@@ -39,29 +39,29 @@ export default function TenantLayout() {
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-[#F5F5F5]">
       {/* Top Header */}
-      <header className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-800 sticky top-0 z-50">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/tenant/dashboard" className="flex items-center">
-              <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Swami PG</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</span>
             </Link>
-            
+
             <div className="flex items-center space-x-4">
               <div className="hidden sm:flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#1E88E5] flex items-center justify-center">
                   <span className="text-sm font-semibold text-white">
                     {(tenantData?.name || 'T').charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <span className="text-sm text-slate-300 font-medium">
+                <span className="text-sm text-[#424242] font-medium">
                   {tenantData?.name || 'Tenant'}
                 </span>
               </div>
               <button
                 onClick={logout}
-                className="px-4 py-2 text-sm font-medium text-red-400 hover:text-white hover:bg-red-500/20 rounded-lg transition-all duration-200 border border-red-500/30 hover:border-red-500/50"
+                className="px-4 py-2 text-sm font-medium text-red-500 hover:text-white hover:bg-red-500 rounded-lg transition-all duration-200 border border-red-200 hover:border-red-500"
               >
                 Logout
               </button>
@@ -76,7 +76,7 @@ export default function TenantLayout() {
       </main>
 
       {/* Bottom Navigation - Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-sm border-t border-slate-800 md:hidden z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
         <div className="flex justify-around">
           {navigation.map((item) => {
             const Icon = item.icon;
@@ -85,16 +85,15 @@ export default function TenantLayout() {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex flex-col items-center py-3 px-4 text-xs transition-all duration-200 ${
-                  active
-                    ? 'text-cyan-400'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                className={`flex flex-col items-center py-3 px-4 text-xs transition-all duration-200 ${active
+                    ? 'text-[#1E88E5]'
+                    : 'text-[#757575] hover:text-[#424242]'
+                  }`}
               >
-                <div className={`p-1 rounded-lg ${active ? 'bg-cyan-400/10' : ''}`}>
+                <div className={`p-1 rounded-lg ${active ? 'bg-blue-50' : ''}`}>
                   <Icon />
                 </div>
-                <span className={`mt-1 font-medium ${active ? 'text-cyan-400' : ''}`}>{item.name}</span>
+                <span className={`mt-1 font-medium ${active ? 'text-[#1E88E5]' : ''}`}>{item.name}</span>
               </Link>
             );
           })}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -46,7 +46,7 @@ const OtherIcon = () => (
 );
 
 const EmptyIcon = () => (
-  <svg className="w-16 h-16 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-16 h-16 text-[#757575]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
   </svg>
 );
@@ -66,13 +66,13 @@ const getCategoryIcon = (category) => {
 // Category color mapping - dark theme
 const getCategoryColor = (category) => {
   const colors = {
-    'Electrical': 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
-    'Water': 'text-blue-400 bg-blue-400/10 border-blue-400/20',
-    'Cleaning': 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-    'Maintenance': 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-    'Other': 'text-slate-400 bg-slate-400/10 border-slate-400/20'
+    'Electrical': 'text-amber-600 bg-yellow-400/10 border-yellow-400/20',
+    'Water': 'text-[#1E88E5] bg-blue-400/10 border-blue-400/20',
+    'Cleaning': 'text-[#43A047] bg-emerald-400/10 border-emerald-400/20',
+    'Maintenance': 'text-orange-500 bg-orange-400/10 border-orange-400/20',
+    'Other': 'text-[#757575] bg-gray-100 border-gray-200'
   };
-  return colors[category] || 'text-slate-400 bg-slate-400/10 border-slate-400/20';
+  return colors[category] || 'text-[#757575] bg-gray-100 border-gray-200';
 };
 
 export default function ComplaintsListPage() {
@@ -155,7 +155,7 @@ export default function ComplaintsListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
         <LoadingSpinner size="large" />
       </div>
     );
@@ -164,14 +164,14 @@ export default function ComplaintsListPage() {
   if (error) {
     return (
       <div className="max-w-lg mx-auto px-4 py-12 text-center">
-        <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-8">
-          <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Error</h2>
-          <p className="text-slate-400">{error}</p>
+          <h2 className="text-xl font-bold text-[#424242] mb-2">Error</h2>
+          <p className="text-[#757575]">{error}</p>
         </div>
       </div>
     );
@@ -182,14 +182,14 @@ export default function ComplaintsListPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Complaints</h1>
-          <p className="text-slate-400 mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#424242]">Complaints</h1>
+          <p className="text-[#757575] mt-1">
             {tenantData?.property_name || 'Your Property'}
           </p>
         </div>
         <Link
           to="/tenant/complaints/new"
-          className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 font-semibold shadow-lg shadow-cyan-500/25"
+          className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 font-semibold shadow-sm"
         >
           <PlusIcon />
           <span className="ml-2">New Complaint</span>
@@ -197,7 +197,7 @@ export default function ComplaintsListPage() {
       </div>
 
       {/* Status Filter Tabs */}
-      <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-2 mb-8">
+      <div className="bg-white rounded-2xl border border-gray-200 p-2 mb-8">
         <div className="flex flex-wrap gap-2">
           {statusOptions.map((status) => (
             <button
@@ -205,15 +205,15 @@ export default function ComplaintsListPage() {
               onClick={() => setSelectedStatus(status)}
               className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-200 flex items-center ${
                 selectedStatus === status
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] shadow-sm'
+                  : 'text-[#757575] hover:text-[#424242] hover:bg-[#F5F5F5]'
               }`}
             >
               {status === 'InProgress' ? 'In Progress' : status}
               <span className={`ml-2 text-sm px-2 py-0.5 rounded-full ${
                 selectedStatus === status
                   ? 'bg-white/20'
-                  : 'bg-slate-800'
+                  : 'bg-[#F5F5F5]'
               }`}>
                 {statusCounts[status]}
               </span>
@@ -224,14 +224,14 @@ export default function ComplaintsListPage() {
 
       {/* Complaints List */}
       {filteredComplaints.length === 0 ? (
-        <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-12 text-center">
+        <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
           <div className="flex justify-center mb-6">
             <EmptyIcon />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <h3 className="text-xl font-semibold text-[#424242] mb-2">
             {selectedStatus === 'All' ? 'No complaints yet' : `No ${selectedStatus === 'InProgress' ? 'in progress' : selectedStatus.toLowerCase()} complaints`}
           </h3>
-          <p className="text-slate-400 mb-6">
+          <p className="text-[#757575] mb-6">
             {selectedStatus === 'All' 
               ? 'When you or other tenants submit complaints, they will appear here.'
               : 'Try selecting a different filter to see more complaints.'}
@@ -239,7 +239,7 @@ export default function ComplaintsListPage() {
           {selectedStatus === 'All' && (
             <Link
               to="/tenant/complaints/new"
-              className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 font-semibold shadow-lg shadow-cyan-500/25"
+              className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 font-semibold shadow-sm"
             >
               <PlusIcon />
               <span className="ml-2">Submit a Complaint</span>
@@ -255,7 +255,7 @@ export default function ComplaintsListPage() {
             return (
               <div
                 key={complaint.id}
-                className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-6 hover:border-cyan-500/50 transition-all duration-200"
+                className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-[#1E88E5]/30 transition-all duration-200"
               >
                 <div className="flex items-start gap-4">
                   {/* Category Icon */}
@@ -266,20 +266,20 @@ export default function ComplaintsListPage() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4 mb-3">
-                      <h3 className="text-lg font-semibold text-white truncate">
+                      <h3 className="text-lg font-semibold text-[#424242] truncate">
                         {complaint.title}
                       </h3>
                       <StatusBadge status={complaint.status} />
                     </div>
 
                     {/* Meta Info */}
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400 mb-3">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-[#757575] mb-3">
                       <span className="flex items-center">
                         <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         {isOwnComplaint ? (
-                          <span className="font-medium text-cyan-400">You</span>
+                          <span className="font-medium text-[#1E88E5]">You</span>
                         ) : (
                           complaint.tenant_name || 'A tenant'
                         )}
@@ -296,16 +296,16 @@ export default function ComplaintsListPage() {
                     </div>
 
                     {/* Description Preview */}
-                    <p className="text-slate-400 text-sm line-clamp-2 mb-4">
+                    <p className="text-[#757575] text-sm line-clamp-2 mb-4">
                       {complaint.description}
                     </p>
 
                     {/* Admin Notes Preview */}
                     {complaint.admin_notes && (
-                      <div className="bg-slate-800/50 rounded-xl px-4 py-3 mb-4 border border-slate-700/50">
-                        <p className="text-sm text-slate-300">
-                          <span className="font-medium text-cyan-400">Admin: </span>
-                          <span className="text-slate-400 line-clamp-1">{complaint.admin_notes}</span>
+                      <div className="bg-[#F5F5F5] rounded-xl px-4 py-3 mb-4 border border-gray-200">
+                        <p className="text-sm text-[#424242]">
+                          <span className="font-medium text-[#1E88E5]">Admin: </span>
+                          <span className="text-[#757575] line-clamp-1">{complaint.admin_notes}</span>
                         </p>
                       </div>
                     )}
@@ -313,7 +313,7 @@ export default function ComplaintsListPage() {
                     {/* View Details Link */}
                     <Link
                       to={`/tenant/complaints/${complaint.id}`}
-                      className="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors"
+                      className="inline-flex items-center text-[#1E88E5] hover:text-[#1565C0] font-medium text-sm transition-colors"
                     >
                       View Details
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,17 +331,17 @@ export default function ComplaintsListPage() {
       {/* Summary Stats */}
       {complaints.length > 0 && (
         <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-red-500/30 p-5 text-center">
-            <p className="text-2xl font-bold text-red-400">{statusCounts[COMPLAINT_STATUS.OPEN]}</p>
-            <p className="text-sm text-slate-400 mt-1">Open</p>
+          <div className="bg-white rounded-2xl border border-red-200 p-5 text-center">
+            <p className="text-2xl font-bold text-red-600">{statusCounts[COMPLAINT_STATUS.OPEN]}</p>
+            <p className="text-sm text-[#757575] mt-1">Open</p>
           </div>
-          <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-amber-500/30 p-5 text-center">
-            <p className="text-2xl font-bold text-amber-400">{statusCounts[COMPLAINT_STATUS.IN_PROGRESS]}</p>
-            <p className="text-sm text-slate-400 mt-1">In Progress</p>
+          <div className="bg-white rounded-2xl border border-amber-500/30 p-5 text-center">
+            <p className="text-2xl font-bold text-amber-600">{statusCounts[COMPLAINT_STATUS.IN_PROGRESS]}</p>
+            <p className="text-sm text-[#757575] mt-1">In Progress</p>
           </div>
-          <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-emerald-500/30 p-5 text-center">
-            <p className="text-2xl font-bold text-emerald-400">{statusCounts[COMPLAINT_STATUS.RESOLVED]}</p>
-            <p className="text-sm text-slate-400 mt-1">Resolved</p>
+          <div className="bg-white rounded-2xl border border-emerald-500/30 p-5 text-center">
+            <p className="text-2xl font-bold text-[#43A047]">{statusCounts[COMPLAINT_STATUS.RESOLVED]}</p>
+            <p className="text-sm text-[#757575] mt-1">Resolved</p>
           </div>
         </div>
       )}

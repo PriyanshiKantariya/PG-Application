@@ -68,8 +68,8 @@ const navItems = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: DashboardIcon },
   { name: 'Properties', path: '/admin/properties', icon: PropertiesIcon },
   { name: 'Tenants', path: '/admin/tenants', icon: TenantsIcon },
-  { 
-    name: 'Bills', 
+  {
+    name: 'Bills',
     icon: BillsIcon,
     subItems: [
       { name: 'Utilities Entry', path: '/admin/bills' },
@@ -93,29 +93,28 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-[#F5F5F5]">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+        <div
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-gradient-to-b from-slate-900 to-slate-950 border-r border-slate-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         {/* Logo */}
-        <div className="p-6 border-b border-slate-800">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Swami PG</h1>
-              <p className="text-slate-500 text-sm">Admin Panel</p>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</h1>
+              <p className="text-[#757575] text-sm">Admin Panel</p>
             </div>
-            <button 
+            <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-slate-400 hover:text-white"
+              className="lg:hidden text-[#757575] hover:text-[#424242]"
             >
               <CloseIcon />
             </button>
@@ -130,11 +129,10 @@ export default function AdminLayout() {
               <div key={item.name}>
                 <button
                   onClick={() => setBillsExpanded(!billsExpanded)}
-                  className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors ${
-                    location.pathname.startsWith('/admin/bills')
-                      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-                  }`}
+                  className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-colors ${location.pathname.startsWith('/admin/bills')
+                      ? 'bg-blue-50 text-[#1E88E5] font-medium'
+                      : 'text-[#757575] hover:bg-gray-100 hover:text-[#424242]'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <item.icon />
@@ -152,10 +150,9 @@ export default function AdminLayout() {
                         end={subItem.path === '/admin/bills'}
                         onClick={() => setSidebarOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors ${
-                            isActive
-                              ? 'bg-slate-800/70 text-cyan-400'
-                              : 'text-slate-500 hover:bg-slate-800/50 hover:text-white'
+                          `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors ${isActive
+                            ? 'bg-blue-50 text-[#1E88E5] font-medium'
+                            : 'text-[#757575] hover:bg-gray-100 hover:text-[#424242]'
                           }`
                         }
                       >
@@ -173,10 +170,9 @@ export default function AdminLayout() {
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    isActive
-                      ? 'bg-slate-800 text-cyan-400 border border-slate-700'
-                      : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                  `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
+                    ? 'bg-blue-50 text-[#1E88E5] font-medium'
+                    : 'text-[#757575] hover:bg-gray-100 hover:text-[#424242]'
                   }`
                 }
               >
@@ -188,16 +184,16 @@ export default function AdminLayout() {
         </nav>
 
         {/* User & Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <div className="px-4 py-2 mb-2">
-            <p className="text-slate-500 text-xs">Logged in as</p>
-            <p className="text-white text-sm font-medium truncate">
+            <p className="text-[#757575] text-xs">Logged in as</p>
+            <p className="text-[#424242] text-sm font-medium truncate">
               {currentUser?.email || 'Admin'}
             </p>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-[#757575] hover:bg-red-50 hover:text-red-600 transition-colors"
           >
             <LogoutIcon />
             <span className="font-medium">Logout</span>
@@ -208,20 +204,20 @@ export default function AdminLayout() {
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Top Bar */}
-        <header className="bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 px-4 py-4 sticky top-0 z-30">
+        <header className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center justify-between">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-[#757575] hover:bg-gray-100 transition-colors"
             >
               <MenuIcon />
             </button>
             <div className="lg:hidden flex-1 text-center">
-              <span className="font-semibold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Swami PG Admin</span>
+              <span className="font-semibold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG Admin</span>
             </div>
             <div className="hidden lg:block">
-              <p className="text-sm text-slate-400">
-                Welcome back, <span className="font-medium text-white">Admin</span>
+              <p className="text-sm text-[#757575]">
+                Welcome back, <span className="font-medium text-[#424242]">Admin</span>
               </p>
             </div>
             <div className="w-8 lg:hidden"></div>

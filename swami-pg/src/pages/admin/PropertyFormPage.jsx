@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { doc, getDoc, addDoc, updateDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
@@ -345,39 +345,39 @@ export default function PropertyFormPage() {
       <div className="mb-6">
         <Link
           to="/admin/properties"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-[#757575] hover:text-[#1E88E5] transition-colors mb-4"
         >
           <ArrowLeftIcon />
           Back to Properties
         </Link>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-[#424242]">
           {isEditMode ? 'Edit Property' : 'Add New Property'}
         </h1>
-        <p className="text-slate-400 mt-1">
+        <p className="text-[#757575] mt-1">
           {isEditMode ? 'Update property details and images' : 'Enter details for the new PG property'}
         </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50">
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200">
         <div className="p-6 space-y-6">
           
           {/* Image Upload Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-white">
+              <label className="block text-sm font-medium text-[#424242]">
                 Property Images
-                <span className="text-slate-400 font-normal ml-2">({formData.images.length}/10)</span>
+                <span className="text-[#757575] font-normal ml-2">({formData.images.length}/10)</span>
               </label>
               {formData.images.length > 0 && (
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-[#757575]">
                   ⭐ = Primary image shown on homepage
                 </span>
               )}
@@ -390,7 +390,7 @@ export default function PropertyFormPage() {
                   <div
                     key={index}
                     className={`relative group rounded-lg overflow-hidden border-2 ${
-                      image.isPrimary ? 'border-amber-400' : 'border-slate-700'
+                      image.isPrimary ? 'border-amber-400' : 'border-gray-200'
                     }`}
                   >
                     <img
@@ -401,19 +401,19 @@ export default function PropertyFormPage() {
                     
                     {/* Primary Badge */}
                     {image.isPrimary && (
-                      <div className="absolute top-1 left-1 bg-amber-400 text-slate-900 px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
+                      <div className="absolute top-1 left-1 bg-amber-400 text-[#424242] px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
                         <StarIcon />
                         Primary
                       </div>
                     )}
 
                     {/* Overlay Actions */}
-                    <div className="absolute inset-0 bg-slate-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       {!image.isPrimary && (
                         <button
                           type="button"
                           onClick={() => handleSetPrimary(index)}
-                          className="p-1.5 bg-amber-500/20 text-amber-400 rounded hover:bg-amber-500/30 transition-colors"
+                          className="p-1.5 bg-amber-500/20 text-amber-600 rounded hover:bg-amber-500/30 transition-colors"
                           title="Set as primary"
                         >
                           <StarIcon />
@@ -423,7 +423,7 @@ export default function PropertyFormPage() {
                         <button
                           type="button"
                           onClick={() => handleMoveImage(index, -1)}
-                          className="p-1.5 bg-slate-600/50 text-slate-300 rounded hover:bg-slate-600 transition-colors"
+                          className="p-1.5 bg-gray-200 text-[#424242] rounded hover:bg-gray-200 transition-colors"
                           title="Move left"
                         >
                           <MoveIcon />
@@ -432,7 +432,7 @@ export default function PropertyFormPage() {
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="p-1.5 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors"
+                        className="p-1.5 bg-red-500/20 text-red-600 rounded hover:bg-red-500/30 transition-colors"
                         title="Remove"
                       >
                         <TrashIcon />
@@ -446,7 +446,7 @@ export default function PropertyFormPage() {
             {/* Upload Button */}
             <div
               onClick={() => !uploadingImages && fileInputRef.current?.click()}
-              className={`border-2 border-dashed border-slate-600 rounded-xl p-6 text-center cursor-pointer hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all ${
+              className={`border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-[#1E88E5]/30 hover:bg-[#F5F5F5] transition-all ${
                 uploadingImages ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -462,41 +462,41 @@ export default function PropertyFormPage() {
               {uploadingImages ? (
                 <div className="flex flex-col items-center gap-2">
                   <LoadingSpinner size="medium" />
-                  <span className="text-cyan-400 font-medium">{uploadProgress || 'Processing...'}</span>
-                  <span className="text-slate-500 text-sm">Images appear as they upload</span>
+                  <span className="text-[#1E88E5] font-medium">{uploadProgress || 'Processing...'}</span>
+                  <span className="text-[#757575] text-sm">Images appear as they upload</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <UploadIcon />
-                  <span className="text-slate-300 font-medium">Click to upload images</span>
-                  <span className="text-slate-500 text-sm">JPG, PNG, WebP • Auto-compressed for fast upload</span>
+                  <span className="text-[#424242] font-medium">Click to upload images</span>
+                  <span className="text-[#757575] text-sm">JPG, PNG, WebP • Auto-compressed for fast upload</span>
                 </div>
               )}
             </div>
           </div>
 
           {/* Show on Homepage Toggle */}
-          <div className="flex items-center gap-3 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+          <div className="flex items-center gap-3 p-4 bg-[#F5F5F5] rounded-lg border border-gray-200">
             <input
               type="checkbox"
               id="showOnHomepage"
               name="showOnHomepage"
               checked={formData.showOnHomepage}
               onChange={handleChange}
-              className="w-5 h-5 rounded border-slate-600 bg-slate-700 text-cyan-500 focus:ring-cyan-500/50"
+              className="w-5 h-5 rounded border-gray-300 bg-gray-200 text-[#1E88E5] focus:ring-[#1E88E5]/50"
             />
-            <label htmlFor="showOnHomepage" className="text-white font-medium cursor-pointer">
+            <label htmlFor="showOnHomepage" className="text-[#424242] font-medium cursor-pointer">
               Show this property on the public homepage
             </label>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-slate-700"></div>
+          <div className="border-t border-gray-200"></div>
 
           {/* Property Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-white mb-1.5">
-              Property Name <span className="text-red-400">*</span>
+            <label htmlFor="name" className="block text-sm font-medium text-[#424242] mb-1.5">
+              Property Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -505,14 +505,14 @@ export default function PropertyFormPage() {
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g., Swami PG – Gotri"
-              className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
             />
           </div>
 
           {/* Area */}
           <div>
-            <label htmlFor="area" className="block text-sm font-medium text-white mb-1.5">
-              Area <span className="text-red-400">*</span>
+            <label htmlFor="area" className="block text-sm font-medium text-[#424242] mb-1.5">
+              Area <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -521,14 +521,14 @@ export default function PropertyFormPage() {
               value={formData.area}
               onChange={handleChange}
               placeholder="e.g., Gotri, Akota, Alkapuri"
-              className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
             />
           </div>
 
           {/* Address */}
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-white mb-1.5">
-              Full Address <span className="text-red-400">*</span>
+            <label htmlFor="address" className="block text-sm font-medium text-[#424242] mb-1.5">
+              Full Address <span className="text-red-600">*</span>
             </label>
             <textarea
               id="address"
@@ -537,13 +537,13 @@ export default function PropertyFormPage() {
               onChange={handleChange}
               rows={2}
               placeholder="Complete property address"
-              className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 resize-none"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
             />
           </div>
 
           {/* Landmark */}
           <div>
-            <label htmlFor="landmark" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="landmark" className="block text-sm font-medium text-[#424242] mb-1.5">
               Landmark
             </label>
             <input
@@ -553,15 +553,15 @@ export default function PropertyFormPage() {
               value={formData.landmark}
               onChange={handleChange}
               placeholder="e.g., Near XYZ College"
-              className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
             />
           </div>
 
           {/* Total Beds & Total Flats Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="total_beds" className="block text-sm font-medium text-white mb-1.5">
-                Total Beds <span className="text-red-400">*</span>
+              <label htmlFor="total_beds" className="block text-sm font-medium text-[#424242] mb-1.5">
+                Total Beds <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -571,13 +571,13 @@ export default function PropertyFormPage() {
                 onChange={handleChange}
                 min="1"
                 placeholder="e.g., 30"
-                className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
               />
-              <p className="text-xs text-slate-500 mt-1">Total bed capacity</p>
+              <p className="text-xs text-[#757575] mt-1">Total bed capacity</p>
             </div>
             <div>
-              <label htmlFor="total_flats" className="block text-sm font-medium text-white mb-1.5">
-                Total Flats <span className="text-red-400">*</span>
+              <label htmlFor="total_flats" className="block text-sm font-medium text-[#424242] mb-1.5">
+                Total Flats <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -587,17 +587,17 @@ export default function PropertyFormPage() {
                 onChange={handleChange}
                 min="1"
                 placeholder="e.g., 10"
-                className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
               />
-              <p className="text-xs text-slate-500 mt-1">Number of flats for utility billing</p>
+              <p className="text-xs text-[#757575] mt-1">Number of flats for utility billing</p>
             </div>
           </div>
 
           {/* Default Rent & Deposit Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="default_rent" className="block text-sm font-medium text-white mb-1.5">
-                Default Rent (₹) <span className="text-red-400">*</span>
+              <label htmlFor="default_rent" className="block text-sm font-medium text-[#424242] mb-1.5">
+                Default Rent (₹) <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -608,11 +608,11 @@ export default function PropertyFormPage() {
                 min="0"
                 step="100"
                 placeholder="e.g., 6500"
-                className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
               />
             </div>
             <div>
-              <label htmlFor="default_deposit" className="block text-sm font-medium text-white mb-1.5">
+              <label htmlFor="default_deposit" className="block text-sm font-medium text-[#424242] mb-1.5">
                 Default Deposit (₹)
               </label>
               <input
@@ -624,14 +624,14 @@ export default function PropertyFormPage() {
                 min="0"
                 step="100"
                 placeholder="e.g., 3000"
-                className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
               />
             </div>
           </div>
 
           {/* House Rules */}
           <div>
-            <label htmlFor="rules_text" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="rules_text" className="block text-sm font-medium text-[#424242] mb-1.5">
               House Rules
             </label>
             <textarea
@@ -641,24 +641,24 @@ export default function PropertyFormPage() {
               onChange={handleChange}
               rows={5}
               placeholder="- No smoking&#10;- No alcohol or drugs&#10;- No guests staying overnight&#10;- Maintain cleanliness"
-              className="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 resize-none"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
             />
-            <p className="text-xs text-slate-500 mt-1">Enter each rule on a new line</p>
+            <p className="text-xs text-[#757575] mt-1">Enter each rule on a new line</p>
           </div>
         </div>
 
         {/* Form Actions */}
-        <div className="px-6 py-4 bg-slate-800/50 border-t border-slate-700/50 rounded-b-xl flex flex-col sm:flex-row gap-3 sm:justify-end">
+        <div className="px-6 py-4 bg-[#F5F5F5] border-t border-gray-200 rounded-b-xl flex flex-col sm:flex-row gap-3 sm:justify-end">
           <Link
             to="/admin/properties"
-            className="px-6 py-2.5 border border-slate-600 bg-slate-700 text-slate-300 rounded-lg font-medium hover:bg-slate-600 transition-colors text-center"
+            className="px-6 py-2.5 border border-gray-300 bg-gray-200 text-[#424242] rounded-lg font-medium hover:bg-gray-200 transition-colors text-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving || uploadingImages}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium hover:from-cyan-400 hover:to-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/25"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             {saving ? (
               <>

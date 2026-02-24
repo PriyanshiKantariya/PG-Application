@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -112,7 +112,7 @@ export default function BillDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
         <LoadingSpinner size="large" />
       </div>
     );
@@ -121,17 +121,17 @@ export default function BillDetailPage() {
   if (error) {
     return (
       <div className="max-w-lg mx-auto px-4 py-12 text-center">
-        <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-8">
-          <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Error</h2>
-          <p className="text-slate-400 mb-6">{error}</p>
+          <h2 className="text-xl font-bold text-[#424242] mb-2">Error</h2>
+          <p className="text-[#757575] mb-6">{error}</p>
           <button
             onClick={() => navigate('/tenant/bills')}
-            className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all font-semibold"
+            className="px-6 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all font-semibold"
           >
             Back to Bills
           </button>
@@ -143,13 +143,13 @@ export default function BillDetailPage() {
   const utilitiesTotal = (bill.electricity_share || 0) + (bill.gas_share || 0);
   
   const breakdownItems = [
-    { label: 'Monthly Rent', amount: bill.rent_amount || 0, iconKey: 'rent', color: 'text-cyan-400' },
-    { label: 'Electricity Share', amount: bill.electricity_share || 0, iconKey: 'electricity', color: 'text-yellow-400' },
-    { label: 'Gas Share', amount: bill.gas_share || 0, iconKey: 'gas', color: 'text-orange-400' },
+    { label: 'Monthly Rent', amount: bill.rent_amount || 0, iconKey: 'rent', color: 'text-[#1E88E5]' },
+    { label: 'Electricity Share', amount: bill.electricity_share || 0, iconKey: 'electricity', color: 'text-amber-600' },
+    { label: 'Gas Share', amount: bill.gas_share || 0, iconKey: 'gas', color: 'text-orange-500' },
   ];
 
   if (bill.late_fee && bill.late_fee > 0) {
-    breakdownItems.push({ label: 'Late Fee', amount: bill.late_fee, iconKey: 'late', isExtra: true, color: 'text-red-400' });
+    breakdownItems.push({ label: 'Late Fee', amount: bill.late_fee, iconKey: 'late', isExtra: true, color: 'text-red-600' });
   }
 
   if (bill.adjustments && bill.adjustments !== 0) {
@@ -158,7 +158,7 @@ export default function BillDetailPage() {
       amount: bill.adjustments, 
       iconKey: bill.adjustments > 0 ? 'plus' : 'minus',
       isExtra: true,
-      color: bill.adjustments > 0 ? 'text-red-400' : 'text-emerald-400'
+      color: bill.adjustments > 0 ? 'text-red-600' : 'text-[#43A047]'
     });
   }
 
@@ -167,7 +167,7 @@ export default function BillDetailPage() {
       {/* Back Button */}
       <Link
         to="/tenant/bills"
-        className="inline-flex items-center text-cyan-400 hover:text-cyan-300 mb-6 font-medium transition-colors"
+        className="inline-flex items-center text-[#1E88E5] hover:text-[#1565C0] mb-6 font-medium transition-colors"
       >
         <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -176,15 +176,15 @@ export default function BillDetailPage() {
       </Link>
 
       {/* Bill Header */}
-      <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-6 text-white">
+        <div className="bg-gradient-to-r from-[#1E88E5] to-[#1565C0] px-6 py-6 text-[#424242]">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">
                 {formatMonthYear(bill.month, bill.year)}
               </h1>
-              <p className="text-cyan-100 mt-1">Bill #{bill.id.slice(-6).toUpperCase()}</p>
+              <p className="text-blue-100 mt-1">Bill #{bill.id.slice(-6).toUpperCase()}</p>
             </div>
             <StatusBadge status={bill.status} />
           </div>
@@ -193,23 +193,23 @@ export default function BillDetailPage() {
         {/* Bill Details */}
         <div className="p-6">
           {/* Due Date Info */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
             <div>
-              <p className="text-sm text-slate-400">Due Date</p>
-              <p className="font-semibold text-white">
+              <p className="text-sm text-[#757575]">Due Date</p>
+              <p className="font-semibold text-[#424242]">
                 {bill.due_date ? formatDate(bill.due_date) : `7 ${formatMonthYear(bill.month, bill.year)}`}
               </p>
             </div>
             {bill.paid_date && (
               <div className="text-right">
-                <p className="text-sm text-slate-400">Paid On</p>
-                <p className="font-semibold text-emerald-400">{formatDate(bill.paid_date)}</p>
+                <p className="text-sm text-[#757575]">Paid On</p>
+                <p className="font-semibold text-[#43A047]">{formatDate(bill.paid_date)}</p>
               </div>
             )}
           </div>
 
           {/* Breakdown */}
-          <h2 className="text-lg font-semibold text-white mb-4">Bill Breakdown</h2>
+          <h2 className="text-lg font-semibold text-[#424242] mb-4">Bill Breakdown</h2>
           
           <div className="space-y-3 mb-6">
             {breakdownItems.map((item, index) => {
@@ -218,14 +218,14 @@ export default function BillDetailPage() {
                 <div
                   key={index}
                   className={`flex items-center justify-between py-4 px-4 rounded-xl ${
-                    item.isExtra ? 'bg-red-500/10 border border-red-500/20' : 'bg-slate-800/50 border border-slate-700/50'
+                    item.isExtra ? 'bg-red-50 border border-red-500/20' : 'bg-[#F5F5F5] border border-gray-200'
                   }`}
                 >
                   <div className="flex items-center">
                     <span className={`mr-3 ${item.color}`}>
                       <IconComponent />
                     </span>
-                    <span className="text-slate-200">{item.label}</span>
+                    <span className="text-[#424242]">{item.label}</span>
                   </div>
                   <span className={`font-semibold ${item.color}`}>
                     {item.amount < 0 ? '-' : ''}{formatCurrency(Math.abs(item.amount))}
@@ -236,9 +236,9 @@ export default function BillDetailPage() {
           </div>
 
           {/* Total */}
-          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-xl p-5 flex items-center justify-between">
-            <span className="text-lg font-medium text-white">Total Amount</span>
-            <span className="text-3xl font-bold text-cyan-400">{formatCurrency(bill.total_amount)}</span>
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-100 rounded-xl p-5 flex items-center justify-between">
+            <span className="text-lg font-medium text-[#424242]">Total Amount</span>
+            <span className="text-3xl font-bold text-[#1E88E5]">{formatCurrency(bill.total_amount)}</span>
           </div>
 
           {/* Payment Button */}
@@ -246,12 +246,12 @@ export default function BillDetailPage() {
             <div className="mt-6">
               <button
                 onClick={handlePaymentClick}
-                className="w-full py-4 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-lg font-semibold rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 flex items-center justify-center shadow-lg shadow-emerald-500/25"
+                className="w-full py-4 bg-gradient-to-r from-[#43A047] to-[#2E7D32] text-[#424242] text-lg font-semibold rounded-xl hover:from-[#2E7D32] hover:to-[#1B5E20] transition-all duration-200 flex items-center justify-center shadow-sm"
               >
                 <PaymentIcon />
                 <span className="ml-2">I HAVE PAID - Submit Screenshot</span>
               </button>
-              <p className="text-sm text-slate-500 text-center mt-2">
+              <p className="text-sm text-[#757575] text-center mt-2">
                 Click above to submit your payment screenshot via Google Form
               </p>
             </div>
@@ -259,15 +259,15 @@ export default function BillDetailPage() {
 
           {/* Paid confirmation */}
           {bill.status === 'Paid' && (
-            <div className="mt-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-5 text-center">
+            <div className="mt-6 bg-green-50 border border-green-100 rounded-xl p-5 text-center">
               <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#43A047]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="text-emerald-400 font-semibold">This bill has been paid</p>
+              <p className="text-[#43A047] font-semibold">This bill has been paid</p>
               {bill.paid_date && (
-                <p className="text-sm text-emerald-400/70 mt-1">
+                <p className="text-sm text-[#43A047]/70 mt-1">
                   Payment confirmed on {formatDate(bill.paid_date)}
                 </p>
               )}
@@ -276,9 +276,9 @@ export default function BillDetailPage() {
 
           {/* Reported Paid status */}
           {bill.status === 'ReportedPaid' && (
-            <div className="mt-4 bg-amber-500/10 border border-amber-500/20 rounded-xl p-5 text-center">
-              <p className="text-amber-400 font-semibold">Payment verification pending</p>
-              <p className="text-sm text-amber-400/70 mt-1">
+            <div className="mt-4 bg-amber-50 border border-amber-100 rounded-xl p-5 text-center">
+              <p className="text-amber-600 font-semibold">Payment verification pending</p>
+              <p className="text-sm text-amber-600/70 mt-1">
                 The admin will verify your payment soon.
               </p>
             </div>
@@ -286,16 +286,16 @@ export default function BillDetailPage() {
 
           {/* Admin Notes */}
           {bill.admin_notes && (
-            <div className="mt-6 bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
-              <h3 className="text-sm font-semibold text-slate-300 mb-2">Admin Notes</h3>
-              <p className="text-slate-400">{bill.admin_notes}</p>
+            <div className="mt-6 bg-[#F5F5F5] rounded-xl p-5 border border-gray-200">
+              <h3 className="text-sm font-semibold text-[#424242] mb-2">Admin Notes</h3>
+              <p className="text-[#757575]">{bill.admin_notes}</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Tenant Info Footer */}
-      <div className="mt-6 text-center text-sm text-slate-500">
+      <div className="mt-6 text-center text-sm text-[#757575]">
         <p>Bill for: {tenantData?.name} ({tenantData?.tenant_code})</p>
         <p>Room: {tenantData?.room_number}</p>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, getDocs, addDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -395,7 +395,7 @@ export default function TenantFormPage() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1E88E5] text-white rounded-lg font-medium hover:bg-[#1565C0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1E88E5] text-[#424242] rounded-lg font-medium hover:bg-[#1565C0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
               <>

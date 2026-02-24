@@ -45,13 +45,13 @@ const BedsIcon = () => (
 const QuickActionCard = ({ to, icon: Icon, title, description, color }) => (
   <Link
     to={to}
-    className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-5 hover:border-cyan-500/50 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-500/10"
+    className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition-all hover:-translate-y-1 shadow-sm"
   >
     <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center mb-4`}>
       <Icon />
     </div>
-    <h3 className="font-semibold text-white mb-1">{title}</h3>
-    <p className="text-sm text-slate-400">{description}</p>
+    <h3 className="font-semibold text-[#424242] mb-1">{title}</h3>
+    <p className="text-sm text-[#757575]">{description}</p>
   </Link>
 );
 
@@ -73,7 +73,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function fetchMetrics() {
       try {
-        // Fetch all data in parallel
         const [
           propertiesSnap,
           tenantsSnap,
@@ -88,17 +87,15 @@ export default function AdminDashboard() {
           getDocs(query(collection(db, 'visit_requests'), where('status', '==', 'New')))
         ]);
 
-        // Calculate total beds from properties
         let totalBeds = 0;
         propertiesSnap.forEach(doc => {
           totalBeds += doc.data().total_beds || 0;
         });
 
-        // Calculate pending payments and reported paid
         let pendingPayments = 0;
         let pendingAmount = 0;
         let reportedPaidBills = 0;
-        
+
         billsSnap.forEach(doc => {
           const bill = doc.data();
           if (bill.status === 'Pending' || bill.status === 'Overdue') {
@@ -145,8 +142,8 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
-        <p className="text-red-400">{error}</p>
+      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <p className="text-red-600">{error}</p>
       </div>
     );
   }
@@ -155,65 +152,65 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-slate-400 mt-1">Welcome to Swami PG Admin Panel</p>
+        <h1 className="text-2xl font-bold text-[#424242]">Dashboard</h1>
+        <p className="text-[#757575] mt-1">Welcome to Swami PG Admin Panel</p>
       </div>
 
       {/* Main Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Properties */}
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-400 mb-1">Total Properties</p>
-              <p className="text-3xl font-bold text-white">{metrics.totalProperties}</p>
-              <p className="text-xs text-slate-400 mt-1">{metrics.totalBeds} total beds</p>
+              <p className="text-sm text-[#757575] mb-1">Total Properties</p>
+              <p className="text-3xl font-bold text-[#424242]">{metrics.totalProperties}</p>
+              <p className="text-xs text-[#757575] mt-1">{metrics.totalBeds} total beds</p>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+            <div className="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-[#1E88E5]">
               <PropertiesIcon />
             </div>
           </div>
         </div>
 
         {/* Active Tenants */}
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-400 mb-1">Active Tenants</p>
-              <p className="text-3xl font-bold text-white">{metrics.activeTenants}</p>
-              <p className="text-xs text-emerald-400 mt-1">{metrics.availableBeds} beds available</p>
+              <p className="text-sm text-[#757575] mb-1">Active Tenants</p>
+              <p className="text-3xl font-bold text-[#424242]">{metrics.activeTenants}</p>
+              <p className="text-xs text-[#43A047] mt-1">{metrics.availableBeds} beds available</p>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <div className="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-[#43A047]">
               <TenantsIcon />
             </div>
           </div>
         </div>
 
         {/* Pending Payments */}
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-400 mb-1">Pending Payments</p>
-              <p className="text-3xl font-bold text-white">{metrics.pendingPayments}</p>
-              <p className="text-xs text-amber-400 mt-1">
+              <p className="text-sm text-[#757575] mb-1">Pending Payments</p>
+              <p className="text-3xl font-bold text-[#424242]">{metrics.pendingPayments}</p>
+              <p className="text-xs text-amber-600 mt-1">
                 ₹{metrics.pendingAmount.toLocaleString('en-IN')} due
               </p>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+            <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
               <PaymentsIcon />
             </div>
           </div>
         </div>
 
         {/* Open Complaints */}
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-400 mb-1">Open Complaints</p>
-              <p className="text-3xl font-bold text-white">{metrics.openComplaints}</p>
-              <p className="text-xs text-red-400 mt-1">Needs attention</p>
+              <p className="text-sm text-[#757575] mb-1">Open Complaints</p>
+              <p className="text-3xl font-bold text-[#424242]">{metrics.openComplaints}</p>
+              <p className="text-xs text-red-500 mt-1">Needs attention</p>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400">
+            <div className="w-14 h-14 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
               <ComplaintsIcon />
             </div>
           </div>
@@ -223,21 +220,21 @@ export default function AdminDashboard() {
       {/* Secondary Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* New Visit Requests */}
-        <div className="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl p-5 text-white shadow-lg shadow-cyan-500/20">
+        <div className="bg-[#1E88E5] rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-cyan-100 mb-1">New Visit Requests</p>
+              <p className="text-sm text-blue-100 mb-1">New Visit Requests</p>
               <p className="text-3xl font-bold">{metrics.newVisitRequests}</p>
             </div>
             <VisitsIcon />
           </div>
-          <Link to="/admin/visits" className="inline-block mt-3 text-sm text-cyan-100 hover:text-white transition-colors">
+          <Link to="/admin/visits" className="inline-block mt-3 text-sm text-blue-100 hover:text-white transition-colors">
             View all →
           </Link>
         </div>
 
         {/* Reported Paid (Awaiting Verification) */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl p-5 text-white shadow-lg shadow-amber-500/20">
+        <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-amber-100 mb-1">Awaiting Verification</p>
@@ -251,13 +248,13 @@ export default function AdminDashboard() {
         </div>
 
         {/* Occupancy Rate */}
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl p-5 text-white shadow-lg shadow-emerald-500/20">
+        <div className="bg-gradient-to-r from-[#43A047] to-teal-500 rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-emerald-100 mb-1">Occupancy Rate</p>
               <p className="text-3xl font-bold">
-                {metrics.totalBeds > 0 
-                  ? Math.round((metrics.activeTenants / metrics.totalBeds) * 100) 
+                {metrics.totalBeds > 0
+                  ? Math.round((metrics.activeTenants / metrics.totalBeds) * 100)
                   : 0}%
               </p>
             </div>
@@ -271,42 +268,42 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-semibold text-[#424242] mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
             to="/admin/properties"
             icon={PropertiesIcon}
             title="Manage Properties"
             description="Add, edit, and view all PG properties"
-            color="bg-cyan-500/10 text-cyan-400"
+            color="bg-blue-50 text-[#1E88E5]"
           />
           <QuickActionCard
             to="/admin/tenants"
             icon={TenantsIcon}
             title="Manage Tenants"
             description="Add new tenants, view details, mark vacated"
-            color="bg-emerald-500/10 text-emerald-400"
+            color="bg-green-50 text-[#43A047]"
           />
           <QuickActionCard
             to="/admin/bills"
             icon={PaymentsIcon}
             title="Bills & Payments"
             description="Generate bills, verify payments"
-            color="bg-amber-500/10 text-amber-400"
+            color="bg-amber-50 text-amber-500"
           />
           <QuickActionCard
             to="/admin/complaints"
             icon={ComplaintsIcon}
             title="Handle Complaints"
             description="View and respond to tenant complaints"
-            color="bg-red-500/10 text-red-400"
+            color="bg-red-50 text-red-500"
           />
           <QuickActionCard
             to="/admin/visits"
             icon={VisitsIcon}
             title="Visit Requests"
             description="Manage property visit requests"
-            color="bg-purple-500/10 text-purple-400"
+            color="bg-purple-50 text-purple-500"
           />
         </div>
       </div>

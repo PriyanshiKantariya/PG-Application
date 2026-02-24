@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -57,7 +57,7 @@ const CalendarIcon = () => (
 );
 
 const CheckIcon = () => (
-  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
@@ -81,13 +81,13 @@ const getCategoryIcon = (category) => {
 
 const getCategoryColor = (category) => {
   const colors = {
-    'Electrical': 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
-    'Water': 'text-blue-400 bg-blue-400/10 border-blue-400/20',
-    'Cleaning': 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-    'Maintenance': 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-    'Other': 'text-slate-400 bg-slate-400/10 border-slate-400/20'
+    'Electrical': 'text-amber-600 bg-yellow-400/10 border-yellow-400/20',
+    'Water': 'text-[#1E88E5] bg-blue-400/10 border-blue-400/20',
+    'Cleaning': 'text-[#43A047] bg-emerald-400/10 border-emerald-400/20',
+    'Maintenance': 'text-orange-500 bg-orange-400/10 border-orange-400/20',
+    'Other': 'text-[#757575] bg-gray-100 border-gray-200'
   };
-  return colors[category] || 'text-slate-400 bg-slate-400/10 border-slate-400/20';
+  return colors[category] || 'text-[#757575] bg-gray-100 border-gray-200';
 };
 
 const getStatusBorder = (status) => {
@@ -96,7 +96,7 @@ const getStatusBorder = (status) => {
     'InProgress': 'border-amber-500',
     'Resolved': 'border-emerald-500'
   };
-  return colors[status] || 'border-slate-500';
+  return colors[status] || 'border-gray-300';
 };
 
 export default function ComplaintDetailPage() {
@@ -146,7 +146,7 @@ export default function ComplaintDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
         <LoadingSpinner size="large" />
       </div>
     );
@@ -155,17 +155,17 @@ export default function ComplaintDetailPage() {
   if (error) {
     return (
       <div className="max-w-lg mx-auto px-4 py-12 text-center">
-        <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-8">
-          <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Error</h2>
-          <p className="text-slate-400 mb-6">{error}</p>
+          <h2 className="text-xl font-bold text-[#424242] mb-2">Error</h2>
+          <p className="text-[#757575] mb-6">{error}</p>
           <button
             onClick={() => navigate('/tenant/complaints')}
-            className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all font-semibold"
+            className="px-6 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all font-semibold"
           >
             Back to Complaints
           </button>
@@ -182,23 +182,23 @@ export default function ComplaintDetailPage() {
       {/* Back Button */}
       <Link
         to="/tenant/complaints"
-        className="inline-flex items-center text-cyan-400 hover:text-cyan-300 mb-6 font-medium transition-colors"
+        className="inline-flex items-center text-[#1E88E5] hover:text-[#1565C0] mb-6 font-medium transition-colors"
       >
         <BackIcon />
         <span className="ml-1">Back to Complaints</span>
       </Link>
 
       {/* Main Card */}
-      <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Header with Category */}
-        <div className={`px-6 py-6 border-b-4 ${getStatusBorder(complaint.status)} bg-slate-800/50`}>
+        <div className={`px-6 py-6 border-b-4 ${getStatusBorder(complaint.status)} bg-[#F5F5F5]`}>
           <div className="flex items-start gap-4">
             <div className={`p-3 rounded-xl border ${getCategoryColor(complaint.category)}`}>
               <CategoryIcon />
             </div>
             <div className="flex-1">
               <div className="flex items-start justify-between gap-4">
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-xl font-bold text-[#424242]">
                   {complaint.title}
                 </h1>
                 <StatusBadge status={complaint.status} />
@@ -211,18 +211,18 @@ export default function ComplaintDetailPage() {
         </div>
 
         {/* Meta Information */}
-        <div className="px-6 py-4 bg-slate-800/30 border-b border-slate-700">
+        <div className="px-6 py-4 bg-[#F5F5F5]/30 border-b border-gray-200">
           <div className="flex flex-wrap gap-6">
-            <div className="flex items-center text-slate-400">
+            <div className="flex items-center text-[#757575]">
               <UserIcon />
               <span className="ml-2">
                 Submitted by: {' '}
-                <span className={isOwnComplaint ? 'font-semibold text-cyan-400' : 'font-medium text-white'}>
+                <span className={isOwnComplaint ? 'font-semibold text-[#1E88E5]' : 'font-medium text-[#424242]'}>
                   {isOwnComplaint ? 'You' : (complaint.tenant_name || 'A tenant')}
                 </span>
               </span>
             </div>
-            <div className="flex items-center text-slate-400">
+            <div className="flex items-center text-[#757575]">
               <CalendarIcon />
               <span className="ml-2">{formatDate(complaint.created_at)}</span>
             </div>
@@ -233,10 +233,10 @@ export default function ComplaintDetailPage() {
         <div className="p-6 space-y-6">
           {/* Description */}
           <div>
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
+            <h2 className="text-sm font-semibold text-[#757575] uppercase tracking-wide mb-3">
               Description
             </h2>
-            <p className="text-slate-200 whitespace-pre-wrap leading-relaxed">
+            <p className="text-[#424242] whitespace-pre-wrap leading-relaxed">
               {complaint.description}
             </p>
           </div>
@@ -244,20 +244,20 @@ export default function ComplaintDetailPage() {
           {/* Image if exists */}
           {complaint.image_url && (
             <div>
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-3">
+              <h2 className="text-sm font-semibold text-[#757575] uppercase tracking-wide mb-3">
                 Attached Photo
               </h2>
-              <div className="rounded-xl overflow-hidden border border-slate-700">
+              <div className="rounded-xl overflow-hidden border border-gray-200">
                 <img
                   src={complaint.image_url}
                   alt="Complaint"
-                  className="w-full max-h-96 object-contain bg-slate-800"
+                  className="w-full max-h-96 object-contain bg-[#F5F5F5]"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
-                <div className="hidden items-center justify-center py-8 text-slate-500 bg-slate-800">
+                <div className="hidden items-center justify-center py-8 text-[#757575] bg-[#F5F5F5]">
                   <svg className="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -268,7 +268,7 @@ export default function ComplaintDetailPage() {
                 href={complaint.image_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center mt-3 text-sm text-cyan-400 hover:text-cyan-300"
+                className="inline-flex items-center mt-3 text-sm text-[#1E88E5] hover:text-[#1565C0]"
               >
                 Open image in new tab
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,35 +280,35 @@ export default function ComplaintDetailPage() {
 
           {/* Admin Notes */}
           {complaint.admin_notes && (
-            <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-5">
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
               <div className="flex items-center mb-3">
-                <AdminIcon className="text-cyan-400" />
-                <h2 className="ml-2 text-sm font-semibold text-cyan-400 uppercase tracking-wide">
+                <AdminIcon className="text-[#1E88E5]" />
+                <h2 className="ml-2 text-sm font-semibold text-[#1E88E5] uppercase tracking-wide">
                   Admin Response
                 </h2>
               </div>
-              <p className="text-slate-200 whitespace-pre-wrap">
+              <p className="text-[#424242] whitespace-pre-wrap">
                 {complaint.admin_notes}
               </p>
             </div>
           )}
 
           {/* Status Timeline */}
-          <div className="pt-4 border-t border-slate-700">
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-4">
+          <div className="pt-4 border-t border-gray-200">
+            <h2 className="text-sm font-semibold text-[#757575] uppercase tracking-wide mb-4">
               Status Timeline
             </h2>
             <div className="space-y-4">
               {/* Created */}
               <div className="flex items-start">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1E88E5] to-[#1565C0] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="font-medium text-white">Complaint Submitted</p>
-                  <p className="text-sm text-slate-400">{formatDate(complaint.created_at)}</p>
+                  <p className="font-medium text-[#424242]">Complaint Submitted</p>
+                  <p className="text-sm text-[#757575]">{formatDate(complaint.created_at)}</p>
                 </div>
               </div>
 
@@ -316,13 +316,13 @@ export default function ComplaintDetailPage() {
               {(complaint.status === 'InProgress' || complaint.status === 'Resolved') && (
                 <div className="flex items-start">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <p className="font-medium text-white">Work In Progress</p>
-                    <p className="text-sm text-slate-400">Admin is working on this issue</p>
+                    <p className="font-medium text-[#424242]">Work In Progress</p>
+                    <p className="text-sm text-[#757575]">Admin is working on this issue</p>
                   </div>
                 </div>
               )}
@@ -330,12 +330,12 @@ export default function ComplaintDetailPage() {
               {/* Resolved */}
               {complaint.status === 'Resolved' && (
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#43A047] to-[#2E7D32] flex items-center justify-center flex-shrink-0">
                     <CheckIcon />
                   </div>
                   <div className="ml-4">
-                    <p className="font-medium text-white">Resolved</p>
-                    <p className="text-sm text-slate-400">
+                    <p className="font-medium text-[#424242]">Resolved</p>
+                    <p className="text-sm text-[#757575]">
                       {complaint.resolved_at ? formatDate(complaint.resolved_at) : 'Issue has been fixed'}
                     </p>
                   </div>
@@ -345,14 +345,14 @@ export default function ComplaintDetailPage() {
               {/* Pending Steps */}
               {complaint.status === 'Open' && (
                 <div className="flex items-start opacity-50">
-                  <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-[#757575]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <p className="font-medium text-slate-400">Awaiting Admin Response</p>
-                    <p className="text-sm text-slate-500">The admin will review this soon</p>
+                    <p className="font-medium text-[#757575]">Awaiting Admin Response</p>
+                    <p className="text-sm text-[#757575]">The admin will review this soon</p>
                   </div>
                 </div>
               )}
@@ -362,7 +362,7 @@ export default function ComplaintDetailPage() {
       </div>
 
       {/* Footer Info */}
-      <div className="mt-6 text-center text-sm text-slate-500">
+      <div className="mt-6 text-center text-sm text-[#757575]">
         <p>Complaint ID: {complaint.id}</p>
         {complaint.updated_at && complaint.updated_at !== complaint.created_at && (
           <p className="mt-1">Last updated: {formatDate(complaint.updated_at)}</p>

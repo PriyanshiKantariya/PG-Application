@@ -18,7 +18,6 @@ export default function TenantLoginPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear errors when typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -99,7 +98,6 @@ export default function TenantLoginPage() {
       console.log('Attempting login with:', formData.email);
       const result = await signInWithEmailAndPassword(auth, formData.email, formData.password);
       console.log('Login successful! User:', result.user.uid);
-      // Redirect to tenant dashboard on success
       navigate('/tenant/dashboard');
     } catch (error) {
       console.error('Login error:', error.code, error.message);
@@ -110,41 +108,31 @@ export default function TenantLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 py-12 px-4 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950"></div>
-      </div>
-
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40"></div>
-
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] py-12 px-4">
       <div className="relative max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-block mb-4">
-            <span className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">Swami PG</span>
+            <span className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</span>
           </Link>
-          <h1 className="text-2xl font-semibold text-white">Tenant Login</h1>
-          <p className="text-slate-400 mt-2">Access your bills and account</p>
+          <h1 className="text-2xl font-semibold text-[#424242]">Tenant Login</h1>
+          <p className="text-[#757575] mt-2">Access your bills and account</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl border border-slate-700/50 p-8 shadow-xl">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-md">
           {/* Auth Error Alert */}
           {authError && (
-            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-400">{authError.title}</h3>
-                  <p className="text-sm text-red-300/80 mt-1">{authError.message}</p>
+                  <h3 className="text-sm font-medium text-red-700">{authError.title}</h3>
+                  <p className="text-sm text-red-600 mt-1">{authError.message}</p>
                 </div>
               </div>
             </div>
@@ -153,7 +141,7 @@ export default function TenantLoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-[#424242] mb-2">
                 Email Address
               </label>
               <input
@@ -162,20 +150,19 @@ export default function TenantLoginPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-slate-900/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors ${
-                  errors.email ? 'border-red-500/50' : 'border-slate-700'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-white border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.email ? 'border-red-300' : 'border-gray-200'
+                  }`}
                 placeholder="Enter your email"
                 autoComplete="email"
               />
               {errors.email && (
-                <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-[#424242] mb-2">
                 Password
               </label>
               <input
@@ -184,14 +171,13 @@ export default function TenantLoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-slate-900/50 border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors ${
-                  errors.password ? 'border-red-500/50' : 'border-slate-700'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-white border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.password ? 'border-red-300' : 'border-gray-200'
+                  }`}
                 placeholder="Enter your password"
                 autoComplete="current-password"
               />
               {errors.password && (
-                <p className="text-red-400 text-sm mt-1">{errors.password}</p>
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
             </div>
 
@@ -199,7 +185,7 @@ export default function TenantLoginPage() {
             <div className="text-right">
               <button
                 type="button"
-                className="text-sm text-cyan-400 hover:text-cyan-300 font-medium"
+                className="text-sm text-[#1E88E5] hover:text-[#1565C0] font-medium"
                 onClick={() => alert('Please contact the admin to reset your password.')}
               >
                 Forgot Password?
@@ -210,7 +196,7 @@ export default function TenantLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:from-cyan-400 hover:to-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/25"
+              className="w-full py-3 bg-[#1E88E5] text-white font-semibold rounded-lg hover:bg-[#1565C0] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -224,10 +210,10 @@ export default function TenantLoginPage() {
           </form>
 
           {/* Sign Up Link */}
-          <div className="mt-6 pt-6 border-t border-slate-700 text-center">
-            <p className="text-sm text-slate-400">
+          <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+            <p className="text-sm text-[#757575]">
               Don't have an account?{' '}
-              <Link to="/tenant/signup" className="text-cyan-400 hover:text-cyan-300 font-medium">
+              <Link to="/tenant/signup" className="text-[#1E88E5] hover:text-[#1565C0] font-medium">
                 Sign Up
               </Link>
             </p>
@@ -236,7 +222,7 @@ export default function TenantLoginPage() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-slate-400 hover:text-cyan-400 font-medium transition-colors">
+          <Link to="/" className="text-[#757575] hover:text-[#1E88E5] font-medium transition-colors">
             ← Back to Home
           </Link>
         </div>

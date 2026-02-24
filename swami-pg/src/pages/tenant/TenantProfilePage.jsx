@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency, formatDate } from '../../utils/helpers';
 
@@ -78,21 +78,21 @@ export default function TenantProfilePage() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">My Profile</h1>
-        <p className="text-slate-400 mt-1">View your account information</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#424242]">My Profile</h1>
+        <p className="text-[#757575] mt-1">View your account information</p>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Avatar Section */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-8 text-center">
-          <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4 border-4 border-white/30">
-            <span className="text-4xl font-bold text-white">
+        <div className="bg-gradient-to-r from-[#1E88E5] to-[#1565C0] px-6 py-8 text-center">
+          <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 border-4 border-white/30">
+            <span className="text-4xl font-bold text-[#424242]">
               {(tenantData?.name || 'T').charAt(0).toUpperCase()}
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-white">{tenantData?.name || 'Tenant'}</h2>
-          <p className="text-cyan-100 mt-1">{tenantData?.tenant_code || 'Loading...'}</p>
+          <h2 className="text-2xl font-bold text-[#424242]">{tenantData?.name || 'Tenant'}</h2>
+          <p className="text-blue-100 mt-1">{tenantData?.tenant_code || 'Loading...'}</p>
         </div>
 
         {/* Profile Fields */}
@@ -100,20 +100,20 @@ export default function TenantProfilePage() {
           {profileFields.map((field, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl border border-slate-700/50"
+              className="flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl border border-gray-200"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-[#1E88E5]">
                   {getIcon(field.icon)}
                 </div>
-                <span className="text-slate-400">{field.label}</span>
+                <span className="text-[#757575]">{field.label}</span>
               </div>
               <span className={`font-medium ${
                 field.label === 'Status' 
                   ? field.value === 'Active' 
-                    ? 'text-emerald-400' 
-                    : 'text-amber-400'
-                  : 'text-white'
+                    ? 'text-[#43A047]' 
+                    : 'text-amber-600'
+                  : 'text-[#424242]'
               }`}>
                 {field.value}
               </span>
@@ -122,17 +122,17 @@ export default function TenantProfilePage() {
         </div>
 
         {/* Actions */}
-        <div className="p-6 border-t border-slate-800">
+        <div className="p-6 border-t border-gray-200">
           <div className="space-y-3">
             <Link
               to="/tenant/dashboard"
-              className="block w-full px-6 py-3 text-center text-sm font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all duration-200 shadow-lg shadow-cyan-500/25"
+              className="block w-full px-6 py-3 text-center text-sm font-semibold text-[#424242] bg-gradient-to-r from-[#1E88E5] to-[#1565C0] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 shadow-sm"
             >
               Back to Dashboard
             </Link>
             <button
               onClick={logout}
-              className="block w-full px-6 py-3 text-center text-sm font-semibold text-red-400 border-2 border-red-500/30 rounded-xl hover:bg-red-500/10 hover:border-red-500/50 transition-all duration-200"
+              className="block w-full px-6 py-3 text-center text-sm font-semibold text-red-600 border-2 border-red-200 rounded-xl hover:bg-red-50 hover:border-red-500/50 transition-all duration-200"
             >
               Logout
             </button>
@@ -141,19 +141,19 @@ export default function TenantProfilePage() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-6 bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 p-6">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-[#424242] mb-4 flex items-center gap-2">
+          <svg className="w-5 h-5 text-[#1E88E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Need Help?
         </h3>
-        <p className="text-slate-400 text-sm mb-4">
+        <p className="text-[#757575] text-sm mb-4">
           Contact the PG admin for any profile updates or issues.
         </p>
         <a
           href="tel:+919876543210"
-          className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />

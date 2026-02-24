@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -118,8 +118,8 @@ export default function PropertiesListPage() {
 
   if (error) {
     return (
-      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
-        <p className="text-red-400">{error}</p>
+      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <p className="text-red-600">{error}</p>
       </div>
     );
   }
@@ -129,12 +129,12 @@ export default function PropertiesListPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Properties Management</h1>
-          <p className="text-slate-400 mt-1">Manage all PG properties</p>
+          <h1 className="text-2xl font-bold text-[#424242]">Properties Management</h1>
+          <p className="text-[#757575] mt-1">Manage all PG properties</p>
         </div>
         <Link
           to="/admin/properties/new"
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2.5 rounded-lg font-medium hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/25"
+          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] px-4 py-2.5 rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm"
         >
           <PlusIcon />
           Add New Property
@@ -143,27 +143,27 @@ export default function PropertiesListPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Total Properties</p>
-          <p className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{filteredProperties.length}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Total Properties</p>
+          <p className="text-2xl font-bold bg-gradient-to-r from-[#1E88E5] to-[#42A5F5] bg-clip-text text-transparent">{filteredProperties.length}</p>
         </div>
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Total Beds</p>
-          <p className="text-2xl font-bold text-white">{totals.totalBeds}</p>
-          <p className="text-xs text-slate-400">{totals.occupied} occupied</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Total Beds</p>
+          <p className="text-2xl font-bold text-[#424242]">{totals.totalBeds}</p>
+          <p className="text-xs text-[#757575]">{totals.occupied} occupied</p>
         </div>
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Available Beds</p>
-          <p className="text-2xl font-bold text-emerald-400">{totals.available}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Available Beds</p>
+          <p className="text-2xl font-bold text-[#43A047]">{totals.available}</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#757575]">
               <SearchIcon />
             </div>
             <input
@@ -171,7 +171,7 @@ export default function PropertiesListPage() {
               placeholder="Search by name, area, or address..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function PropertiesListPage() {
             <select
               value={areaFilter}
               onChange={(e) => setAreaFilter(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+              className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
             >
               <option value="All">All Areas</option>
               {areas.map(area => (
@@ -193,12 +193,12 @@ export default function PropertiesListPage() {
 
       {/* Properties List */}
       {filteredProperties.length === 0 ? (
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4 text-[#757575]">
             <BuildingIcon />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">No Properties Found</h3>
-          <p className="text-slate-400 mb-4">
+          <h3 className="text-lg font-medium text-[#424242] mb-2">No Properties Found</h3>
+          <p className="text-[#757575] mb-4">
             {properties.length === 0 
               ? "You haven't added any properties yet." 
               : "No properties match your search criteria."}
@@ -206,7 +206,7 @@ export default function PropertiesListPage() {
           {properties.length === 0 && (
             <Link
               to="/admin/properties/new"
-              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium"
+              className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium"
             >
               <PlusIcon />
               Add your first property
@@ -216,68 +216,68 @@ export default function PropertiesListPage() {
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden md:block bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 overflow-hidden">
+          <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50 border-b border-slate-700">
+                <thead className="bg-[#F5F5F5] border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Property Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Area
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Total Beds
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Occupied
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Available
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Default Rent
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/50">
+                <tbody className="divide-y divide-gray-200">
                   {filteredProperties.map((property) => (
-                    <tr key={property.id} className="hover:bg-slate-800/50 transition-colors">
+                    <tr key={property.id} className="hover:bg-[#F5F5F5] transition-colors">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-medium text-white">{property.name}</p>
-                          <p className="text-sm text-slate-400 truncate max-w-xs">{property.address}</p>
+                          <p className="font-medium text-[#424242]">{property.name}</p>
+                          <p className="text-sm text-[#757575] truncate max-w-xs">{property.address}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#1E88E5] border border-blue-100">
                           {property.area || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center font-medium text-white">
+                      <td className="px-6 py-4 text-center font-medium text-[#424242]">
                         {property.total_beds || 0}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`font-medium ${property.occupied_beds > 0 ? 'text-amber-400' : 'text-slate-400'}`}>
+                        <span className={`font-medium ${property.occupied_beds > 0 ? 'text-amber-600' : 'text-[#757575]'}`}>
                           {property.occupied_beds || 0}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`font-medium ${property.available_beds > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <span className={`font-medium ${property.available_beds > 0 ? 'text-[#43A047]' : 'text-red-600'}`}>
                           {property.available_beds || 0}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center text-white">
+                      <td className="px-6 py-4 text-center text-[#424242]">
                         ₹{(property.default_rent || 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <Link
                           to={`/admin/properties/${property.id}/edit`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-400 rounded-lg text-sm font-medium hover:bg-cyan-500/20 border border-cyan-500/20 transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#1E88E5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
                         >
                           <EditIcon />
                           Edit
@@ -293,44 +293,44 @@ export default function PropertiesListPage() {
           {/* Mobile Cards */}
           <div className="md:hidden space-y-4">
             {filteredProperties.map((property) => (
-              <div key={property.id} className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
+              <div key={property.id} className="bg-white rounded-xl border border-gray-200 p-4">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-semibold text-white">{property.name}</h3>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mt-1">
+                    <h3 className="font-semibold text-[#424242]">{property.name}</h3>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#1E88E5] border border-blue-100 mt-1">
                       {property.area || 'N/A'}
                     </span>
                   </div>
                   <Link
                     to={`/admin/properties/${property.id}/edit`}
-                    className="p-2 text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                    className="p-2 text-[#1E88E5] hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <EditIcon />
                   </Link>
                 </div>
                 
-                <p className="text-sm text-slate-400 mb-3 line-clamp-1">{property.address}</p>
+                <p className="text-sm text-[#757575] mb-3 line-clamp-1">{property.address}</p>
                 
-                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-700/50">
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Total</p>
-                    <p className="font-semibold text-white">{property.total_beds || 0}</p>
+                    <p className="text-xs text-[#757575]">Total</p>
+                    <p className="font-semibold text-[#424242]">{property.total_beds || 0}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Occupied</p>
-                    <p className="font-semibold text-amber-400">{property.occupied_beds || 0}</p>
+                    <p className="text-xs text-[#757575]">Occupied</p>
+                    <p className="font-semibold text-amber-600">{property.occupied_beds || 0}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-400">Available</p>
-                    <p className={`font-semibold ${property.available_beds > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <p className="text-xs text-[#757575]">Available</p>
+                    <p className={`font-semibold ${property.available_beds > 0 ? 'text-[#43A047]' : 'text-red-600'}`}>
                       {property.available_beds || 0}
                     </p>
                   </div>
                 </div>
                 
-                <div className="mt-3 pt-3 border-t border-slate-700/50">
-                  <p className="text-sm text-slate-400">
-                    Default Rent: <span className="font-medium text-white">₹{(property.default_rent || 0).toLocaleString('en-IN')}</span>
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <p className="text-sm text-[#757575]">
+                    Default Rent: <span className="font-medium text-[#424242]">₹{(property.default_rent || 0).toLocaleString('en-IN')}</span>
                   </p>
                 </div>
               </div>

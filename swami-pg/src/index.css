@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
-/* Swami PG Brand Colors & Design System */
+/* Swami PG Brand Colors & Design System – Light Mode */
 :root {
   --primary: #1E88E5;
   --primary-dark: #1565C0;
   --primary-light: #42A5F5;
+  --accent: #43A047;
   --success: #2E7D32;
   --success-light: #4CAF50;
   --warning: #F9A825;
@@ -13,9 +14,11 @@
   --danger-light: #EF5350;
   --bg-light: #F5F5F5;
   --bg-white: #FFFFFF;
-  --text-primary: #212121;
+  --text-primary: #424242;
   --text-secondary: #757575;
   --border: #E0E0E0;
+  --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* Base styles */
@@ -24,7 +27,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text-primary);
   background-color: var(--bg-light);
   -webkit-font-smoothing: antialiased;
@@ -76,18 +79,58 @@ body {
 }
 
 /* Brand color utilities */
-.bg-primary { background-color: var(--primary) !important; }
-.bg-primary-dark { background-color: var(--primary-dark) !important; }
-.bg-success { background-color: var(--success) !important; }
-.bg-warning { background-color: var(--warning) !important; }
-.bg-danger { background-color: var(--danger) !important; }
-.text-primary { color: var(--primary) !important; }
-.text-primary-dark { color: var(--primary-dark) !important; }
-.border-primary { border-color: var(--primary) !important; }
+.bg-primary {
+  background-color: var(--primary) !important;
+}
 
-/* Card shadow */
+.bg-primary-dark {
+  background-color: var(--primary-dark) !important;
+}
+
+.bg-success {
+  background-color: var(--success) !important;
+}
+
+.bg-warning {
+  background-color: var(--warning) !important;
+}
+
+.bg-danger {
+  background-color: var(--danger) !important;
+}
+
+.text-primary-brand {
+  color: var(--primary) !important;
+}
+
+.text-primary-dark {
+  color: var(--primary-dark) !important;
+}
+
+.border-primary {
+  border-color: var(--primary) !important;
+}
+
+/* Card styles – OLX-inspired soft shadow */
 .card-shadow {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
+}
+
+.card-shadow:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Light mode card */
+.card-light {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-light:hover {
+  box-shadow: var(--card-shadow-hover);
 }
 
 /* Hover transitions */
@@ -97,5 +140,61 @@ body {
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Dropdown animation */
+.animate-in {
+  animation: dropdownIn 0.15s ease-out;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Floating decorative shape animations */
+@keyframes floatShape {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-12px) scale(1.03);
+  }
+}
+
+@keyframes floatShapeDelayed {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+.floating-shape {
+  animation: floatShape 8s ease-in-out infinite;
+}
+
+.floating-shape-delayed {
+  animation: floatShapeDelayed 10s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }

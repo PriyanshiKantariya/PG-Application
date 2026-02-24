@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
@@ -158,20 +158,20 @@ const getTimeAgo = (date) => {
 function StatusBadge({ status }) {
   const statusConfig = {
     Open: {
-      bg: 'bg-red-500/10',
-      text: 'text-red-400',
-      border: 'border-red-500/30',
+      bg: 'bg-red-50',
+      text: 'text-red-600',
+      border: 'border-red-200',
       dot: 'bg-red-400'
     },
     InProgress: {
-      bg: 'bg-amber-500/10',
-      text: 'text-amber-400',
+      bg: 'bg-amber-50',
+      text: 'text-amber-600',
       border: 'border-amber-500/30',
       dot: 'bg-amber-400'
     },
     Resolved: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-400',
+      bg: 'bg-green-50',
+      text: 'text-[#43A047]',
       border: 'border-emerald-500/30',
       dot: 'bg-emerald-400'
     }
@@ -193,10 +193,10 @@ function StatusBadge({ status }) {
 // ============================================================================
 function CategoryBadge({ category }) {
   const categoryConfig = {
-    Electrical: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', icon: Icons.Lightning },
-    Water: { bg: 'bg-blue-500/20', text: 'text-blue-400', icon: Icons.Droplet },
-    Cleaning: { bg: 'bg-purple-500/20', text: 'text-purple-400', icon: Icons.Sparkles },
-    Maintenance: { bg: 'bg-slate-500/20', text: 'text-slate-300', icon: Icons.Wrench },
+    Electrical: { bg: 'bg-yellow-500/20', text: 'text-amber-600', icon: Icons.Lightning },
+    Water: { bg: 'bg-blue-50', text: 'text-[#1E88E5]', icon: Icons.Droplet },
+    Cleaning: { bg: 'bg-purple-50', text: 'text-purple-500', icon: Icons.Sparkles },
+    Maintenance: { bg: 'bg-gray-100', text: 'text-[#424242]', icon: Icons.Wrench },
     Other: { bg: 'bg-gray-500/20', text: 'text-gray-400', icon: Icons.Tag }
   };
 
@@ -223,15 +223,15 @@ function StatCard({ icon: Icon, label, value, color = 'blue' }) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4 hover:border-slate-600 transition-all">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-white`}>
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#424242]`}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-3">
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-sm text-slate-400 mt-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[#424242]">{value}</p>
+        <p className="text-sm text-[#757575] mt-0.5">{label}</p>
       </div>
     </div>
   );
@@ -259,25 +259,25 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-700/50">
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-700/50">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
-              <Icons.AlertCircle className="w-5 h-5 text-red-400" />
+              <Icons.AlertCircle className="w-5 h-5 text-red-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-white">Complaint Details</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="font-semibold text-[#424242]">Complaint Details</h3>
+              <p className="text-sm text-[#757575]">
                 {getTimeAgo(complaint.created_at)}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
           >
-            <Icons.X className="w-5 h-5 text-slate-400" />
+            <Icons.X className="w-5 h-5 text-[#757575]" />
           </button>
         </div>
 
@@ -286,58 +286,58 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
           {/* Title & Category */}
           <div>
             <div className="flex items-start justify-between gap-3 mb-2">
-              <h4 className="text-lg font-semibold text-white">{complaint.title}</h4>
+              <h4 className="text-lg font-semibold text-[#424242]">{complaint.title}</h4>
               <CategoryBadge category={complaint.category} />
             </div>
-            <p className="text-slate-300">{complaint.description}</p>
+            <p className="text-[#424242]">{complaint.description}</p>
           </div>
 
           {/* Image */}
           {complaint.image_url && (
             <div>
-              <p className="text-xs text-slate-400 mb-2 flex items-center gap-1">
+              <p className="text-xs text-[#757575] mb-2 flex items-center gap-1">
                 <Icons.Image className="w-3.5 h-3.5" />
                 Attached Image
               </p>
               <img 
                 src={complaint.image_url} 
                 alt="Complaint" 
-                className="w-full max-h-64 object-cover rounded-lg border border-slate-700"
+                className="w-full max-h-64 object-cover rounded-lg border border-gray-200"
               />
             </div>
           )}
 
           {/* Tenant & Property Info */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
-              <p className="text-xs text-slate-400 mb-1">Submitted By</p>
-              <p className="font-medium text-white">{tenant?.name || 'Unknown Tenant'}</p>
-              <p className="text-xs text-slate-400">{tenant?.phone || ''}</p>
+            <div className="bg-[#F5F5F5] rounded-xl p-4 border border-gray-200">
+              <p className="text-xs text-[#757575] mb-1">Submitted By</p>
+              <p className="font-medium text-[#424242]">{tenant?.name || 'Unknown Tenant'}</p>
+              <p className="text-xs text-[#757575]">{tenant?.phone || ''}</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
-              <p className="text-xs text-slate-400 mb-1">Property</p>
-              <p className="font-medium text-white">{property?.name || 'Unknown Property'}</p>
-              <p className="text-xs text-slate-400">{property?.area || ''}</p>
+            <div className="bg-[#F5F5F5] rounded-xl p-4 border border-gray-200">
+              <p className="text-xs text-[#757575] mb-1">Property</p>
+              <p className="font-medium text-[#424242]">{property?.name || 'Unknown Property'}</p>
+              <p className="text-xs text-[#757575]">{property?.area || ''}</p>
             </div>
           </div>
 
           {/* Timestamps */}
           <div className="flex gap-6 text-sm">
             <div>
-              <p className="text-slate-400">Created</p>
-              <p className="font-medium text-white">{formatDateTime(complaint.created_at)}</p>
+              <p className="text-[#757575]">Created</p>
+              <p className="font-medium text-[#424242]">{formatDateTime(complaint.created_at)}</p>
             </div>
             {complaint.resolved_at && (
               <div>
-                <p className="text-slate-400">Resolved</p>
-                <p className="font-medium text-emerald-400">{formatDateTime(complaint.resolved_at)}</p>
+                <p className="text-[#757575]">Resolved</p>
+                <p className="font-medium text-[#43A047]">{formatDateTime(complaint.resolved_at)}</p>
               </div>
             )}
           </div>
 
           {/* Status Update */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-[#424242] mb-2">
               Update Status
             </label>
             <div className="flex gap-2">
@@ -348,11 +348,11 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
                   className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-medium border-2 transition-all ${
                     status === s
                       ? s === 'Open'
-                        ? 'border-red-500 bg-red-500/20 text-red-400'
+                        ? 'border-red-500 bg-red-500/20 text-red-600'
                         : s === 'InProgress'
-                        ? 'border-amber-500 bg-amber-500/20 text-amber-400'
-                        : 'border-emerald-500 bg-emerald-500/20 text-emerald-400'
-                      : 'border-slate-600 bg-slate-800 text-slate-400 hover:border-slate-500'
+                        ? 'border-amber-500 bg-amber-500/20 text-amber-600'
+                        : 'border-emerald-500 bg-emerald-500/20 text-[#43A047]'
+                      : 'border-gray-300 bg-[#F5F5F5] text-[#757575] hover:border-gray-300'
                   }`}
                 >
                   {s === 'InProgress' ? 'In Progress' : s}
@@ -362,19 +362,19 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
             
             {/* Status Flow Indicator */}
             {complaint.status !== 'Resolved' && (
-              <div className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-400">
-                <span className={complaint.status === 'Open' ? 'font-semibold text-red-400' : ''}>Open</span>
+              <div className="mt-3 flex items-center justify-center gap-2 text-xs text-[#757575]">
+                <span className={complaint.status === 'Open' ? 'font-semibold text-red-600' : ''}>Open</span>
                 <Icons.ArrowRight className="w-3 h-3" />
-                <span className={complaint.status === 'InProgress' ? 'font-semibold text-amber-400' : ''}>In Progress</span>
+                <span className={complaint.status === 'InProgress' ? 'font-semibold text-amber-600' : ''}>In Progress</span>
                 <Icons.ArrowRight className="w-3 h-3" />
-                <span className={status === 'Resolved' ? 'font-semibold text-emerald-400' : ''}>Resolved</span>
+                <span className={status === 'Resolved' ? 'font-semibold text-[#43A047]' : ''}>Resolved</span>
               </div>
             )}
           </div>
 
           {/* Admin Notes */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-[#424242] mb-2">
               Admin Notes
             </label>
             <textarea
@@ -382,24 +382,24 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add notes or resolution details..."
               rows={3}
-              className="w-full px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 resize-none"
+              className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
             />
           </div>
         </div>
 
         {/* Actions */}
-        <div className="p-5 border-t border-slate-700/50 flex gap-3">
+        <div className="p-5 border-t border-gray-200 flex gap-3">
           <button
             onClick={handleSave}
             disabled={saving || !hasChanges}
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium hover:from-cyan-600 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? <LoadingSpinner size="small" /> : <Icons.CheckCircle className="w-4 h-4" />}
             Save Changes
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2.5 border border-slate-600 text-slate-300 rounded-lg font-medium hover:bg-slate-700 transition-colors"
+            className="px-4 py-2.5 border border-gray-300 text-[#424242] rounded-lg font-medium hover:bg-gray-200 transition-colors"
           >
             Cancel
           </button>
@@ -414,12 +414,12 @@ function ComplaintDetailModal({ complaint, tenant, property, onClose, onUpdateSt
 // ============================================================================
 function ComplaintCard({ complaint, tenant, property, onViewDetails }) {
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4 hover:border-slate-600 transition-all">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white truncate">{complaint.title}</h3>
-          <p className="text-sm text-slate-400 mt-0.5 line-clamp-2">{complaint.description}</p>
+          <h3 className="font-semibold text-[#424242] truncate">{complaint.title}</h3>
+          <p className="text-sm text-[#757575] mt-0.5 line-clamp-2">{complaint.description}</p>
         </div>
         <StatusBadge status={complaint.status} />
       </div>
@@ -427,39 +427,39 @@ function ComplaintCard({ complaint, tenant, property, onViewDetails }) {
       {/* Category & Property */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <CategoryBadge category={complaint.category} />
-        <span className="text-xs text-slate-400">•</span>
-        <span className="text-xs text-slate-400 flex items-center gap-1">
+        <span className="text-xs text-[#757575]">•</span>
+        <span className="text-xs text-[#757575] flex items-center gap-1">
           <Icons.Building className="w-3 h-3" />
           {property?.name || 'Unknown'}
         </span>
       </div>
 
       {/* Tenant Info */}
-      <div className="flex items-center gap-2 mb-3 p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
-        <div className="w-7 h-7 rounded-full bg-cyan-500/20 flex items-center justify-center">
-          <Icons.User className="w-3.5 h-3.5 text-cyan-400" />
+      <div className="flex items-center gap-2 mb-3 p-2 bg-[#F5F5F5] rounded-lg border border-gray-200">
+        <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+          <Icons.User className="w-3.5 h-3.5 text-[#1E88E5]" />
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-medium text-white truncate">{tenant?.name || 'Unknown'}</p>
+          <p className="text-sm font-medium text-[#424242] truncate">{tenant?.name || 'Unknown'}</p>
         </div>
       </div>
 
       {/* Admin Notes Preview */}
       {complaint.admin_notes && (
-        <div className="mb-3 p-2 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
-          <p className="text-xs text-cyan-400 font-medium mb-0.5">Admin Note:</p>
-          <p className="text-xs text-cyan-300 line-clamp-2">{complaint.admin_notes}</p>
+        <div className="mb-3 p-2 bg-blue-50 rounded-lg border border-blue-100">
+          <p className="text-xs text-[#1E88E5] font-medium mb-0.5">Admin Note:</p>
+          <p className="text-xs text-[#1565C0] line-clamp-2">{complaint.admin_notes}</p>
         </div>
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
-        <span className="text-xs text-slate-400">
+      <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+        <span className="text-xs text-[#757575]">
           {getTimeAgo(complaint.created_at)}
         </span>
         <button
           onClick={() => onViewDetails(complaint)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#1E88E5] hover:bg-blue-50 rounded-lg transition-colors"
         >
           <Icons.Eye className="w-4 h-4" />
           View Details
@@ -649,7 +649,7 @@ export default function ComplaintsAdminPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <LoadingSpinner size="large" />
-        <p className="text-slate-400">Loading complaints...</p>
+        <p className="text-[#757575]">Loading complaints...</p>
       </div>
     );
   }
@@ -658,17 +658,17 @@ export default function ComplaintsAdminPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Complaints Management</h1>
-        <p className="text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold text-[#424242]">Complaints Management</h1>
+        <p className="text-[#757575] mt-1">
           View and manage tenant complaints across all properties
         </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
-          <Icons.AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+          <Icons.AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
@@ -701,17 +701,17 @@ export default function ComplaintsAdminPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#757575]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, description, or tenant..."
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
             />
           </div>
 
@@ -719,7 +719,7 @@ export default function ComplaintsAdminPage() {
           <select
             value={selectedProperty}
             onChange={(e) => setSelectedProperty(e.target.value)}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[160px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[160px]"
           >
             {propertiesList.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
@@ -730,7 +730,7 @@ export default function ComplaintsAdminPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[140px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[140px]"
           >
             {STATUSES.map(s => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -741,7 +741,7 @@ export default function ComplaintsAdminPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[140px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[140px]"
           >
             {CATEGORIES.map(c => (
               <option key={c.value} value={c.value}>{c.label}</option>
@@ -752,7 +752,7 @@ export default function ComplaintsAdminPage() {
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-[#757575] hover:text-[#424242] hover:bg-gray-200 rounded-lg transition-colors"
             >
               <Icons.X className="w-4 h-4" />
               Clear
@@ -763,12 +763,12 @@ export default function ComplaintsAdminPage() {
 
       {/* Complaints Grid */}
       {filteredComplaints.length === 0 ? (
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icons.AlertCircle className="w-8 h-8 text-slate-400" />
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Icons.AlertCircle className="w-8 h-8 text-[#757575]" />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">No Complaints Found</h3>
-          <p className="text-slate-400 max-w-sm mx-auto">
+          <h3 className="text-lg font-medium text-[#424242] mb-2">No Complaints Found</h3>
+          <p className="text-[#757575] max-w-sm mx-auto">
             {hasFilters 
               ? 'No complaints match your current filters. Try adjusting your search criteria.'
               : 'No complaints have been submitted yet.'}
@@ -790,15 +790,15 @@ export default function ComplaintsAdminPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 px-5 py-4">
-              <p className="text-sm text-slate-400">
+            <div className="flex items-center justify-between bg-white rounded-xl border border-gray-200 px-5 py-4">
+              <p className="text-sm text-[#757575]">
                 Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredComplaints.length)} of {filteredComplaints.length} complaints
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Icons.ChevronLeft className="w-4 h-4" />
                 </button>
@@ -821,8 +821,8 @@ export default function ComplaintsAdminPage() {
                         onClick={() => setCurrentPage(pageNum)}
                         className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                           pageNum === currentPage 
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white' 
-                            : 'hover:bg-slate-700 text-slate-400'
+                            ? 'bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242]' 
+                            : 'hover:bg-gray-200 text-[#757575]'
                         }`}
                       >
                         {pageNum}
@@ -834,7 +834,7 @@ export default function ComplaintsAdminPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Icons.ChevronRight className="w-4 h-4" />
                 </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import { useState, useEffect, useMemo, useCallback } from 'react';
 import { collection, getDocs, query, where, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
@@ -122,25 +122,25 @@ const getFlatKey = (propertyId, flatNumber) => `${propertyId}_flat_${flatNumber}
 // ============================================================================
 function StatCard({ icon: Icon, label, value, subValue, color = 'blue' }) {
   const colorStyles = {
-    blue: 'from-cyan-500 to-blue-600',
+    blue: 'from-[#1E88E5] to-[#1565C0]',
     green: 'from-emerald-500 to-emerald-600',
     amber: 'from-amber-500 to-amber-600',
     purple: 'from-purple-500 to-purple-600'
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4 hover:border-slate-600 transition-all">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-white shadow-lg`}>
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#424242] shadow-lg`}>
           <Icon className="w-5 h-5" />
         </div>
         {subValue && (
-          <span className="text-xs text-slate-400">{subValue}</span>
+          <span className="text-xs text-[#757575]">{subValue}</span>
         )}
       </div>
       <div className="mt-3">
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-sm text-slate-400 mt-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[#424242]">{value}</p>
+        <p className="text-sm text-[#757575] mt-0.5">{label}</p>
       </div>
     </div>
   );
@@ -165,17 +165,17 @@ function FlatUtilityRow({
   return (
     <div className={`group flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border transition-all ${
       isSaved 
-        ? 'bg-emerald-500/10 border-emerald-500/30' 
-        : 'bg-slate-800/50 border-slate-700/50 hover:border-slate-600'
+        ? 'bg-green-50 border-emerald-500/30' 
+        : 'bg-[#F5F5F5] border-gray-200 hover:border-gray-300'
     }`}>
       {/* Flat Number Badge */}
       <div className="flex items-center gap-3 sm:w-24 flex-shrink-0">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${
-          isSaved ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-300'
+          isSaved ? 'bg-emerald-500/20 text-[#43A047]' : 'bg-gray-200 text-[#424242]'
         }`}>
           {flatNumber}
         </div>
-        <span className="sm:hidden text-sm font-medium text-slate-300">Flat {flatNumber}</span>
+        <span className="sm:hidden text-sm font-medium text-[#424242]">Flat {flatNumber}</span>
       </div>
 
       {/* Utility Inputs */}
@@ -192,7 +192,7 @@ function FlatUtilityRow({
             min="0"
             step="10"
             placeholder="Electricity"
-            className="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+            className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
           />
         </div>
 
@@ -208,7 +208,7 @@ function FlatUtilityRow({
             min="0"
             step="10"
             placeholder="Gas"
-            className="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+            className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
           />
         </div>
       </div>
@@ -217,8 +217,8 @@ function FlatUtilityRow({
       <div className="flex items-center justify-between sm:justify-end gap-3 sm:w-48 flex-shrink-0">
         {/* Total */}
         <div className="text-right">
-          <p className="text-xs text-slate-400">Total</p>
-          <p className={`font-semibold ${totalBill > 0 ? 'text-white' : 'text-slate-400'}`}>
+          <p className="text-xs text-[#757575]">Total</p>
+          <p className={`font-semibold ${totalBill > 0 ? 'text-[#424242]' : 'text-[#757575]'}`}>
             {formatCurrency(totalBill)}
           </p>
         </div>
@@ -226,7 +226,7 @@ function FlatUtilityRow({
         {/* Save Button */}
         <div className="flex items-center gap-2">
           {successMessage && (
-            <span className="hidden sm:flex items-center gap-1 text-xs text-emerald-400">
+            <span className="hidden sm:flex items-center gap-1 text-xs text-[#43A047]">
               <Icons.CheckCircle className="w-3.5 h-3.5" />
               Saved
             </span>
@@ -236,8 +236,8 @@ function FlatUtilityRow({
             disabled={isSaving || (!utilityData?.electricity_bill && !utilityData?.gas_bill)}
             className={`p-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
               isSaved 
-                ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' 
-                : 'bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20'
+                ? 'bg-emerald-500/20 text-[#43A047] hover:bg-emerald-500/30' 
+                : 'bg-blue-50 text-[#1E88E5] hover:bg-blue-50'
             }`}
             title={isSaved ? 'Update' : 'Save'}
           >
@@ -298,19 +298,19 @@ function PropertyCard({
 
   if (totalFlats === 0) {
     return (
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-amber-500/30 p-5">
+      <div className="bg-white rounded-xl border border-amber-500/30 p-5">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-            <Icons.Building className="w-6 h-6 text-amber-400" />
+            <Icons.Building className="w-6 h-6 text-amber-600" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-white">{property.name}</h3>
-            <p className="text-sm text-slate-400 flex items-center gap-1 mt-0.5">
+            <h3 className="font-semibold text-[#424242]">{property.name}</h3>
+            <p className="text-sm text-[#757575] flex items-center gap-1 mt-0.5">
               <Icons.MapPin className="w-3.5 h-3.5" />
               {property.area}
             </p>
-            <div className="mt-3 p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-              <p className="text-sm text-amber-400">
+            <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <p className="text-sm text-amber-600">
                 ⚠️ No flats configured. Please edit this property and set the "Total Flats" count.
               </p>
             </div>
@@ -321,8 +321,8 @@ function PropertyCard({
   }
 
   return (
-    <div className={`bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border transition-all ${
-      isExpanded ? 'border-cyan-500/50 shadow-lg shadow-cyan-500/10' : 'border-slate-700/50 hover:border-slate-600'
+    <div className={`bg-white rounded-xl border transition-all ${
+      isExpanded ? 'border-[#1E88E5]/30 shadow-md' : 'border-gray-200 hover:border-gray-300'
     }`}>
       {/* Property Header */}
       <div 
@@ -332,26 +332,26 @@ function PropertyCard({
         <div className="flex items-start gap-4">
           {/* Property Icon */}
           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-            savedCount === totalFlats ? 'bg-emerald-500/20' : 'bg-slate-700'
+            savedCount === totalFlats ? 'bg-emerald-500/20' : 'bg-gray-200'
           }`}>
             <Icons.Building className={`w-6 h-6 ${
-              savedCount === totalFlats ? 'text-emerald-400' : 'text-slate-400'
+              savedCount === totalFlats ? 'text-[#43A047]' : 'text-[#757575]'
             }`} />
           </div>
 
           {/* Property Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-white truncate">{property.name}</h3>
+              <h3 className="font-semibold text-[#424242] truncate">{property.name}</h3>
               <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                 savedCount === totalFlats 
-                  ? 'bg-emerald-500/20 text-emerald-400' 
-                  : 'bg-slate-700 text-slate-400'
+                  ? 'bg-emerald-500/20 text-[#43A047]' 
+                  : 'bg-gray-200 text-[#757575]'
               }`}>
                 {savedCount}/{totalFlats} flats
               </span>
             </div>
-            <p className="text-sm text-slate-400 flex items-center gap-1 mt-0.5">
+            <p className="text-sm text-[#757575] flex items-center gap-1 mt-0.5">
               <Icons.MapPin className="w-3.5 h-3.5" />
               {property.area}
             </p>
@@ -360,24 +360,24 @@ function PropertyCard({
             <div className="flex items-center gap-4 mt-3 flex-wrap">
               <div className="flex items-center gap-1.5 text-sm">
                 <Icons.Lightning className="w-4 h-4 text-amber-500" />
-                <span className="text-slate-300">{formatCurrency(propertyTotals.electricity)}</span>
+                <span className="text-[#424242]">{formatCurrency(propertyTotals.electricity)}</span>
               </div>
               <div className="flex items-center gap-1.5 text-sm">
                 <Icons.Fire className="w-4 h-4 text-orange-500" />
-                <span className="text-slate-300">{formatCurrency(propertyTotals.gas)}</span>
+                <span className="text-[#424242]">{formatCurrency(propertyTotals.gas)}</span>
               </div>
-              <div className="text-sm font-medium text-white">
+              <div className="text-sm font-medium text-[#424242]">
                 Total: {formatCurrency(propertyTotals.electricity + propertyTotals.gas)}
               </div>
             </div>
           </div>
 
           {/* Expand/Collapse */}
-          <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
+          <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
             {isExpanded ? (
-              <Icons.ChevronDown className="w-5 h-5 text-slate-400" />
+              <Icons.ChevronDown className="w-5 h-5 text-[#757575]" />
             ) : (
-              <Icons.ChevronRight className="w-5 h-5 text-slate-400" />
+              <Icons.ChevronRight className="w-5 h-5 text-[#757575]" />
             )}
           </button>
         </div>
@@ -385,16 +385,16 @@ function PropertyCard({
 
       {/* Flats List - Expanded */}
       {isExpanded && (
-        <div className="border-t border-slate-700/50">
+        <div className="border-t border-gray-200">
           {/* Flats Header */}
-          <div className="px-5 py-3 bg-slate-800/50 flex items-center justify-between flex-wrap gap-2">
+          <div className="px-5 py-3 bg-[#F5F5F5] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Icons.Home className="w-4 h-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-300">
+              <Icons.Home className="w-4 h-4 text-[#757575]" />
+              <span className="text-sm font-medium text-[#424242]">
                 {totalFlats} Flats
               </span>
               {totalPages > 1 && (
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-[#757575]">
                   (Page {currentPage} of {totalPages})
                 </span>
               )}
@@ -405,7 +405,7 @@ function PropertyCard({
                 onSaveAllFlats(property.id, flats);
               }}
               disabled={isSavingAny}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-cyan-400 bg-cyan-500/10 rounded-lg hover:bg-cyan-500/20 border border-cyan-500/20 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#1E88E5] bg-blue-50 rounded-lg hover:bg-blue-50 border border-blue-100 transition-colors disabled:opacity-50"
             >
               <Icons.Save className="w-4 h-4" />
               Save Page
@@ -433,14 +433,14 @@ function PropertyCard({
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="px-5 py-3 border-t border-slate-700/50 flex items-center justify-center gap-2">
+            <div className="px-5 py-3 border-t border-gray-200 flex items-center justify-center gap-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onPageChange(property.id, currentPage - 1);
                 }}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-slate-700 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-400"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#757575]"
               >
                 <Icons.ChevronLeft className="w-4 h-4" />
               </button>
@@ -466,8 +466,8 @@ function PropertyCard({
                       }}
                       className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                         pageNum === currentPage 
-                          ? 'bg-cyan-500 text-white' 
-                          : 'hover:bg-slate-700 text-slate-400'
+                          ? 'bg-[#1E88E5] text-[#424242]' 
+                          : 'hover:bg-gray-200 text-[#757575]'
                       }`}
                     >
                       {pageNum}
@@ -482,7 +482,7 @@ function PropertyCard({
                   onPageChange(property.id, currentPage + 1);
                 }}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-slate-700 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-400"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#757575]"
               >
                 <Icons.ChevronRight className="w-4 h-4" />
               </button>
@@ -714,7 +714,7 @@ export default function UtilitiesEntryPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <LoadingSpinner size="large" />
-        <p className="text-slate-400">Loading properties...</p>
+        <p className="text-[#757575]">Loading properties...</p>
       </div>
     );
   }
@@ -724,31 +724,31 @@ export default function UtilitiesEntryPage() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Per-Flat Utility Billing</h1>
-          <p className="text-slate-400 mt-1">
+          <h1 className="text-2xl font-bold text-[#424242]">Per-Flat Utility Billing</h1>
+          <p className="text-[#757575] mt-1">
             Enter electricity and gas bills for each flat in your properties
           </p>
         </div>
         
         {/* Period Selector */}
-        <div className="flex items-center gap-2 bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-1.5 shadow-sm">
+        <div className="flex items-center gap-2 bg-white rounded-xl border border-gray-200 p-1.5 shadow-sm">
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-white cursor-pointer rounded-lg hover:bg-slate-700"
+            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#424242] cursor-pointer rounded-lg hover:bg-gray-200"
           >
             {MONTHS.map(m => (
-              <option key={m.value} value={m.value} className="bg-slate-800">{m.label}</option>
+              <option key={m.value} value={m.value} className="bg-[#F5F5F5]">{m.label}</option>
             ))}
           </select>
-          <div className="w-px h-6 bg-slate-700" />
+          <div className="w-px h-6 bg-gray-200" />
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-white cursor-pointer rounded-lg hover:bg-slate-700"
+            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#424242] cursor-pointer rounded-lg hover:bg-gray-200"
           >
             {YEARS.map(y => (
-              <option key={y} value={y} className="bg-slate-800">{y}</option>
+              <option key={y} value={y} className="bg-[#F5F5F5]">{y}</option>
             ))}
           </select>
         </div>
@@ -756,11 +756,11 @@ export default function UtilitiesEntryPage() {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
           <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Icons.X className="w-3 h-3 text-red-400" />
+            <Icons.X className="w-3 h-3 text-red-600" />
           </div>
-          <p className="text-red-400 text-sm">{error}</p>
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
@@ -796,34 +796,34 @@ export default function UtilitiesEntryPage() {
 
       {/* Search Bar */}
       <div className="relative">
-        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#757575]" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search properties by name or area..."
-          className="w-full pl-12 pr-4 py-3 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-700 rounded-lg"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-lg"
           >
-            <Icons.X className="w-4 h-4 text-slate-400" />
+            <Icons.X className="w-4 h-4 text-[#757575]" />
           </button>
         )}
       </div>
 
       {/* Properties List */}
       {filteredProperties.length === 0 ? (
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icons.Building className="w-8 h-8 text-slate-400" />
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Icons.Building className="w-8 h-8 text-[#757575]" />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">
+          <h3 className="text-lg font-medium text-[#424242] mb-2">
             {properties.length === 0 ? 'No Properties Found' : 'No Matching Properties'}
           </h3>
-          <p className="text-slate-400 max-w-sm mx-auto">
+          <p className="text-[#757575] max-w-sm mx-auto">
             {properties.length === 0 
               ? 'Add properties first and configure the number of flats.'
               : 'Try adjusting your search criteria.'}
@@ -852,12 +852,12 @@ export default function UtilitiesEntryPage() {
       )}
 
       {/* Help Text */}
-      <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-4">
+      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
         <div className="flex items-start gap-3">
-          <Icons.Sparkles className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+          <Icons.Sparkles className="w-5 h-5 text-[#1E88E5] flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-medium text-cyan-400">How it works</h4>
-            <p className="text-sm text-cyan-300/80 mt-1">
+            <h4 className="font-medium text-[#1E88E5]">How it works</h4>
+            <p className="text-sm text-[#1565C0]/80 mt-1">
               Enter electricity and gas bills for each flat individually. Each flat's utility data is stored 
               separately and can be used for billing calculations. Click the checkmark to save each flat, 
               or use "Save Page" to save all visible entries for a property at once.

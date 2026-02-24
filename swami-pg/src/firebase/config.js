@@ -1,4 +1,4 @@
-+// Firebase configuration
+// Firebase configuration
 // Replace these values with your actual Firebase project credentials
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';

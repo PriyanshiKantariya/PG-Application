@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useProperties, useAreas } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
 import { formatCurrency, getCallLink } from '../../utils/helpers';
@@ -87,9 +87,9 @@ const Icons = {
 };
 
 // ============================================================================
-// DARK THEME PROPERTY CARD
+// PROPERTY CARD – LIGHT MODE
 // ============================================================================
-function DarkPropertyCard({ property }) {
+function PropertyCard({ property }) {
   const { id, name, area, default_rent, available_beds, total_beds, rules_text, images } = property;
 
   const rulesPreview = rules_text
@@ -97,54 +97,43 @@ function DarkPropertyCard({ property }) {
     : '';
 
   const isAvailable = available_beds > 0;
-  
+
   // Get primary image or first image
   const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
   const hasImage = primaryImage?.url;
 
   return (
-    <div className="group bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl border border-slate-700/50 overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10">
+    <div className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Property Header / Image */}
-      <div className="relative h-44 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 flex items-center justify-center overflow-hidden">
+      <div className="relative h-44 bg-gradient-to-br from-[#5B9BD5] to-[#4A8AC4] flex items-center justify-center overflow-hidden">
         {hasImage ? (
           <>
-            {/* Actual Property Image */}
-            <img 
-              src={primaryImage.url} 
+            <img
+              src={primaryImage.url}
               alt={name}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
           </>
         ) : (
           <>
-            {/* Decorative elements (fallback when no image) */}
-            <div className="absolute inset-0 opacity-30">
-              <div className="absolute top-4 left-4 w-20 h-20 border border-cyan-500/30 rounded-full"></div>
-              <div className="absolute bottom-4 right-4 w-16 h-16 border border-purple-500/30 rounded-full"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full blur-2xl"></div>
-            </div>
-            
-            {/* Property Initial */}
-            <div className="relative z-10 w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:scale-110 transition-transform duration-300">
+            <div className="relative z-10 w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <span className="text-white text-3xl font-bold">{name?.charAt(0) || 'P'}</span>
             </div>
           </>
         )}
 
         {/* Availability Badge */}
-        <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-sm ${
-          isAvailable 
-            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
-            : 'bg-red-500/20 text-red-400 border border-red-500/30'
-        }`}>
+        <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold ${isAvailable
+          ? 'bg-green-100 text-[#2E7D32] border border-green-200'
+          : 'bg-red-100 text-[#C62828] border border-red-200'
+          }`}>
           {isAvailable ? `${available_beds} beds available` : 'Fully Occupied'}
         </div>
-        
+
         {/* Image count badge */}
         {images?.length > 1 && (
-          <div className="absolute bottom-3 left-3 px-2 py-1 rounded bg-slate-900/70 text-slate-300 text-xs backdrop-blur-sm flex items-center gap-1">
+          <div className="absolute bottom-3 left-3 px-2 py-1 rounded bg-black/50 text-white text-xs backdrop-blur-sm flex items-center gap-1">
             <Icons.Building className="w-3 h-3" />
             {images.length} photos
           </div>
@@ -153,51 +142,51 @@ function DarkPropertyCard({ property }) {
 
       {/* Property Info */}
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-cyan-400 transition-colors">
+        <h3 className="text-lg font-semibold text-[#1a1a1a] mb-1 group-hover:text-[#1E88E5] transition-colors">
           {name}
         </h3>
-        
-        <div className="flex items-center gap-1.5 text-slate-400 text-sm mb-4">
+
+        <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm mb-4">
           <Icons.MapPin className="w-4 h-4" />
           <span>{area}</span>
         </div>
 
         {/* Price */}
         <div className="flex items-baseline gap-1 mb-4">
-          <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold text-[#1E88E5]">
             {formatCurrency(default_rent)}
           </span>
-          <span className="text-slate-500 text-sm">/ month</span>
+          <span className="text-[#4a4a4a] text-sm">/ month</span>
         </div>
 
         {/* Quick Stats */}
-        <div className="flex items-center gap-4 mb-4 pb-4 border-b border-slate-700/50">
-          <div className="flex items-center gap-1.5 text-slate-400 text-sm">
+        <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
+          <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
             <Icons.Bed className="w-4 h-4" />
             <span>{total_beds} beds</span>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-400 text-sm">
+          <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
             <Icons.Users className="w-4 h-4" />
             <span>Shared</span>
           </div>
         </div>
 
         {rulesPreview && (
-          <p className="text-slate-500 text-sm mb-4 line-clamp-2">{rulesPreview}</p>
+          <p className="text-[#4a4a4a] text-sm mb-4 line-clamp-2">{rulesPreview}</p>
         )}
 
         {/* Actions */}
         <div className="flex gap-3">
           <Link
             to={`/property/${id}`}
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/20"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-[#1E88E5] rounded-lg hover:bg-[#1565C0] transition-all shadow-sm"
           >
             View Details
             <Icons.ChevronRight className="w-4 h-4" />
           </Link>
           <a
             href={getCallLink('9876543210')}
-            className="px-4 py-2.5 text-sm font-medium text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/10 transition-colors"
+            className="px-4 py-2.5 text-sm font-medium text-[#1E88E5] border border-[#1E88E5]/30 rounded-lg hover:bg-blue-50 transition-colors"
           >
             <Icons.Phone className="w-4 h-4" />
           </a>
@@ -210,14 +199,14 @@ function DarkPropertyCard({ property }) {
 // ============================================================================
 // FEATURE CARD
 // ============================================================================
-function FeatureCard({ icon: Icon, title, description, gradient }) {
+function FeatureCard({ icon: Icon, title, description, color }) {
   return (
-    <div className="group relative p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-slate-600 transition-all duration-300 hover:shadow-lg">
-      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+    <div className="group relative p-6 rounded-xl bg-white border border-gray-200 hover:shadow-lg transition-all duration-300">
+      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
         <Icon className="w-6 h-6" />
       </div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-      <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
+      <h3 className="text-lg font-semibold text-[#1a1a1a] mb-2">{title}</h3>
+      <p className="text-[#4a4a4a] text-sm leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -228,10 +217,10 @@ function FeatureCard({ icon: Icon, title, description, gradient }) {
 function StatItem({ value, label }) {
   return (
     <div className="text-center">
-      <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-1">
+      <p className="text-3xl md:text-4xl font-bold text-[#1E88E5] mb-1">
         {value}
       </p>
-      <p className="text-slate-400 text-sm">{label}</p>
+      <p className="text-[#4a4a4a] text-sm">{label}</p>
     </div>
   );
 }
@@ -241,45 +230,51 @@ function StatItem({ value, label }) {
 // ============================================================================
 export default function HomePage() {
   const [selectedArea, setSelectedArea] = useState('All Areas');
-  const { properties, loading, error } = useProperties(selectedArea, true); // true = showOnHomepageOnly
+  const { properties, loading, error } = useProperties(selectedArea, true);
   const { areas } = useAreas();
+  const location = useLocation();
+
+  // Scroll to hash section when navigating from another page
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [location.hash]);
 
   return (
-    <div className="bg-slate-950 min-h-screen">
+    <div className="bg-[#F5F5F5] min-h-screen">
       {/* ================================================================== */}
       {/* HERO SECTION */}
       {/* ================================================================== */}
-      <section className="relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950"></div>
-        </div>
-
-        {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 lg:pt-24 lg:pb-32">
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #B3D4F0 0%, #C5DFF5 30%, #D4E6F6 70%, #D4E6F6 100%)' }}>
+        {/* Decorative floating shapes */}
+        <div className="absolute top-10 left-10 w-64 h-64 rounded-full bg-[#1E88E5]/[0.08] blur-2xl floating-shape" aria-hidden="true"></div>
+        <div className="absolute top-20 right-16 w-48 h-48 rounded-full bg-[#42A5F5]/[0.10] blur-xl floating-shape-delayed" aria-hidden="true"></div>
+        <div className="absolute -bottom-8 left-1/3 w-72 h-36 rounded-full bg-[#90CAF9]/20 blur-2xl" aria-hidden="true"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-28 lg:pt-28 lg:pb-36">
           {/* Badge */}
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700/50 backdrop-blur-sm">
-              <Icons.Sparkles className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm text-slate-300">Trusted by 500+ professionals in Vadodara</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100">
+              <Icons.Sparkles className="w-4 h-4 text-[#1E88E5]" />
+              <span className="text-sm text-[#1a1a1a]">Trusted by 500+ professionals in Vadodara</span>
             </div>
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-6">
-            <span className="text-white">Premium PG Living in</span>
+            <span className="text-[#1a1a1a]">Premium PG Living in</span>
             <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="text-[#1E88E5]">
               Vadodara
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-slate-400 text-center max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-[#4a4a4a] text-center max-w-2xl mx-auto mb-10 leading-relaxed">
             Experience modern, safe, and affordable accommodation designed for students and working professionals.
           </p>
 
@@ -287,14 +282,14 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
               to="/request-visit"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl font-semibold hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold hover:bg-[#4A8AC4] transition-all shadow-md"
             >
               <Icons.Calendar className="w-5 h-5" />
               Schedule a Visit
             </Link>
             <a
               href="tel:+919876543210"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-800 text-white rounded-xl font-semibold border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1a1a1a] rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
             >
               <Icons.Phone className="w-5 h-5" />
               Call Us Now
@@ -303,11 +298,11 @@ export default function HomePage() {
 
           {/* Stats */}
           <div className="flex justify-center">
-            <div className="inline-flex items-center gap-8 md:gap-12 px-8 py-6 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-8 md:gap-12 px-8 py-6 rounded-2xl bg-[#F5F5F5] border border-gray-200">
               <StatItem value="10+" label="Properties" />
-              <div className="w-px h-10 bg-slate-700"></div>
+              <div className="w-px h-10 bg-gray-200"></div>
               <StatItem value="200+" label="Happy Tenants" />
-              <div className="w-px h-10 bg-slate-700 hidden md:block"></div>
+              <div className="w-px h-10 bg-gray-200 hidden md:block"></div>
               <div className="hidden md:block">
                 <StatItem value="5★" label="Rating" />
               </div>
@@ -316,16 +311,23 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Wave Divider: Hero → Features */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
+          <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
       {/* ================================================================== */}
       {/* FEATURES SECTION */}
       {/* ================================================================== */}
-      <section className="relative py-20 bg-slate-900/50">
+      <section id="about" className="relative py-24 scroll-mt-14 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
               Why Choose Swami PG?
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
               We provide more than just a place to stay. Experience comfort, security, and community.
             </p>
           </div>
@@ -335,56 +337,65 @@ export default function HomePage() {
               icon={Icons.Shield}
               title="Safe & Secure"
               description="24/7 CCTV surveillance and security personnel for your peace of mind."
-              gradient="from-cyan-500 to-blue-600"
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
             />
             <FeatureCard
               icon={Icons.Home}
               title="Fully Furnished"
               description="Comfortable beds, storage, and all essential amenities included."
-              gradient="from-purple-500 to-pink-600"
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
             />
             <FeatureCard
               icon={Icons.Wifi}
               title="High-Speed WiFi"
               description="Unlimited high-speed internet for work and entertainment."
-              gradient="from-amber-500 to-orange-600"
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
             />
             <FeatureCard
               icon={Icons.Currency}
               title="Transparent Pricing"
               description="No hidden charges. Clear billing with utility breakdown."
-              gradient="from-emerald-500 to-teal-600"
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
             />
           </div>
         </div>
       </section>
 
+      {/* Wave Divider: Features → Properties */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
+          <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
       {/* ================================================================== */}
       {/* PROPERTIES SECTION */}
       {/* ================================================================== */}
-      <section className="relative py-20">
+      <section id="properties" className="relative py-24 scroll-mt-14 overflow-hidden bg-[#D4E6F6]">
+        {/* Subtle blue accent gradient on left edge */}
+        <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-transparent via-[#1E88E5]/20 to-transparent" aria-hidden="true"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header with Filter */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2">
                 Our Properties
               </h2>
-              <p className="text-slate-400">
-                {selectedArea === 'All Areas' 
-                  ? 'Browse all available properties' 
+              <p className="text-[#4a4a4a]">
+                {selectedArea === 'All Areas'
+                  ? 'Browse all available properties'
                   : `Properties in ${selectedArea}`}
-                <span className="text-slate-500 ml-2">({properties.length} found)</span>
+                <span className="text-[#4a4a4a] ml-2">({properties.length} found)</span>
               </p>
             </div>
 
             {/* Area Filter */}
             <div className="flex items-center gap-3">
-              <span className="text-slate-400 text-sm">Filter by area:</span>
+              <span className="text-[#4a4a4a] text-sm">Filter by area:</span>
               <select
                 value={selectedArea}
                 onChange={(e) => setSelectedArea(e.target.value)}
-                className="px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all min-w-[180px]"
+                className="px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-all min-w-[180px] shadow-sm"
               >
                 {areas.map((area) => (
                   <option key={area} value={area}>{area}</option>
@@ -397,26 +408,26 @@ export default function HomePage() {
           {loading ? (
             <div className="py-20 flex flex-col items-center">
               <LoadingSpinner size="large" />
-              <p className="text-slate-400 mt-4">Loading properties...</p>
+              <p className="text-[#4a4a4a] mt-4">Loading properties...</p>
             </div>
           ) : error ? (
             <div className="py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
                 <Icons.Building className="w-8 h-8 text-red-400" />
               </div>
-              <p className="text-red-400">Error loading properties: {error}</p>
+              <p className="text-red-500">Error loading properties: {error}</p>
             </div>
           ) : properties.length === 0 ? (
             <div className="py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-4">
-                <Icons.Building className="w-8 h-8 text-slate-500" />
+              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                <Icons.Building className="w-8 h-8 text-[#4a4a4a]" />
               </div>
-              <p className="text-slate-400">No properties found in this area.</p>
+              <p className="text-[#4a4a4a]">No properties found in this area.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => (
-                <DarkPropertyCard key={property.id} property={property} />
+                <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           )}
@@ -426,29 +437,35 @@ export default function HomePage() {
       {/* ================================================================== */}
       {/* HOW IT WORKS SECTION */}
       {/* ================================================================== */}
-      <section className="relative py-20 bg-slate-900/50">
+      <section className="relative py-24 overflow-hidden bg-white">
+        {/* Decorative circles */}
+        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#1E88E5]/[0.05] blur-xl" aria-hidden="true"></div>
+        <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-[#42A5F5]/[0.05] blur-xl" aria-hidden="true"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
               How It Works
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
+            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
               Getting started is simple. Follow these steps to find your perfect PG.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Step connector line (desktop) */}
+          <div className="hidden md:block absolute top-[13.5rem] left-1/2 -translate-x-1/2 w-2/3 border-t-2 border-dashed border-[#1E88E5]/15" aria-hidden="true"></div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {[
               { step: '01', title: 'Browse Properties', description: 'Explore our curated list of premium PG accommodations across Vadodara.' },
               { step: '02', title: 'Schedule a Visit', description: 'Book a convenient time to visit and see the property in person.' },
               { step: '03', title: 'Move In', description: 'Complete simple documentation and move into your new home.' }
             ].map((item, index) => (
-              <div key={index} className="relative">
-                <div className="text-6xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">{item.step}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
-                <p className="text-slate-400">{item.description}</p>
+              <div key={index} className="relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/80 shadow-sm">
+                <div className="text-6xl font-bold text-[#5B9BD5]/90 mb-4">{item.step}</div>
+                <h3 className="text-xl font-semibold text-[#1a1a1a] mb-2">{item.title}</h3>
+                <p className="text-[#4a4a4a]">{item.description}</p>
                 {index < 2 && (
-                  <div className="hidden md:block absolute top-8 -right-4 text-slate-700">
+                  <div className="hidden md:block absolute top-8 -right-4 text-[#1E88E5]/30 z-10">
                     <Icons.ArrowRight className="w-8 h-8" />
                   </div>
                 )}
@@ -459,34 +476,75 @@ export default function HomePage() {
       </section>
 
       {/* ================================================================== */}
+      {/* REVIEWS SECTION */}
+      {/* ================================================================== */}
+      <section id="reviews" className="relative py-24 scroll-mt-14 overflow-hidden bg-[#D4E6F6]">
+        {/* Decorative accent */}
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-[#1E88E5]/[0.04] blur-3xl" aria-hidden="true"></div>
+        <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full bg-[#42A5F5]/[0.04] blur-3xl" aria-hidden="true"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
+              What Our Tenants Say
+            </h2>
+            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
+              Real experiences from our happy residents
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Rahul S.', rating: 5, text: 'Best PG in Vadodara! Clean rooms, great food, and the management is very responsive. Highly recommend Swami PG.', property: 'Gotri' },
+              { name: 'Priya M.', rating: 5, text: 'I have been staying here for 6 months and it feels like home. The staff is friendly and the facilities are well maintained.', property: 'Akota' },
+              { name: 'Amit K.', rating: 4, text: 'Good location, reasonable rent, and transparent billing. The online portal for bills is very convenient.', property: 'Alkapuri' }
+            ].map((review, index) => (
+              <div key={index} className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-4 h-4 ${i < review.rating ? 'text-amber-400' : 'text-gray-200'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-[#1a1a1a] mb-4 leading-relaxed">"{review.text}"</p>
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <p className="font-semibold text-[#1a1a1a]">{review.name}</p>
+                  <span className="text-xs font-medium text-[#1E88E5] bg-blue-50 px-2 py-1 rounded-full">{review.property}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
       {/* CTA SECTION */}
       {/* ================================================================== */}
-      <section className="relative py-20">
+      <section className="relative py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative rounded-3xl overflow-hidden">
             {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600"></div>
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-            
+            <div className="absolute inset-0 bg-gradient-to-br from-[#3A6FA0] to-[#2D5F8A]"></div>
+
             {/* Content */}
             <div className="relative px-8 py-16 md:px-16 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
                 Ready to Find Your New Home?
               </h2>
-              <p className="text-lg text-white/80 mb-8 max-w-xl mx-auto">
+              <p className="text-lg text-white mb-8 max-w-xl mx-auto">
                 Schedule a visit today and experience the Swami PG difference. Our team is ready to welcome you!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/request-visit"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-slate-100 transition-colors shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#5B9BD5] rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg"
                 >
                   <Icons.Calendar className="w-5 h-5" />
                   Schedule Your Visit
                 </Link>
                 <a
                   href="tel:+919876543210"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 text-white rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition-colors backdrop-blur-sm"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 text-white rounded-xl font-semibold border border-white/40 hover:bg-white/30 transition-colors"
                 >
                   <Icons.Phone className="w-5 h-5" />
                   Call Us Now
@@ -503,7 +561,7 @@ export default function HomePage() {
       <div className="fixed bottom-4 left-4 right-4 md:hidden z-40">
         <Link
           to="/request-visit"
-          className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-cyan-500/30"
+          className="flex items-center justify-center gap-2 w-full py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold shadow-lg"
         >
           <Icons.Calendar className="w-5 h-5" />
           Schedule a Visit

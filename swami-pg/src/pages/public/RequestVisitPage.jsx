@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -131,7 +131,7 @@ export default function RequestVisitPage() {
             </p>
             <button
               onClick={() => navigate('/')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-blue-600 text-[#424242] rounded-lg hover:bg-blue-700 transition-colors"
             >
               Back to Home
             </button>
@@ -300,7 +300,7 @@ export default function RequestVisitPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-blue-600 text-[#424242] font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <span className="flex items-center justify-center">

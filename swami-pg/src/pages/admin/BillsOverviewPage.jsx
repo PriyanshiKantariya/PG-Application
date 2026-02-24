@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, query, where, orderBy, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
@@ -152,27 +152,27 @@ const formatDate = (date) => {
 function StatusBadge({ status }) {
   const statusConfig = {
     Pending: {
-      bg: 'bg-amber-500/10',
-      text: 'text-amber-400',
+      bg: 'bg-amber-50',
+      text: 'text-amber-600',
       border: 'border-amber-500/30',
       icon: Icons.Clock
     },
     ReportedPaid: {
       bg: 'bg-blue-500/10',
-      text: 'text-blue-400',
+      text: 'text-[#1E88E5]',
       border: 'border-blue-500/30',
       icon: Icons.AlertCircle
     },
     Paid: {
-      bg: 'bg-emerald-500/10',
-      text: 'text-emerald-400',
+      bg: 'bg-green-50',
+      text: 'text-[#43A047]',
       border: 'border-emerald-500/30',
       icon: Icons.CheckCircle
     },
     Overdue: {
-      bg: 'bg-red-500/10',
-      text: 'text-red-400',
-      border: 'border-red-500/30',
+      bg: 'bg-red-50',
+      text: 'text-red-600',
+      border: 'border-red-200',
       icon: Icons.AlertCircle
     }
   };
@@ -201,18 +201,18 @@ function StatCard({ icon: Icon, label, value, subValue, color = 'blue' }) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4 hover:border-slate-600 transition-all">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-white`}>
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#424242]`}>
           <Icon className="w-5 h-5" />
         </div>
         {subValue && (
-          <span className="text-xs text-slate-400">{subValue}</span>
+          <span className="text-xs text-[#757575]">{subValue}</span>
         )}
       </div>
       <div className="mt-3">
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-sm text-slate-400 mt-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[#424242]">{value}</p>
+        <p className="text-sm text-[#757575] mt-0.5">{label}</p>
       </div>
     </div>
   );
@@ -246,25 +246,25 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-700/50">
+      <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-700/50">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-              <Icons.Receipt className="w-5 h-5 text-cyan-400" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Icons.Receipt className="w-5 h-5 text-[#1E88E5]" />
             </div>
             <div>
-              <h3 className="font-semibold text-white">Bill Details</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="font-semibold text-[#424242]">Bill Details</h3>
+              <p className="text-sm text-[#757575]">
                 {getMonthName(bill.month)} {bill.year}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
           >
-            <Icons.X className="w-5 h-5 text-slate-400" />
+            <Icons.X className="w-5 h-5 text-[#757575]" />
           </button>
         </div>
 
@@ -272,45 +272,45 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
         <div className="p-5 space-y-5">
           {/* Tenant & Property Info */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
-              <p className="text-xs text-slate-400 mb-1">Tenant</p>
-              <p className="font-medium text-white">{tenant?.name || 'Unknown'}</p>
-              <p className="text-xs text-slate-400">{tenant?.phone || ''}</p>
+            <div className="p-3 bg-[#F5F5F5] rounded-lg border border-gray-200">
+              <p className="text-xs text-[#757575] mb-1">Tenant</p>
+              <p className="font-medium text-[#424242]">{tenant?.name || 'Unknown'}</p>
+              <p className="text-xs text-[#757575]">{tenant?.phone || ''}</p>
             </div>
-            <div className="p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
-              <p className="text-xs text-slate-400 mb-1">Property</p>
-              <p className="font-medium text-white">{property?.name || 'Unknown'}</p>
-              <p className="text-xs text-slate-400">{property?.area || ''}</p>
+            <div className="p-3 bg-[#F5F5F5] rounded-lg border border-gray-200">
+              <p className="text-xs text-[#757575] mb-1">Property</p>
+              <p className="font-medium text-[#424242]">{property?.name || 'Unknown'}</p>
+              <p className="text-xs text-[#757575]">{property?.area || ''}</p>
             </div>
           </div>
 
           {/* Bill Breakdown */}
-          <div className="border border-slate-700/50 rounded-xl overflow-hidden">
-            <div className="px-4 py-3 bg-slate-800/50 border-b border-slate-700/50">
-              <h4 className="font-medium text-white">Bill Breakdown</h4>
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="px-4 py-3 bg-[#F5F5F5] border-b border-gray-200">
+              <h4 className="font-medium text-[#424242]">Bill Breakdown</h4>
             </div>
             <div className="p-4 space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-400">Monthly Rent</span>
-                <span className="font-medium text-white">{formatCurrency(bill.rent_amount)}</span>
+                <span className="text-[#757575]">Monthly Rent</span>
+                <span className="font-medium text-[#424242]">{formatCurrency(bill.rent_amount)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-400">Electricity Share</span>
-                <span className="font-medium text-white">{formatCurrency(bill.electricity_share)}</span>
+                <span className="text-[#757575]">Electricity Share</span>
+                <span className="font-medium text-[#424242]">{formatCurrency(bill.electricity_share)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-400">Gas Share</span>
-                <span className="font-medium text-white">{formatCurrency(bill.gas_share)}</span>
+                <span className="text-[#757575]">Gas Share</span>
+                <span className="font-medium text-[#424242]">{formatCurrency(bill.gas_share)}</span>
               </div>
               {bill.late_fee > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-red-400">Late Fee</span>
-                  <span className="font-medium text-red-400">{formatCurrency(bill.late_fee)}</span>
+                  <span className="text-red-600">Late Fee</span>
+                  <span className="font-medium text-red-600">{formatCurrency(bill.late_fee)}</span>
                 </div>
               )}
-              <div className="pt-3 border-t border-slate-700/50 flex justify-between">
-                <span className="font-semibold text-white">Total Amount</span>
-                <span className="font-bold text-lg text-cyan-400">{formatCurrency(bill.total_amount)}</span>
+              <div className="pt-3 border-t border-gray-200 flex justify-between">
+                <span className="font-semibold text-[#424242]">Total Amount</span>
+                <span className="font-bold text-lg text-[#1E88E5]">{formatCurrency(bill.total_amount)}</span>
               </div>
             </div>
           </div>
@@ -318,31 +318,31 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
           {/* Status & Dates */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-slate-400 mb-1">Status</p>
+              <p className="text-xs text-[#757575] mb-1">Status</p>
               <StatusBadge status={bill.status} />
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-1">Due Date</p>
-              <p className="font-medium text-white">{formatDate(bill.due_date)}</p>
+              <p className="text-xs text-[#757575] mb-1">Due Date</p>
+              <p className="font-medium text-[#424242]">{formatDate(bill.due_date)}</p>
             </div>
           </div>
 
           {bill.paid_at && (
             <div>
-              <p className="text-xs text-slate-400 mb-1">Paid On</p>
-              <p className="font-medium text-emerald-400">{formatDate(bill.paid_at)}</p>
+              <p className="text-xs text-[#757575] mb-1">Paid On</p>
+              <p className="font-medium text-[#43A047]">{formatDate(bill.paid_at)}</p>
             </div>
           )}
         </div>
 
         {/* Actions */}
         {(bill.status === 'Pending' || bill.status === 'ReportedPaid') && (
-          <div className="p-5 border-t border-slate-700/50 flex gap-3">
+          <div className="p-5 border-t border-gray-200 flex gap-3">
             {bill.status === 'ReportedPaid' && (
               <button
                 onClick={handleVerifyPayment}
                 disabled={updating}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-lg shadow-emerald-500/25"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-[#424242] rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-sm"
               >
                 {updating ? <LoadingSpinner size="small" /> : <Icons.Check className="w-4 h-4" />}
                 Verify Payment
@@ -352,7 +352,7 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
               <button
                 onClick={handleMarkOverdue}
                 disabled={updating}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/10 text-red-400 border border-red-500/30 rounded-lg font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-500/20 transition-colors disabled:opacity-50"
               >
                 {updating ? <LoadingSpinner size="small" /> : <Icons.AlertCircle className="w-4 h-4" />}
                 Mark Overdue
@@ -360,7 +360,7 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2.5 border border-slate-600 text-slate-300 rounded-lg font-medium hover:bg-slate-700 transition-colors"
+              className="px-4 py-2.5 border border-gray-300 text-[#424242] rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
               Close
             </button>
@@ -553,7 +553,7 @@ export default function BillsOverviewPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <LoadingSpinner size="large" />
-        <p className="text-slate-400">Loading bills...</p>
+        <p className="text-[#757575]">Loading bills...</p>
       </div>
     );
   }
@@ -562,17 +562,17 @@ export default function BillsOverviewPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Bills Overview</h1>
-        <p className="text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold text-[#424242]">Bills Overview</h1>
+        <p className="text-[#757575] mt-1">
           View and manage all tenant bills across properties
         </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
-          <Icons.AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+          <Icons.AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
@@ -613,17 +613,17 @@ export default function BillsOverviewPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#757575]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by tenant name or phone..."
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
             />
           </div>
 
@@ -631,7 +631,7 @@ export default function BillsOverviewPage() {
           <select
             value={selectedProperty}
             onChange={(e) => setSelectedProperty(e.target.value)}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[160px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[160px]"
           >
             {propertiesList.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
@@ -642,7 +642,7 @@ export default function BillsOverviewPage() {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[140px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[140px]"
           >
             {MONTHS.map(m => (
               <option key={m.value} value={m.value}>{m.label}</option>
@@ -653,7 +653,7 @@ export default function BillsOverviewPage() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[120px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[120px]"
           >
             {YEARS.map(y => (
               <option key={y.value} value={y.value}>{y.label}</option>
@@ -664,7 +664,7 @@ export default function BillsOverviewPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 min-w-[140px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[140px]"
           >
             {STATUSES.map(s => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -675,7 +675,7 @@ export default function BillsOverviewPage() {
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-[#757575] hover:text-[#424242] hover:bg-gray-200 rounded-lg transition-colors"
             >
               <Icons.X className="w-4 h-4" />
               Clear
@@ -685,14 +685,14 @@ export default function BillsOverviewPage() {
       </div>
 
       {/* Bills Table */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         {filteredBills.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Icons.Receipt className="w-8 h-8 text-slate-400" />
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Icons.Receipt className="w-8 h-8 text-[#757575]" />
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">No Bills Found</h3>
-            <p className="text-slate-400 max-w-sm mx-auto">
+            <h3 className="text-lg font-medium text-[#424242] mb-2">No Bills Found</h3>
+            <p className="text-[#757575] max-w-sm mx-auto">
               {hasFilters 
                 ? 'No bills match your current filters. Try adjusting your search criteria.'
                 : 'No bills have been generated yet.'}
@@ -701,7 +701,7 @@ export default function BillsOverviewPage() {
         ) : (
           <>
             {/* Table Header */}
-            <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-5 py-3 bg-slate-800/50 border-b border-slate-700/50 text-sm font-medium text-slate-400">
+            <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-5 py-3 bg-[#F5F5F5] border-b border-gray-200 text-sm font-medium text-[#757575]">
               <div className="col-span-3">Tenant</div>
               <div className="col-span-2">Property</div>
               <div className="col-span-2">Period</div>
@@ -711,7 +711,7 @@ export default function BillsOverviewPage() {
             </div>
 
             {/* Table Body */}
-            <div className="divide-y divide-slate-700/50">
+            <div className="divide-y divide-gray-200">
               {paginatedBills.map(bill => {
                 const tenant = tenants[bill.tenant_id];
                 const property = properties[bill.property_id];
@@ -719,38 +719,38 @@ export default function BillsOverviewPage() {
                 return (
                   <div
                     key={bill.id}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-5 py-4 hover:bg-slate-800/50 transition-colors"
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-5 py-4 hover:bg-[#F5F5F5] transition-colors"
                   >
                     {/* Tenant */}
                     <div className="lg:col-span-3 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                        <Icons.User className="w-4 h-4 text-cyan-400" />
+                      <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <Icons.User className="w-4 h-4 text-[#1E88E5]" />
                       </div>
                       <div className="min-w-0">
-                        <p className="font-medium text-white truncate">{tenant?.name || 'Unknown'}</p>
-                        <p className="text-xs text-slate-400">{tenant?.phone || ''}</p>
+                        <p className="font-medium text-[#424242] truncate">{tenant?.name || 'Unknown'}</p>
+                        <p className="text-xs text-[#757575]">{tenant?.phone || ''}</p>
                       </div>
                     </div>
 
                     {/* Property */}
                     <div className="lg:col-span-2 flex items-center">
                       <div className="min-w-0">
-                        <p className="text-sm text-white truncate">{property?.name || 'Unknown'}</p>
-                        <p className="text-xs text-slate-400 lg:hidden">{getMonthName(bill.month)} {bill.year}</p>
+                        <p className="text-sm text-[#424242] truncate">{property?.name || 'Unknown'}</p>
+                        <p className="text-xs text-[#757575] lg:hidden">{getMonthName(bill.month)} {bill.year}</p>
                       </div>
                     </div>
 
                     {/* Period */}
                     <div className="lg:col-span-2 hidden lg:flex items-center">
-                      <div className="flex items-center gap-2 text-sm text-slate-300">
-                        <Icons.Calendar className="w-4 h-4 text-slate-400" />
+                      <div className="flex items-center gap-2 text-sm text-[#424242]">
+                        <Icons.Calendar className="w-4 h-4 text-[#757575]" />
                         {getMonthName(bill.month)} {bill.year}
                       </div>
                     </div>
 
                     {/* Amount */}
                     <div className="lg:col-span-2 flex items-center lg:justify-end">
-                      <p className="font-semibold text-white">{formatCurrency(bill.total_amount)}</p>
+                      <p className="font-semibold text-[#424242]">{formatCurrency(bill.total_amount)}</p>
                     </div>
 
                     {/* Status */}
@@ -762,7 +762,7 @@ export default function BillsOverviewPage() {
                     <div className="lg:col-span-1 flex items-center justify-end">
                       <button
                         onClick={() => setSelectedBill(bill)}
-                        className="p-2 hover:bg-slate-700 rounded-lg transition-colors text-slate-400 hover:text-cyan-400"
+                        className="p-2 hover:bg-gray-200 rounded-lg transition-colors text-[#757575] hover:text-[#1E88E5]"
                         title="View Details"
                       >
                         <Icons.Eye className="w-4 h-4" />
@@ -775,15 +775,15 @@ export default function BillsOverviewPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="px-5 py-4 border-t border-slate-700/50 flex items-center justify-between">
-                <p className="text-sm text-slate-400">
+              <div className="px-5 py-4 border-t border-gray-200 flex items-center justify-between">
+                <p className="text-sm text-[#757575]">
                   Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredBills.length)} of {filteredBills.length} bills
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <Icons.ChevronLeft className="w-4 h-4" />
                   </button>
@@ -806,8 +806,8 @@ export default function BillsOverviewPage() {
                           onClick={() => setCurrentPage(pageNum)}
                           className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                             pageNum === currentPage 
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white' 
-                              : 'hover:bg-slate-700 text-slate-400'
+                              ? 'bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242]' 
+                              : 'hover:bg-gray-200 text-[#757575]'
                           }`}
                         >
                           {pageNum}
@@ -819,7 +819,7 @@ export default function BillsOverviewPage() {
                   <button
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <Icons.ChevronRight className="w-4 h-4" />
                   </button>

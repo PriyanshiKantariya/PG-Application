@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -106,12 +106,12 @@ export default function TenantsListPage() {
   // Status badge styling
   const getStatusBadge = (status) => {
     if (status === 'Active') {
-      return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+      return 'bg-green-50 text-[#43A047] border border-green-100';
     }
     if (status === 'Pending') {
-      return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+      return 'bg-amber-50 text-amber-600 border border-amber-100';
     }
-    return 'bg-slate-700/50 text-slate-400 border border-slate-600';
+    return 'bg-gray-100 text-[#757575] border border-gray-300';
   };
 
   if (loading) {
@@ -124,8 +124,8 @@ export default function TenantsListPage() {
 
   if (error) {
     return (
-      <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
-        <p className="text-red-400">{error}</p>
+      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <p className="text-red-600">{error}</p>
       </div>
     );
   }
@@ -135,12 +135,12 @@ export default function TenantsListPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Tenants Management</h1>
-          <p className="text-slate-400 mt-1">Manage all PG tenants</p>
+          <h1 className="text-2xl font-bold text-[#424242]">Tenants Management</h1>
+          <p className="text-[#757575] mt-1">Manage all PG tenants</p>
         </div>
         <Link
           to="/admin/tenants/new"
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-2.5 rounded-lg font-medium hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/25"
+          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] px-4 py-2.5 rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm"
         >
           <PlusIcon />
           Add New Tenant
@@ -149,26 +149,26 @@ export default function TenantsListPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Total Tenants</p>
-          <p className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{tenants.length}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Total Tenants</p>
+          <p className="text-2xl font-bold bg-gradient-to-r from-[#1E88E5] to-[#42A5F5] bg-clip-text text-transparent">{tenants.length}</p>
         </div>
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Active Tenants</p>
-          <p className="text-2xl font-bold text-emerald-400">{activeTenants}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Active Tenants</p>
+          <p className="text-2xl font-bold text-[#43A047]">{activeTenants}</p>
         </div>
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p className="text-sm text-slate-400">Vacated</p>
-          <p className="text-2xl font-bold text-slate-400">{vacatedTenants}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm text-[#757575]">Vacated</p>
+          <p className="text-2xl font-bold text-[#757575]">{vacatedTenants}</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#757575]">
               <SearchIcon />
             </div>
             <input
@@ -176,7 +176,7 @@ export default function TenantsListPage() {
               placeholder="Search by name, phone, or tenant code..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
             />
           </div>
 
@@ -185,7 +185,7 @@ export default function TenantsListPage() {
             <select
               value={propertyFilter}
               onChange={(e) => setPropertyFilter(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+              className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
             >
               <option value="All">All Properties</option>
               {properties.map(property => (
@@ -199,7 +199,7 @@ export default function TenantsListPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors"
+              className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
             >
               <option value="All">All Status</option>
               <option value="Active">Active</option>
@@ -211,12 +211,12 @@ export default function TenantsListPage() {
 
       {/* Tenants List */}
       {filteredTenants.length === 0 ? (
-        <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4 text-[#757575]">
             <UsersIcon />
           </div>
-          <h3 className="text-lg font-medium text-white mb-2">No Tenants Found</h3>
-          <p className="text-slate-400 mb-4">
+          <h3 className="text-lg font-medium text-[#424242] mb-2">No Tenants Found</h3>
+          <p className="text-[#757575] mb-4">
             {tenants.length === 0
               ? "You haven't added any tenants yet."
               : "No tenants match your search criteria."}
@@ -224,7 +224,7 @@ export default function TenantsListPage() {
           {tenants.length === 0 && (
             <Link
               to="/admin/tenants/new"
-              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium"
+              className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium"
             >
               <PlusIcon />
               Add your first tenant
@@ -234,61 +234,61 @@ export default function TenantsListPage() {
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden md:block bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 overflow-hidden">
+          <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50 border-b border-slate-700">
+                <thead className="bg-[#F5F5F5] border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Code
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Phone
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Property
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Rent
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/50">
+                <tbody className="divide-y divide-gray-200">
                   {filteredTenants.map((tenant) => (
-                    <tr key={tenant.id} className="hover:bg-slate-800/50 transition-colors">
+                    <tr key={tenant.id} className="hover:bg-[#F5F5F5] transition-colors">
                       <td className="px-6 py-4">
-                        <span className="font-mono font-medium text-cyan-400">
+                        <span className="font-mono font-medium text-[#1E88E5]">
                           {tenant.tenant_code || 'N/A'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="font-medium text-white">{tenant.name}</p>
+                        <p className="font-medium text-[#424242]">{tenant.name}</p>
                         {tenant.email && (
-                          <p className="text-sm text-slate-400">{tenant.email}</p>
+                          <p className="text-sm text-[#757575]">{tenant.email}</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5 text-slate-400">
+                        <div className="flex items-center gap-1.5 text-[#757575]">
                           <PhoneIcon />
                           <span>{tenant.phone || 'N/A'}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-white">
+                        <span className="text-[#424242]">
                           {tenant.property?.name || 'Unknown'}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className="font-medium text-white">
+                        <span className="font-medium text-[#424242]">
                           ₹{(tenant.rent || 0).toLocaleString('en-IN')}
                         </span>
                       </td>
@@ -300,7 +300,7 @@ export default function TenantsListPage() {
                       <td className="px-6 py-4 text-center">
                         <Link
                           to={`/admin/tenants/${tenant.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-400 rounded-lg text-sm font-medium hover:bg-cyan-500/20 border border-cyan-500/20 transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#1E88E5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
                         >
                           <ViewIcon />
                           View
@@ -319,21 +319,21 @@ export default function TenantsListPage() {
               <Link
                 key={tenant.id}
                 to={`/admin/tenants/${tenant.id}`}
-                className="block bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 p-4 hover:border-cyan-500/50 transition-colors"
+                className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-[#1E88E5]/30 transition-colors"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <span className="font-mono text-sm font-medium text-cyan-400">
+                    <span className="font-mono text-sm font-medium text-[#1E88E5]">
                       {tenant.tenant_code || 'N/A'}
                     </span>
-                    <h3 className="font-semibold text-white mt-1">{tenant.name}</h3>
+                    <h3 className="font-semibold text-[#424242] mt-1">{tenant.name}</h3>
                   </div>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(tenant.status || 'Pending')}`}>
                     {tenant.status || 'Pending'}
                   </span>
                 </div>
 
-                <div className="space-y-1 text-sm text-slate-400">
+                <div className="space-y-1 text-sm text-[#757575]">
                   <div className="flex items-center gap-1.5">
                     <PhoneIcon />
                     <span>{tenant.phone || 'N/A'}</span>
@@ -341,9 +341,9 @@ export default function TenantsListPage() {
                   <p>{tenant.property?.name || 'Unknown Property'}</p>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-slate-700/50 flex justify-between items-center">
-                  <span className="text-sm text-slate-400">Monthly Rent</span>
-                  <span className="font-semibold text-white">
+                <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
+                  <span className="text-sm text-[#757575]">Monthly Rent</span>
+                  <span className="font-semibold text-[#424242]">
                     ₹{(tenant.rent || 0).toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -352,7 +352,7 @@ export default function TenantsListPage() {
           </div>
 
           {/* Results count */}
-          <p className="text-sm text-slate-400 text-center">
+          <p className="text-sm text-[#757575] text-center">
             Showing {filteredTenants.length} of {tenants.length} tenants
           </p>
         </>
