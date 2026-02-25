@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
@@ -130,7 +130,7 @@ function StatusBadge({ status }) {
   const statusConfig = {
     New: {
       bg: 'bg-blue-500/10',
-      text: 'text-[#1E88E5]',
+      text: 'text-[#5B9BD5]',
       border: 'border-blue-500/30',
       icon: Icons.Sparkles,
       dot: 'bg-blue-400'
@@ -176,13 +176,13 @@ function StatCard({ icon: Icon, label, value, color = 'blue' }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#424242]`}>
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#1a1a1a]`}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-3">
-        <p className="text-2xl font-bold text-[#424242]">{value}</p>
-        <p className="text-sm text-[#757575] mt-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[#1a1a1a]">{value}</p>
+        <p className="text-sm text-[#4a4a4a] mt-0.5">{label}</p>
       </div>
     </div>
   );
@@ -215,11 +215,11 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
         <div className="flex items-center justify-between p-5 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Icons.Calendar className="w-5 h-5 text-[#1E88E5]" />
+              <Icons.Calendar className="w-5 h-5 text-[#5B9BD5]" />
             </div>
             <div>
-              <h3 className="font-semibold text-[#424242]">Visit Request Details</h3>
-              <p className="text-sm text-[#757575]">
+              <h3 className="font-semibold text-[#1a1a1a]">Visit Request Details</h3>
+              <p className="text-sm text-[#4a4a4a]">
                 Submitted {formatDateTime(request.created_at)}
               </p>
             </div>
@@ -228,7 +228,7 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
             onClick={onClose}
             className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
           >
-            <Icons.X className="w-5 h-5 text-[#757575]" />
+            <Icons.X className="w-5 h-5 text-[#4a4a4a]" />
           </button>
         </div>
 
@@ -236,21 +236,21 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
         <div className="p-5 space-y-5">
           {/* Visitor Info */}
           <div className="bg-[#F5F5F5] rounded-xl p-4 space-y-3 border border-gray-200">
-            <h4 className="font-medium text-[#424242] flex items-center gap-2">
-              <Icons.User className="w-4 h-4 text-[#757575]" />
+            <h4 className="font-medium text-[#1a1a1a] flex items-center gap-2">
+              <Icons.User className="w-4 h-4 text-[#4a4a4a]" />
               Visitor Information
             </h4>
             <div className="grid grid-cols-1 gap-3">
               <div>
-                <p className="text-xs text-[#757575]">Name</p>
-                <p className="font-medium text-[#424242]">{request.name}</p>
+                <p className="text-xs text-[#4a4a4a]">Name</p>
+                <p className="font-medium text-[#1a1a1a]">{request.name}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <p className="text-xs text-[#757575]">Phone</p>
+                  <p className="text-xs text-[#4a4a4a]">Phone</p>
                   <a 
                     href={`tel:${request.phone}`}
-                    className="font-medium text-[#1E88E5] hover:underline flex items-center gap-1"
+                    className="font-medium text-[#5B9BD5] hover:underline flex items-center gap-1"
                   >
                     <Icons.Phone className="w-3.5 h-3.5" />
                     {request.phone}
@@ -258,10 +258,10 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
                 </div>
                 {request.email && (
                   <div className="flex-1">
-                    <p className="text-xs text-[#757575]">Email</p>
+                    <p className="text-xs text-[#4a4a4a]">Email</p>
                     <a 
                       href={`mailto:${request.email}`}
-                      className="font-medium text-[#1E88E5] hover:underline flex items-center gap-1 truncate"
+                      className="font-medium text-[#5B9BD5] hover:underline flex items-center gap-1 truncate"
                     >
                       <Icons.Mail className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">{request.email}</span>
@@ -275,20 +275,20 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
           {/* Property & Schedule */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-[#F5F5F5] rounded-xl p-4 border border-gray-200">
-              <p className="text-xs text-[#757575] mb-1">Property</p>
-              <p className="font-medium text-[#424242]">{property?.name || 'Unknown'}</p>
-              <p className="text-xs text-[#757575] mt-0.5">{property?.area || ''}</p>
+              <p className="text-xs text-[#4a4a4a] mb-1">Property</p>
+              <p className="font-medium text-[#1a1a1a]">{property?.name || 'Unknown'}</p>
+              <p className="text-xs text-[#4a4a4a] mt-0.5">{property?.area || ''}</p>
             </div>
             <div className="bg-[#F5F5F5] rounded-xl p-4 border border-gray-200">
-              <p className="text-xs text-[#757575] mb-1">Preferred Date</p>
-              <p className="font-medium text-[#424242]">{formatDate(request.preferred_date)}</p>
-              <p className="text-xs text-[#757575] mt-0.5">{request.preferred_time || 'Any time'}</p>
+              <p className="text-xs text-[#4a4a4a] mb-1">Preferred Date</p>
+              <p className="font-medium text-[#1a1a1a]">{formatDate(request.preferred_date)}</p>
+              <p className="text-xs text-[#4a4a4a] mt-0.5">{request.preferred_time || 'Any time'}</p>
             </div>
           </div>
 
           {/* Status Update */}
           <div>
-            <label className="block text-sm font-medium text-[#424242] mb-2">
+            <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
               Status
             </label>
             <div className="flex gap-2">
@@ -299,11 +299,11 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
                   className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-medium border-2 transition-all ${
                     status === s
                       ? s === 'New'
-                        ? 'border-blue-500 bg-blue-50 text-[#1E88E5]'
+                        ? 'border-blue-500 bg-blue-50 text-[#5B9BD5]'
                         : s === 'Contacted'
                         ? 'border-amber-500 bg-amber-500/20 text-amber-600'
                         : 'border-emerald-500 bg-emerald-500/20 text-[#43A047]'
-                      : 'border-gray-300 bg-[#F5F5F5] text-[#757575] hover:border-gray-300'
+                      : 'border-gray-300 bg-[#F5F5F5] text-[#4a4a4a] hover:border-gray-300'
                   }`}
                 >
                   {s}
@@ -314,7 +314,7 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
 
           {/* Admin Notes */}
           <div>
-            <label className="block text-sm font-medium text-[#424242] mb-2">
+            <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
               Admin Notes
             </label>
             <textarea
@@ -322,7 +322,7 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add notes about this visit request..."
               rows={3}
-              className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
+              className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] resize-none"
             />
           </div>
         </div>
@@ -332,14 +332,14 @@ function VisitDetailModal({ request, property, onClose, onUpdateStatus }) {
           <button
             onClick={handleSave}
             disabled={saving || !hasChanges}
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] rounded-lg font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? <LoadingSpinner size="small" /> : <Icons.CheckCircle className="w-4 h-4" />}
             Save Changes
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2.5 border border-gray-300 text-[#424242] rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            className="px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-lg font-medium hover:bg-gray-200 transition-colors"
           >
             Cancel
           </button>
@@ -358,12 +358,12 @@ function VisitRequestCard({ request, property, onViewDetails }) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1E88E5] to-[#1565C0] flex items-center justify-center text-[#424242] font-semibold">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#5B9BD5] to-[#4A8AC4] flex items-center justify-center text-[#1a1a1a] font-semibold">
             {request.name?.charAt(0)?.toUpperCase() || 'V'}
           </div>
           <div>
-            <h3 className="font-semibold text-[#424242]">{request.name}</h3>
-            <p className="text-sm text-[#757575]">{request.phone}</p>
+            <h3 className="font-semibold text-[#1a1a1a]">{request.name}</h3>
+            <p className="text-sm text-[#4a4a4a]">{request.phone}</p>
           </div>
         </div>
         <StatusBadge status={request.status} />
@@ -371,16 +371,16 @@ function VisitRequestCard({ request, property, onViewDetails }) {
 
       {/* Property & Schedule */}
       <div className="space-y-2 mb-4">
-        <div className="flex items-center gap-2 text-sm text-[#424242]">
-          <Icons.Building className="w-4 h-4 text-[#757575]" />
+        <div className="flex items-center gap-2 text-sm text-[#1a1a1a]">
+          <Icons.Building className="w-4 h-4 text-[#4a4a4a]" />
           <span>{property?.name || 'Unknown Property'}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-[#424242]">
-          <Icons.Calendar className="w-4 h-4 text-[#757575]" />
+        <div className="flex items-center gap-2 text-sm text-[#1a1a1a]">
+          <Icons.Calendar className="w-4 h-4 text-[#4a4a4a]" />
           <span>{formatDate(request.preferred_date)}</span>
           {request.preferred_time && (
             <>
-              <span className="text-[#757575]">•</span>
+              <span className="text-[#4a4a4a]">�</span>
               <span>{request.preferred_time}</span>
             </>
           )}
@@ -390,19 +390,19 @@ function VisitRequestCard({ request, property, onViewDetails }) {
       {/* Notes Preview */}
       {request.admin_notes && (
         <div className="mb-4 p-2.5 bg-blue-50 rounded-lg border border-blue-100">
-          <p className="text-xs text-[#1E88E5] mb-1">Notes:</p>
-          <p className="text-sm text-[#1565C0] line-clamp-2">{request.admin_notes}</p>
+          <p className="text-xs text-[#5B9BD5] mb-1">Notes:</p>
+          <p className="text-sm text-[#4A8AC4] line-clamp-2">{request.admin_notes}</p>
         </div>
       )}
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-        <span className="text-xs text-[#757575]">
+        <span className="text-xs text-[#4a4a4a]">
           {formatDateTime(request.created_at)}
         </span>
         <button
           onClick={() => onViewDetails(request)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#1E88E5] hover:bg-blue-50 rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#5B9BD5] hover:bg-blue-50 rounded-lg transition-colors"
         >
           <Icons.Eye className="w-4 h-4" />
           View Details
@@ -563,7 +563,7 @@ export default function VisitRequestsPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <LoadingSpinner size="large" />
-        <p className="text-[#757575]">Loading visit requests...</p>
+        <p className="text-[#4a4a4a]">Loading visit requests...</p>
       </div>
     );
   }
@@ -572,8 +572,8 @@ export default function VisitRequestsPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#424242]">Visit Requests</h1>
-        <p className="text-[#757575] mt-1">
+        <h1 className="text-2xl font-bold text-[#1a1a1a]">Visit Requests</h1>
+        <p className="text-[#4a4a4a] mt-1">
           Manage property visit requests from potential tenants
         </p>
       </div>
@@ -619,13 +619,13 @@ export default function VisitRequestsPage() {
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#757575]" />
+            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a4a4a]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, phone, or email..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
             />
           </div>
 
@@ -633,7 +633,7 @@ export default function VisitRequestsPage() {
           <select
             value={selectedProperty}
             onChange={(e) => setSelectedProperty(e.target.value)}
-            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[180px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] min-w-[180px]"
           >
             {propertiesList.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
@@ -644,7 +644,7 @@ export default function VisitRequestsPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] min-w-[140px]"
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] min-w-[140px]"
           >
             {STATUSES.map(s => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -655,7 +655,7 @@ export default function VisitRequestsPage() {
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-[#757575] hover:text-[#424242] hover:bg-gray-200 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2.5 text-[#4a4a4a] hover:text-[#1a1a1a] hover:bg-gray-200 rounded-lg transition-colors"
             >
               <Icons.X className="w-4 h-4" />
               Clear
@@ -668,10 +668,10 @@ export default function VisitRequestsPage() {
       {filteredRequests.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icons.Calendar className="w-8 h-8 text-[#757575]" />
+            <Icons.Calendar className="w-8 h-8 text-[#4a4a4a]" />
           </div>
-          <h3 className="text-lg font-medium text-[#424242] mb-2">No Visit Requests Found</h3>
-          <p className="text-[#757575] max-w-sm mx-auto">
+          <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">No Visit Requests Found</h3>
+          <p className="text-[#4a4a4a] max-w-sm mx-auto">
             {hasFilters 
               ? 'No requests match your current filters. Try adjusting your search criteria.'
               : 'No visit requests have been submitted yet.'}
@@ -693,14 +693,14 @@ export default function VisitRequestsPage() {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between bg-white rounded-xl border border-gray-200 px-5 py-4">
-              <p className="text-sm text-[#757575]">
+              <p className="text-sm text-[#4a4a4a]">
                 Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredRequests.length)} of {filteredRequests.length} requests
               </p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg border border-gray-200 text-[#4a4a4a] hover:bg-gray-200 hover:text-[#1a1a1a] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Icons.ChevronLeft className="w-4 h-4" />
                 </button>
@@ -723,8 +723,8 @@ export default function VisitRequestsPage() {
                         onClick={() => setCurrentPage(pageNum)}
                         className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                           pageNum === currentPage 
-                            ? 'bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242]' 
-                            : 'hover:bg-gray-200 text-[#757575]'
+                            ? 'bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a]' 
+                            : 'hover:bg-gray-200 text-[#4a4a4a]'
                         }`}
                       >
                         {pageNum}
@@ -736,7 +736,7 @@ export default function VisitRequestsPage() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-gray-200 text-[#757575] hover:bg-gray-200 hover:text-[#424242] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg border border-gray-200 text-[#4a4a4a] hover:bg-gray-200 hover:text-[#1a1a1a] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <Icons.ChevronRight className="w-4 h-4" />
                 </button>

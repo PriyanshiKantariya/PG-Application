@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useProperties, useAreas } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
@@ -90,7 +90,7 @@ const Icons = {
 // PROPERTY CARD – LIGHT MODE
 // ============================================================================
 function PropertyCard({ property }) {
-  const { id, name, area, default_rent, available_beds, total_beds, rules_text, images } = property;
+  const { id, name, area, default_rent, available_beds, total_flats, rules_text, images } = property;
 
   const rulesPreview = rules_text
     ? rules_text.split('\n').slice(0, 2).join(' • ').replace(/^- /gm, '')
@@ -128,7 +128,7 @@ function PropertyCard({ property }) {
           ? 'bg-green-100 text-[#2E7D32] border border-green-200'
           : 'bg-red-100 text-[#C62828] border border-red-200'
           }`}>
-          {isAvailable ? `${available_beds} beds available` : 'Fully Occupied'}
+          {isAvailable ? `${available_beds} flats available` : 'Fully Occupied'}
         </div>
 
         {/* Image count badge */}
@@ -163,7 +163,7 @@ function PropertyCard({ property }) {
         <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
           <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
             <Icons.Bed className="w-4 h-4" />
-            <span>{total_beds} beds</span>
+            <span>{total_flats} flats</span>
           </div>
           <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
             <Icons.Users className="w-4 h-4" />

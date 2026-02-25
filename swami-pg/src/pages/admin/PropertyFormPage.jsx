@@ -53,11 +53,9 @@ export default function PropertyFormPage() {
     area: '',
     address: '',
     landmark: '',
-    total_beds: '',
     total_flats: '',
     default_rent: '',
     default_deposit: '',
-    rules_text: '',
     images: [], // Array of { url, path, isPrimary }
     showOnHomepage: true
   });
@@ -86,11 +84,9 @@ export default function PropertyFormPage() {
           area: data.area || '',
           address: data.address || '',
           landmark: data.landmark || '',
-          total_beds: data.total_beds?.toString() || '',
           total_flats: data.total_flats?.toString() || '',
           default_rent: data.default_rent?.toString() || '',
           default_deposit: data.default_deposit?.toString() || '',
-          rules_text: data.rules_text || '',
           images: data.images || [],
           showOnHomepage: data.showOnHomepage !== false // Default true
         });
@@ -271,10 +267,7 @@ export default function PropertyFormPage() {
       setError('Address is required');
       return;
     }
-    if (!formData.total_beds || parseInt(formData.total_beds) <= 0) {
-      setError('Total beds must be a positive number');
-      return;
-    }
+
     if (!formData.total_flats || parseInt(formData.total_flats) <= 0) {
       setError('Total flats must be a positive number');
       return;
@@ -302,11 +295,9 @@ export default function PropertyFormPage() {
         area: formData.area.trim(),
         address: formData.address.trim(),
         landmark: formData.landmark.trim(),
-        total_beds: parseInt(formData.total_beds),
         total_flats: parseInt(formData.total_flats),
         default_rent: parseFloat(formData.default_rent),
         default_deposit: parseFloat(formData.default_deposit) || 0,
-        rules_text: formData.rules_text.trim(),
         images: formData.images,
         showOnHomepage: formData.showOnHomepage,
         updated_at: serverTimestamp()
@@ -345,15 +336,15 @@ export default function PropertyFormPage() {
       <div className="mb-6">
         <Link
           to="/admin/properties"
-          className="inline-flex items-center gap-2 text-[#757575] hover:text-[#1E88E5] transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-[#4a4a4a] hover:text-[#5B9BD5] transition-colors mb-4"
         >
           <ArrowLeftIcon />
           Back to Properties
         </Link>
-        <h1 className="text-2xl font-bold text-[#424242]">
+        <h1 className="text-2xl font-bold text-[#1a1a1a]">
           {isEditMode ? 'Edit Property' : 'Add New Property'}
         </h1>
-        <p className="text-[#757575] mt-1">
+        <p className="text-[#4a4a4a] mt-1">
           {isEditMode ? 'Update property details and images' : 'Enter details for the new PG property'}
         </p>
       </div>
@@ -372,13 +363,13 @@ export default function PropertyFormPage() {
           {/* Image Upload Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-[#424242]">
+              <label className="block text-sm font-medium text-[#1a1a1a]">
                 Property Images
-                <span className="text-[#757575] font-normal ml-2">({formData.images.length}/10)</span>
+                <span className="text-[#4a4a4a] font-normal ml-2">({formData.images.length}/10)</span>
               </label>
               {formData.images.length > 0 && (
-                <span className="text-xs text-[#757575]">
-                  ⭐ = Primary image shown on homepage
+                <span className="text-xs text-[#4a4a4a]">
+                  ★ = Primary image shown on homepage
                 </span>
               )}
             </div>
@@ -401,7 +392,7 @@ export default function PropertyFormPage() {
                     
                     {/* Primary Badge */}
                     {image.isPrimary && (
-                      <div className="absolute top-1 left-1 bg-amber-400 text-[#424242] px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
+                      <div className="absolute top-1 left-1 bg-amber-400 text-[#1a1a1a] px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
                         <StarIcon />
                         Primary
                       </div>
@@ -423,7 +414,7 @@ export default function PropertyFormPage() {
                         <button
                           type="button"
                           onClick={() => handleMoveImage(index, -1)}
-                          className="p-1.5 bg-gray-200 text-[#424242] rounded hover:bg-gray-200 transition-colors"
+                          className="p-1.5 bg-gray-200 text-[#1a1a1a] rounded hover:bg-gray-200 transition-colors"
                           title="Move left"
                         >
                           <MoveIcon />
@@ -446,7 +437,7 @@ export default function PropertyFormPage() {
             {/* Upload Button */}
             <div
               onClick={() => !uploadingImages && fileInputRef.current?.click()}
-              className={`border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-[#1E88E5]/30 hover:bg-[#F5F5F5] transition-all ${
+              className={`border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-[#5B9BD5]/30 hover:bg-[#F5F5F5] transition-all ${
                 uploadingImages ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -462,14 +453,14 @@ export default function PropertyFormPage() {
               {uploadingImages ? (
                 <div className="flex flex-col items-center gap-2">
                   <LoadingSpinner size="medium" />
-                  <span className="text-[#1E88E5] font-medium">{uploadProgress || 'Processing...'}</span>
-                  <span className="text-[#757575] text-sm">Images appear as they upload</span>
+                  <span className="text-[#5B9BD5] font-medium">{uploadProgress || 'Processing...'}</span>
+                  <span className="text-[#4a4a4a] text-sm">Images appear as they upload</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <UploadIcon />
-                  <span className="text-[#424242] font-medium">Click to upload images</span>
-                  <span className="text-[#757575] text-sm">JPG, PNG, WebP • Auto-compressed for fast upload</span>
+                  <span className="text-[#1a1a1a] font-medium">Click to upload images</span>
+                  <span className="text-[#4a4a4a] text-sm">JPG, PNG, WebP � Auto-compressed for fast upload</span>
                 </div>
               )}
             </div>
@@ -483,9 +474,9 @@ export default function PropertyFormPage() {
               name="showOnHomepage"
               checked={formData.showOnHomepage}
               onChange={handleChange}
-              className="w-5 h-5 rounded border-gray-300 bg-gray-200 text-[#1E88E5] focus:ring-[#1E88E5]/50"
+              className="w-5 h-5 rounded border-gray-300 bg-gray-200 text-[#5B9BD5] focus:ring-[#5B9BD5]/50"
             />
-            <label htmlFor="showOnHomepage" className="text-[#424242] font-medium cursor-pointer">
+            <label htmlFor="showOnHomepage" className="text-[#1a1a1a] font-medium cursor-pointer">
               Show this property on the public homepage
             </label>
           </div>
@@ -495,7 +486,7 @@ export default function PropertyFormPage() {
 
           {/* Property Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-[#424242] mb-1.5">
+            <label htmlFor="name" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
               Property Name <span className="text-red-600">*</span>
             </label>
             <input
@@ -504,14 +495,14 @@ export default function PropertyFormPage() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="e.g., Swami PG – Gotri"
-              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+              placeholder="e.g., Swami PG � Gotri"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
             />
           </div>
 
           {/* Area */}
           <div>
-            <label htmlFor="area" className="block text-sm font-medium text-[#424242] mb-1.5">
+            <label htmlFor="area" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
               Area <span className="text-red-600">*</span>
             </label>
             <input
@@ -521,13 +512,13 @@ export default function PropertyFormPage() {
               value={formData.area}
               onChange={handleChange}
               placeholder="e.g., Gotri, Akota, Alkapuri"
-              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
             />
           </div>
 
           {/* Address */}
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-[#424242] mb-1.5">
+            <label htmlFor="address" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
               Full Address <span className="text-red-600">*</span>
             </label>
             <textarea
@@ -537,13 +528,13 @@ export default function PropertyFormPage() {
               onChange={handleChange}
               rows={2}
               placeholder="Complete property address"
-              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] resize-none"
             />
           </div>
 
           {/* Landmark */}
           <div>
-            <label htmlFor="landmark" className="block text-sm font-medium text-[#424242] mb-1.5">
+            <label htmlFor="landmark" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
               Landmark
             </label>
             <input
@@ -553,51 +544,33 @@ export default function PropertyFormPage() {
               value={formData.landmark}
               onChange={handleChange}
               placeholder="e.g., Near XYZ College"
-              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
             />
           </div>
 
-          {/* Total Beds & Total Flats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="total_beds" className="block text-sm font-medium text-[#424242] mb-1.5">
-                Total Beds <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="number"
-                id="total_beds"
-                name="total_beds"
-                value={formData.total_beds}
-                onChange={handleChange}
-                min="1"
-                placeholder="e.g., 30"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
-              />
-              <p className="text-xs text-[#757575] mt-1">Total bed capacity</p>
-            </div>
-            <div>
-              <label htmlFor="total_flats" className="block text-sm font-medium text-[#424242] mb-1.5">
-                Total Flats <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="number"
-                id="total_flats"
-                name="total_flats"
-                value={formData.total_flats}
-                onChange={handleChange}
-                min="1"
-                placeholder="e.g., 10"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
-              />
-              <p className="text-xs text-[#757575] mt-1">Number of flats for utility billing</p>
-            </div>
+          {/* Number of Flats per Property */}
+          <div>
+            <label htmlFor="total_flats" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
+              Number of Flats per Property <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="number"
+              id="total_flats"
+              name="total_flats"
+              value={formData.total_flats}
+              onChange={handleChange}
+              min="1"
+              placeholder="e.g., 10"
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
+            />
+            <p className="text-xs text-[#4a4a4a] mt-1">Total number of flats in this property</p>
           </div>
 
           {/* Default Rent & Deposit Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="default_rent" className="block text-sm font-medium text-[#424242] mb-1.5">
-                Default Rent (₹) <span className="text-red-600">*</span>
+              <label htmlFor="default_rent" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
+                Default Rent <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -608,12 +581,12 @@ export default function PropertyFormPage() {
                 min="0"
                 step="100"
                 placeholder="e.g., 6500"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
               />
             </div>
             <div>
-              <label htmlFor="default_deposit" className="block text-sm font-medium text-[#424242] mb-1.5">
-                Default Deposit (₹)
+              <label htmlFor="default_deposit" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
+                Default Deposit
               </label>
               <input
                 type="number"
@@ -624,41 +597,26 @@ export default function PropertyFormPage() {
                 min="0"
                 step="100"
                 placeholder="e.g., 3000"
-                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5]"
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
               />
             </div>
           </div>
 
-          {/* House Rules */}
-          <div>
-            <label htmlFor="rules_text" className="block text-sm font-medium text-[#424242] mb-1.5">
-              House Rules
-            </label>
-            <textarea
-              id="rules_text"
-              name="rules_text"
-              value={formData.rules_text}
-              onChange={handleChange}
-              rows={5}
-              placeholder="- No smoking&#10;- No alcohol or drugs&#10;- No guests staying overnight&#10;- Maintain cleanliness"
-              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#424242] placeholder:text-[#757575] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] resize-none"
-            />
-            <p className="text-xs text-[#757575] mt-1">Enter each rule on a new line</p>
-          </div>
+
         </div>
 
         {/* Form Actions */}
         <div className="px-6 py-4 bg-[#F5F5F5] border-t border-gray-200 rounded-b-xl flex flex-col sm:flex-row gap-3 sm:justify-end">
           <Link
             to="/admin/properties"
-            className="px-6 py-2.5 border border-gray-300 bg-gray-200 text-[#424242] rounded-lg font-medium hover:bg-gray-200 transition-colors text-center"
+            className="px-6 py-2.5 border border-gray-300 bg-gray-200 text-[#1a1a1a] rounded-lg font-medium hover:bg-gray-200 transition-colors text-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving || uploadingImages}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] rounded-lg font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             {saving ? (
               <>

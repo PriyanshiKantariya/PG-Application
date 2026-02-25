@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProperty } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
@@ -172,8 +172,8 @@ export default function PropertyDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-[#757575]">Total Beds</span>
-                <span className="font-semibold text-[#424242]">{property.total_beds}</span>
+                <span className="text-[#757575]">Total Flats</span>
+                <span className="font-semibold text-[#424242]">{property.total_flats}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-[#757575]">Occupied</span>

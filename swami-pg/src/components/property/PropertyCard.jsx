@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { formatCurrency, getCallLink } from '../../utils/helpers';
 
 export default function PropertyCard({ property }) {
@@ -8,7 +8,7 @@ export default function PropertyCard({ property }) {
     area,
     default_rent,
     available_beds,
-    total_beds,
+    total_flats,
     rules_text
   } = property;
 
@@ -33,7 +33,7 @@ export default function PropertyCard({ property }) {
               ? 'bg-[#E8F5E9] text-[#2E7D32]' 
               : 'bg-[#FFEBEE] text-[#C62828]'
           }`}>
-            {available_beds > 0 ? `${available_beds} beds available` : 'Fully Occupied'}
+            {available_beds > 0 ? `${available_beds} flats available` : 'Fully Occupied'}
           </span>
         </div>
 

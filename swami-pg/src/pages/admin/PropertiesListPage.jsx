@@ -67,7 +67,7 @@ export default function PropertiesListPage() {
             propertyData.occupied_beds = activeTenants.length;
           }
           
-          propertyData.available_beds = (propertyData.total_beds || 0) - propertyData.occupied_beds;
+          propertyData.available_beds = (propertyData.total_flats || 0) - propertyData.occupied_beds;
           propertiesData.push(propertyData);
         }
         
@@ -103,10 +103,10 @@ export default function PropertiesListPage() {
 
   // Calculate totals
   const totals = filteredProperties.reduce((acc, p) => ({
-    totalBeds: acc.totalBeds + (p.total_beds || 0),
+    totalFlats: acc.totalFlats + (p.total_flats || 0),
     occupied: acc.occupied + (p.occupied_beds || 0),
     available: acc.available + (p.available_beds || 0)
-  }), { totalBeds: 0, occupied: 0, available: 0 });
+  }), { totalFlats: 0, occupied: 0, available: 0 });
 
   if (loading) {
     return (
@@ -129,12 +129,12 @@ export default function PropertiesListPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#424242]">Properties Management</h1>
-          <p className="text-[#757575] mt-1">Manage all PG properties</p>
+          <h1 className="text-2xl font-bold text-[#1a1a1a]">Properties Management</h1>
+          <p className="text-[#4a4a4a] mt-1">Manage all PG properties</p>
         </div>
         <Link
           to="/admin/properties/new"
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] px-4 py-2.5 rounded-lg font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm"
+          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] px-4 py-2.5 rounded-lg font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-all shadow-sm"
         >
           <PlusIcon />
           Add New Property
@@ -144,16 +144,16 @@ export default function PropertiesListPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-[#757575]">Total Properties</p>
-          <p className="text-2xl font-bold bg-gradient-to-r from-[#1E88E5] to-[#42A5F5] bg-clip-text text-transparent">{filteredProperties.length}</p>
+          <p className="text-sm text-[#4a4a4a]">Total Properties</p>
+          <p className="text-2xl font-bold bg-gradient-to-r from-[#5B9BD5] to-[#42A5F5] bg-clip-text text-transparent">{filteredProperties.length}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-[#757575]">Total Beds</p>
-          <p className="text-2xl font-bold text-[#424242]">{totals.totalBeds}</p>
-          <p className="text-xs text-[#757575]">{totals.occupied} occupied</p>
+          <p className="text-sm text-[#4a4a4a]">Total Flats</p>
+          <p className="text-2xl font-bold text-[#1a1a1a]">{totals.totalFlats}</p>
+          <p className="text-xs text-[#4a4a4a]">{totals.occupied} occupied</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-[#757575]">Available Beds</p>
+          <p className="text-sm text-[#4a4a4a]">Available Flats</p>
           <p className="text-2xl font-bold text-[#43A047]">{totals.available}</p>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function PropertiesListPage() {
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#757575]">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#4a4a4a]">
               <SearchIcon />
             </div>
             <input
@@ -171,7 +171,7 @@ export default function PropertiesListPage() {
               placeholder="Search by name, area, or address..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function PropertiesListPage() {
             <select
               value={areaFilter}
               onChange={(e) => setAreaFilter(e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
+              className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
             >
               <option value="All">All Areas</option>
               {areas.map(area => (
@@ -194,11 +194,11 @@ export default function PropertiesListPage() {
       {/* Properties List */}
       {filteredProperties.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4 text-[#757575]">
+          <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4 text-[#4a4a4a]">
             <BuildingIcon />
           </div>
-          <h3 className="text-lg font-medium text-[#424242] mb-2">No Properties Found</h3>
-          <p className="text-[#757575] mb-4">
+          <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">No Properties Found</h3>
+          <p className="text-[#4a4a4a] mb-4">
             {properties.length === 0 
               ? "You haven't added any properties yet." 
               : "No properties match your search criteria."}
@@ -206,7 +206,7 @@ export default function PropertiesListPage() {
           {properties.length === 0 && (
             <Link
               to="/admin/properties/new"
-              className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium"
+              className="inline-flex items-center gap-2 text-[#5B9BD5] hover:text-[#4A8AC4] font-medium"
             >
               <PlusIcon />
               Add your first property
@@ -221,25 +221,25 @@ export default function PropertiesListPage() {
               <table className="w-full">
                 <thead className="bg-[#F5F5F5] border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Property Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Area
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
-                      Total Beds
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
+                      Total Flats
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Occupied
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Available
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Default Rent
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#757575] uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -249,20 +249,20 @@ export default function PropertiesListPage() {
                     <tr key={property.id} className="hover:bg-[#F5F5F5] transition-colors">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-medium text-[#424242]">{property.name}</p>
-                          <p className="text-sm text-[#757575] truncate max-w-xs">{property.address}</p>
+                          <p className="font-medium text-[#1a1a1a]">{property.name}</p>
+                          <p className="text-sm text-[#4a4a4a] truncate max-w-xs">{property.address}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#1E88E5] border border-blue-100">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#5B9BD5] border border-blue-100">
                           {property.area || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center font-medium text-[#424242]">
-                        {property.total_beds || 0}
+                      <td className="px-6 py-4 text-center font-medium text-[#1a1a1a]">
+                        {property.total_flats || 0}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`font-medium ${property.occupied_beds > 0 ? 'text-amber-600' : 'text-[#757575]'}`}>
+                        <span className={`font-medium ${property.occupied_beds > 0 ? 'text-amber-600' : 'text-[#4a4a4a]'}`}>
                           {property.occupied_beds || 0}
                         </span>
                       </td>
@@ -271,13 +271,13 @@ export default function PropertiesListPage() {
                           {property.available_beds || 0}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center text-[#424242]">
-                        ₹{(property.default_rent || 0).toLocaleString('en-IN')}
+                      <td className="px-6 py-4 text-center text-[#1a1a1a]">
+                        {(property.default_rent || 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <Link
                           to={`/admin/properties/${property.id}/edit`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#1E88E5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
                         >
                           <EditIcon />
                           Edit
@@ -296,32 +296,32 @@ export default function PropertiesListPage() {
               <div key={property.id} className="bg-white rounded-xl border border-gray-200 p-4">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h3 className="font-semibold text-[#424242]">{property.name}</h3>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#1E88E5] border border-blue-100 mt-1">
+                    <h3 className="font-semibold text-[#1a1a1a]">{property.name}</h3>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#5B9BD5] border border-blue-100 mt-1">
                       {property.area || 'N/A'}
                     </span>
                   </div>
                   <Link
                     to={`/admin/properties/${property.id}/edit`}
-                    className="p-2 text-[#1E88E5] hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-[#5B9BD5] hover:bg-blue-50 rounded-lg transition-colors"
                   >
                     <EditIcon />
                   </Link>
                 </div>
                 
-                <p className="text-sm text-[#757575] mb-3 line-clamp-1">{property.address}</p>
+                <p className="text-sm text-[#4a4a4a] mb-3 line-clamp-1">{property.address}</p>
                 
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
                   <div className="text-center">
-                    <p className="text-xs text-[#757575]">Total</p>
-                    <p className="font-semibold text-[#424242]">{property.total_beds || 0}</p>
+                    <p className="text-xs text-[#4a4a4a]">Total</p>
+                    <p className="font-semibold text-[#1a1a1a]">{property.total_flats || 0}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-[#757575]">Occupied</p>
+                    <p className="text-xs text-[#4a4a4a]">Occupied</p>
                     <p className="font-semibold text-amber-600">{property.occupied_beds || 0}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xs text-[#757575]">Available</p>
+                    <p className="text-xs text-[#4a4a4a]">Available</p>
                     <p className={`font-semibold ${property.available_beds > 0 ? 'text-[#43A047]' : 'text-red-600'}`}>
                       {property.available_beds || 0}
                     </p>
@@ -329,8 +329,8 @@ export default function PropertiesListPage() {
                 </div>
                 
                 <div className="mt-3 pt-3 border-t border-gray-200">
-                  <p className="text-sm text-[#757575]">
-                    Default Rent: <span className="font-medium text-[#424242]">₹{(property.default_rent || 0).toLocaleString('en-IN')}</span>
+                  <p className="text-sm text-[#4a4a4a]">
+                    Default Rent: <span className="font-medium text-[#1a1a1a]">{(property.default_rent || 0).toLocaleString('en-IN')}</span>
                   </p>
                 </div>
               </div>

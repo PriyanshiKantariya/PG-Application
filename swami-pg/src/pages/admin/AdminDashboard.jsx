@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -50,15 +50,15 @@ const QuickActionCard = ({ to, icon: Icon, title, description, color }) => (
     <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center mb-4`}>
       <Icon />
     </div>
-    <h3 className="font-semibold text-[#424242] mb-1">{title}</h3>
-    <p className="text-sm text-[#757575]">{description}</p>
+    <h3 className="font-semibold text-[#1a1a1a] mb-1">{title}</h3>
+    <p className="text-sm text-[#4a4a4a]">{description}</p>
   </Link>
 );
 
 export default function AdminDashboard() {
   const [metrics, setMetrics] = useState({
     totalProperties: 0,
-    totalBeds: 0,
+    totalFlats: 0,
     activeTenants: 0,
     availableBeds: 0,
     pendingPayments: 0,
@@ -87,9 +87,9 @@ export default function AdminDashboard() {
           getDocs(query(collection(db, 'visit_requests'), where('status', '==', 'New')))
         ]);
 
-        let totalBeds = 0;
+        let totalFlats = 0;
         propertiesSnap.forEach(doc => {
-          totalBeds += doc.data().total_beds || 0;
+          totalFlats += doc.data().total_flats || 0;
         });
 
         let pendingPayments = 0;
@@ -108,11 +108,11 @@ export default function AdminDashboard() {
         });
 
         const activeTenants = tenantsSnap.size;
-        const availableBeds = totalBeds - activeTenants;
+        const availableBeds = totalFlats - activeTenants;
 
         setMetrics({
           totalProperties: propertiesSnap.size,
-          totalBeds,
+          totalFlats,
           activeTenants,
           availableBeds: availableBeds > 0 ? availableBeds : 0,
           pendingPayments,
@@ -152,8 +152,8 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#424242]">Dashboard</h1>
-        <p className="text-[#757575] mt-1">Welcome to Swami PG Admin Panel</p>
+        <h1 className="text-2xl font-bold text-[#1a1a1a]">Dashboard</h1>
+        <p className="text-[#4a4a4a] mt-1">Welcome to Swami PG Admin Panel</p>
       </div>
 
       {/* Main Metrics */}
@@ -162,11 +162,11 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[#757575] mb-1">Total Properties</p>
-              <p className="text-3xl font-bold text-[#424242]">{metrics.totalProperties}</p>
-              <p className="text-xs text-[#757575] mt-1">{metrics.totalBeds} total beds</p>
+              <p className="text-sm text-[#4a4a4a] mb-1">Total Properties</p>
+              <p className="text-3xl font-bold text-[#1a1a1a]">{metrics.totalProperties}</p>
+              <p className="text-xs text-[#4a4a4a] mt-1">{metrics.totalFlats} total flats</p>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-[#1E88E5]">
+            <div className="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center text-[#5B9BD5]">
               <PropertiesIcon />
             </div>
           </div>
@@ -176,9 +176,9 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[#757575] mb-1">Active Tenants</p>
-              <p className="text-3xl font-bold text-[#424242]">{metrics.activeTenants}</p>
-              <p className="text-xs text-[#43A047] mt-1">{metrics.availableBeds} beds available</p>
+              <p className="text-sm text-[#4a4a4a] mb-1">Active Tenants</p>
+              <p className="text-3xl font-bold text-[#1a1a1a]">{metrics.activeTenants}</p>
+              <p className="text-xs text-[#43A047] mt-1">{metrics.availableBeds} flats available</p>
             </div>
             <div className="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-[#43A047]">
               <TenantsIcon />
@@ -190,8 +190,8 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[#757575] mb-1">Pending Payments</p>
-              <p className="text-3xl font-bold text-[#424242]">{metrics.pendingPayments}</p>
+              <p className="text-sm text-[#4a4a4a] mb-1">Pending Payments</p>
+              <p className="text-3xl font-bold text-[#1a1a1a]">{metrics.pendingPayments}</p>
               <p className="text-xs text-amber-600 mt-1">
                 ₹{metrics.pendingAmount.toLocaleString('en-IN')} due
               </p>
@@ -206,8 +206,8 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-[#757575] mb-1">Open Complaints</p>
-              <p className="text-3xl font-bold text-[#424242]">{metrics.openComplaints}</p>
+              <p className="text-sm text-[#4a4a4a] mb-1">Open Complaints</p>
+              <p className="text-3xl font-bold text-[#1a1a1a]">{metrics.openComplaints}</p>
               <p className="text-xs text-red-500 mt-1">Needs attention</p>
             </div>
             <div className="w-14 h-14 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
       {/* Secondary Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* New Visit Requests */}
-        <div className="bg-[#1E88E5] rounded-xl p-5 text-white shadow-md">
+        <div className="bg-[#3A6FA0] rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-blue-100 mb-1">New Visit Requests</p>
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Reported Paid (Awaiting Verification) */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl p-5 text-white shadow-md">
+        <div className="bg-gradient-to-r from-[#C58F3B] to-[#B07830] rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-amber-100 mb-1">Awaiting Verification</p>
@@ -248,34 +248,34 @@ export default function AdminDashboard() {
         </div>
 
         {/* Occupancy Rate */}
-        <div className="bg-gradient-to-r from-[#43A047] to-teal-500 rounded-xl p-5 text-white shadow-md">
+        <div className="bg-gradient-to-r from-[#3A8A5C] to-[#2D7A50] rounded-xl p-5 text-white shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-emerald-100 mb-1">Occupancy Rate</p>
               <p className="text-3xl font-bold">
-                {metrics.totalBeds > 0
-                  ? Math.round((metrics.activeTenants / metrics.totalBeds) * 100)
+                {metrics.totalFlats > 0
+                  ? Math.round((metrics.activeTenants / metrics.totalFlats) * 100)
                   : 0}%
               </p>
             </div>
             <BedsIcon />
           </div>
           <p className="mt-3 text-sm text-emerald-100">
-            {metrics.activeTenants} of {metrics.totalBeds} beds occupied
+            {metrics.activeTenants} of {metrics.totalFlats} flats occupied
           </p>
         </div>
       </div>
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold text-[#424242] mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-semibold text-[#1a1a1a] mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
             to="/admin/properties"
             icon={PropertiesIcon}
             title="Manage Properties"
             description="Add, edit, and view all PG properties"
-            color="bg-blue-50 text-[#1E88E5]"
+            color="bg-blue-50 text-[#5B9BD5]"
           />
           <QuickActionCard
             to="/admin/tenants"

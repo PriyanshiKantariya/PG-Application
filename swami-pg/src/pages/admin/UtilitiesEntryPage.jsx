@@ -1,6 +1,7 @@
-﻿import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { collection, getDocs, query, where, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
 
 // ============================================================================
@@ -78,6 +79,21 @@ const Icons = {
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
     </svg>
+  ),
+  Upload: ({ className = "w-5 h-5" }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  ),
+  Plus: ({ className = "w-5 h-5" }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    </svg>
+  ),
+  Trash: ({ className = "w-5 h-5" }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
   )
 };
 
@@ -122,7 +138,7 @@ const getFlatKey = (propertyId, flatNumber) => `${propertyId}_flat_${flatNumber}
 // ============================================================================
 function StatCard({ icon: Icon, label, value, subValue, color = 'blue' }) {
   const colorStyles = {
-    blue: 'from-[#1E88E5] to-[#1565C0]',
+    blue: 'from-[#5B9BD5] to-[#4A8AC4]',
     green: 'from-emerald-500 to-emerald-600',
     amber: 'from-amber-500 to-amber-600',
     purple: 'from-purple-500 to-purple-600'
@@ -131,16 +147,16 @@ function StatCard({ icon: Icon, label, value, subValue, color = 'blue' }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-gray-300 transition-all">
       <div className="flex items-start justify-between">
-        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#424242] shadow-lg`}>
+        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colorStyles[color]} flex items-center justify-center text-[#1a1a1a] shadow-lg`}>
           <Icon className="w-5 h-5" />
         </div>
         {subValue && (
-          <span className="text-xs text-[#757575]">{subValue}</span>
+          <span className="text-xs text-[#4a4a4a]">{subValue}</span>
         )}
       </div>
       <div className="mt-3">
-        <p className="text-2xl font-bold text-[#424242]">{value}</p>
-        <p className="text-sm text-[#757575] mt-0.5">{label}</p>
+        <p className="text-2xl font-bold text-[#1a1a1a]">{value}</p>
+        <p className="text-sm text-[#4a4a4a] mt-0.5">{label}</p>
       </div>
     </div>
   );
@@ -149,104 +165,187 @@ function StatCard({ icon: Icon, label, value, subValue, color = 'blue' }) {
 // ============================================================================
 // FLAT UTILITY ROW COMPONENT
 // ============================================================================
-function FlatUtilityRow({ 
-  flatNumber, 
-  utilityData, 
+function FlatUtilityRow({
+  flatNumber,
+  utilityData,
   isSaved,
   isSaving,
   successMessage,
   onChange,
-  onSave 
+  onSave,
+  onPhotoUpload,
+  onPhotoRemove,
+  photoUploading,
+  isCustom
 }) {
   const electricityBill = parseFloat(utilityData?.electricity_bill) || 0;
   const gasBill = parseFloat(utilityData?.gas_bill) || 0;
   const totalBill = electricityBill + gasBill;
 
+  const handleFileSelect = (type) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) onPhotoUpload(type, file);
+    };
+    input.click();
+  };
+
   return (
-    <div className={`group flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border transition-all ${
-      isSaved 
-        ? 'bg-green-50 border-emerald-500/30' 
-        : 'bg-[#F5F5F5] border-gray-200 hover:border-gray-300'
-    }`}>
-      {/* Flat Number Badge */}
-      <div className="flex items-center gap-3 sm:w-24 flex-shrink-0">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${
-          isSaved ? 'bg-emerald-500/20 text-[#43A047]' : 'bg-gray-200 text-[#424242]'
-        }`}>
-          {flatNumber}
-        </div>
-        <span className="sm:hidden text-sm font-medium text-[#424242]">Flat {flatNumber}</span>
-      </div>
-
-      {/* Utility Inputs */}
-      <div className="flex-1 grid grid-cols-2 gap-3">
-        {/* Electricity */}
-        <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-            <Icons.Lightning className="w-4 h-4 text-amber-500" />
+    <div className={`group rounded-xl border transition-all ${isSaved
+      ? 'bg-green-50 border-emerald-500/30'
+      : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm'
+      }`}>
+      {/* Main Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
+        {/* Flat Number Badge */}
+        <div className="flex items-center gap-3 sm:w-24 flex-shrink-0">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${isSaved ? 'bg-emerald-500/20 text-[#43A047]' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-[#1a1a1a]'
+            }`}>
+            {flatNumber}
           </div>
-          <input
-            type="number"
-            value={utilityData?.electricity_bill || ''}
-            onChange={(e) => onChange('electricity_bill', e.target.value)}
-            min="0"
-            step="10"
-            placeholder="Electricity"
-            className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
-          />
-        </div>
-
-        {/* Gas */}
-        <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-            <Icons.Fire className="w-4 h-4 text-orange-500" />
+          <div className="sm:hidden">
+            <span className="text-sm font-medium text-[#1a1a1a]">Flat {flatNumber}</span>
+            {isCustom && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 bg-blue-100 text-[#5B9BD5] rounded-full font-medium">Custom</span>}
           </div>
-          <input
-            type="number"
-            value={utilityData?.gas_bill || ''}
-            onChange={(e) => onChange('gas_bill', e.target.value)}
-            min="0"
-            step="10"
-            placeholder="Gas"
-            className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F5F5F5] border border-gray-200 rounded-lg text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
-          />
-        </div>
-      </div>
-
-      {/* Total & Actions */}
-      <div className="flex items-center justify-between sm:justify-end gap-3 sm:w-48 flex-shrink-0">
-        {/* Total */}
-        <div className="text-right">
-          <p className="text-xs text-[#757575]">Total</p>
-          <p className={`font-semibold ${totalBill > 0 ? 'text-[#424242]' : 'text-[#757575]'}`}>
-            {formatCurrency(totalBill)}
-          </p>
         </div>
 
-        {/* Save Button */}
-        <div className="flex items-center gap-2">
-          {successMessage && (
-            <span className="hidden sm:flex items-center gap-1 text-xs text-[#43A047]">
-              <Icons.CheckCircle className="w-3.5 h-3.5" />
-              Saved
-            </span>
-          )}
-          <button
-            onClick={onSave}
-            disabled={isSaving || (!utilityData?.electricity_bill && !utilityData?.gas_bill)}
-            className={`p-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
-              isSaved 
-                ? 'bg-emerald-500/20 text-[#43A047] hover:bg-emerald-500/30' 
-                : 'bg-blue-50 text-[#1E88E5] hover:bg-blue-50'
-            }`}
-            title={isSaved ? 'Update' : 'Save'}
-          >
-            {isSaving ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              <Icons.Check className="w-4 h-4" />
+        {/* Utility Inputs */}
+        <div className="flex-1 grid grid-cols-2 gap-3">
+          {/* Electricity Input + Upload */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="relative flex-1">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <Icons.Lightning className="w-4 h-4 text-amber-500" />
+                </div>
+                <input
+                  type="number"
+                  value={utilityData?.electricity_bill || ''}
+                  onChange={(e) => onChange('electricity_bill', e.target.value)}
+                  min="0"
+                  step="10"
+                  placeholder="Electricity"
+                  className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F8F9FA] border border-gray-200 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
+                />
+              </div>
+              <button
+                onClick={() => handleFileSelect('electricity_bill_photo')}
+                disabled={photoUploading?.electricity_bill_photo}
+                className={`p-2 rounded-lg border transition-all flex-shrink-0 ${utilityData?.electricity_bill_photo
+                  ? 'bg-amber-50 border-amber-200 text-amber-600'
+                  : 'bg-gray-50 border-gray-200 text-gray-400 hover:text-amber-500 hover:border-amber-200 hover:bg-amber-50'
+                  }`}
+                title="Upload electricity bill photo"
+              >
+                {photoUploading?.electricity_bill_photo
+                  ? <LoadingSpinner size="small" />
+                  : <Icons.Upload className="w-4 h-4" />
+                }
+              </button>
+            </div>
+            {/* Electricity Photo Thumbnail */}
+            {utilityData?.electricity_bill_photo && (
+              <div className="flex items-center gap-2 pl-1">
+                <a href={utilityData.electricity_bill_photo} target="_blank" rel="noopener noreferrer" className="group/thumb flex items-center gap-2">
+                  <img src={utilityData.electricity_bill_photo} alt="Electricity bill" className="w-8 h-8 rounded object-cover border border-gray-200 group-hover/thumb:border-amber-300 transition-colors" />
+                  <span className="text-xs text-gray-400 group-hover/thumb:text-amber-500 transition-colors">View bill</span>
+                </a>
+                <button
+                  onClick={() => onPhotoRemove('electricity_bill_photo')}
+                  className="p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  title="Remove photo"
+                >
+                  <Icons.X className="w-3 h-3" />
+                </button>
+              </div>
             )}
-          </button>
+          </div>
+
+          {/* Gas Input + Upload */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="relative flex-1">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <Icons.Fire className="w-4 h-4 text-orange-500" />
+                </div>
+                <input
+                  type="number"
+                  value={utilityData?.gas_bill || ''}
+                  onChange={(e) => onChange('gas_bill', e.target.value)}
+                  min="0"
+                  step="10"
+                  placeholder="Gas"
+                  className="w-full pl-10 pr-3 py-2.5 text-sm bg-[#F8F9FA] border border-gray-200 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
+                />
+              </div>
+              <button
+                onClick={() => handleFileSelect('gas_bill_photo')}
+                disabled={photoUploading?.gas_bill_photo}
+                className={`p-2 rounded-lg border transition-all flex-shrink-0 ${utilityData?.gas_bill_photo
+                  ? 'bg-orange-50 border-orange-200 text-orange-600'
+                  : 'bg-gray-50 border-gray-200 text-gray-400 hover:text-orange-500 hover:border-orange-200 hover:bg-orange-50'
+                  }`}
+                title="Upload gas bill photo"
+              >
+                {photoUploading?.gas_bill_photo
+                  ? <LoadingSpinner size="small" />
+                  : <Icons.Upload className="w-4 h-4" />
+                }
+              </button>
+            </div>
+            {/* Gas Photo Thumbnail */}
+            {utilityData?.gas_bill_photo && (
+              <div className="flex items-center gap-2 pl-1">
+                <a href={utilityData.gas_bill_photo} target="_blank" rel="noopener noreferrer" className="group/thumb flex items-center gap-2">
+                  <img src={utilityData.gas_bill_photo} alt="Gas bill" className="w-8 h-8 rounded object-cover border border-gray-200 group-hover/thumb:border-orange-300 transition-colors" />
+                  <span className="text-xs text-gray-400 group-hover/thumb:text-orange-500 transition-colors">View bill</span>
+                </a>
+                <button
+                  onClick={() => onPhotoRemove('gas_bill_photo')}
+                  className="p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  title="Remove photo"
+                >
+                  <Icons.X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Total & Actions */}
+        <div className="flex items-center justify-between sm:justify-end gap-3 sm:w-44 flex-shrink-0">
+          <div className="text-right">
+            <p className="text-xs text-[#4a4a4a]">Total</p>
+            <p className={`font-semibold ${totalBill > 0 ? 'text-[#1a1a1a]' : 'text-[#4a4a4a]'}`}>
+              {formatCurrency(totalBill)}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {successMessage && (
+              <span className="hidden sm:flex items-center gap-1 text-xs text-[#43A047]">
+                <Icons.CheckCircle className="w-3.5 h-3.5" />
+                Saved
+              </span>
+            )}
+            <button
+              onClick={onSave}
+              disabled={isSaving || (!utilityData?.electricity_bill && !utilityData?.gas_bill)}
+              className={`p-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed ${isSaved
+                ? 'bg-emerald-500/20 text-[#43A047] hover:bg-emerald-500/30'
+                : 'bg-blue-50 text-[#5B9BD5] hover:bg-blue-100'
+                }`}
+              title={isSaved ? 'Update' : 'Save'}
+            >
+              {isSaving ? (
+                <LoadingSpinner size="small" />
+              ) : (
+                <Icons.Check className="w-4 h-4" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -268,16 +367,25 @@ function PropertyCard({
   onSaveFlat,
   onSaveAllFlats,
   currentPage,
-  onPageChange
+  onPageChange,
+  customFlats,
+  newFlatInput,
+  onNewFlatInputChange,
+  onAddCustomFlat,
+  onPhotoUpload,
+  onPhotoRemove,
+  photoUploading
 }) {
   const totalFlats = Number(property.total_flats) || 0;
-  const allFlats = Array.from({ length: totalFlats }, (_, i) => i + 1);
-  
+  const autoFlats = Array.from({ length: totalFlats }, (_, i) => i + 1);
+  const extraFlats = customFlats || [];
+  const allFlats = [...autoFlats, ...extraFlats.filter(f => !autoFlats.includes(f))];
+
   // Pagination
-  const totalPages = Math.ceil(totalFlats / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(allFlats.length / ITEMS_PER_PAGE);
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
   const flats = allFlats.slice(startIdx, startIdx + ITEMS_PER_PAGE);
-  
+
   // Calculate saved count
   const savedCount = allFlats.filter(flatNum => {
     const key = getFlatKey(property.id, flatNum);
@@ -304,14 +412,14 @@ function PropertyCard({
             <Icons.Building className="w-6 h-6 text-amber-600" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-[#424242]">{property.name}</h3>
-            <p className="text-sm text-[#757575] flex items-center gap-1 mt-0.5">
+            <h3 className="font-semibold text-[#1a1a1a]">{property.name}</h3>
+            <p className="text-sm text-[#4a4a4a] flex items-center gap-1 mt-0.5">
               <Icons.MapPin className="w-3.5 h-3.5" />
               {property.area}
             </p>
             <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
               <p className="text-sm text-amber-600">
-                ⚠️ No flats configured. Please edit this property and set the "Total Flats" count.
+                ?? No flats configured. Please edit this property and set the "Total Flats" count.
               </p>
             </div>
           </div>
@@ -321,37 +429,33 @@ function PropertyCard({
   }
 
   return (
-    <div className={`bg-white rounded-xl border transition-all ${
-      isExpanded ? 'border-[#1E88E5]/30 shadow-md' : 'border-gray-200 hover:border-gray-300'
-    }`}>
+    <div className={`bg-white rounded-xl border transition-all ${isExpanded ? 'border-[#5B9BD5]/30 shadow-md' : 'border-gray-200 hover:border-gray-300'
+      }`}>
       {/* Property Header */}
-      <div 
+      <div
         className="p-5 cursor-pointer select-none"
         onClick={onToggleExpand}
       >
         <div className="flex items-start gap-4">
           {/* Property Icon */}
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-            savedCount === totalFlats ? 'bg-emerald-500/20' : 'bg-gray-200'
-          }`}>
-            <Icons.Building className={`w-6 h-6 ${
-              savedCount === totalFlats ? 'text-[#43A047]' : 'text-[#757575]'
-            }`} />
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${savedCount === totalFlats ? 'bg-emerald-500/20' : 'bg-gray-200'
+            }`}>
+            <Icons.Building className={`w-6 h-6 ${savedCount === totalFlats ? 'text-[#43A047]' : 'text-[#4a4a4a]'
+              }`} />
           </div>
 
           {/* Property Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-[#424242] truncate">{property.name}</h3>
-              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                savedCount === totalFlats 
-                  ? 'bg-emerald-500/20 text-[#43A047]' 
-                  : 'bg-gray-200 text-[#757575]'
-              }`}>
+              <h3 className="font-semibold text-[#1a1a1a] truncate">{property.name}</h3>
+              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${savedCount === totalFlats
+                ? 'bg-emerald-500/20 text-[#43A047]'
+                : 'bg-gray-200 text-[#4a4a4a]'
+                }`}>
                 {savedCount}/{totalFlats} flats
               </span>
             </div>
-            <p className="text-sm text-[#757575] flex items-center gap-1 mt-0.5">
+            <p className="text-sm text-[#4a4a4a] flex items-center gap-1 mt-0.5">
               <Icons.MapPin className="w-3.5 h-3.5" />
               {property.area}
             </p>
@@ -360,13 +464,13 @@ function PropertyCard({
             <div className="flex items-center gap-4 mt-3 flex-wrap">
               <div className="flex items-center gap-1.5 text-sm">
                 <Icons.Lightning className="w-4 h-4 text-amber-500" />
-                <span className="text-[#424242]">{formatCurrency(propertyTotals.electricity)}</span>
+                <span className="text-[#1a1a1a]">{formatCurrency(propertyTotals.electricity)}</span>
               </div>
               <div className="flex items-center gap-1.5 text-sm">
                 <Icons.Fire className="w-4 h-4 text-orange-500" />
-                <span className="text-[#424242]">{formatCurrency(propertyTotals.gas)}</span>
+                <span className="text-[#1a1a1a]">{formatCurrency(propertyTotals.gas)}</span>
               </div>
-              <div className="text-sm font-medium text-[#424242]">
+              <div className="text-sm font-medium text-[#1a1a1a]">
                 Total: {formatCurrency(propertyTotals.electricity + propertyTotals.gas)}
               </div>
             </div>
@@ -375,9 +479,9 @@ function PropertyCard({
           {/* Expand/Collapse */}
           <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
             {isExpanded ? (
-              <Icons.ChevronDown className="w-5 h-5 text-[#757575]" />
+              <Icons.ChevronDown className="w-5 h-5 text-[#4a4a4a]" />
             ) : (
-              <Icons.ChevronRight className="w-5 h-5 text-[#757575]" />
+              <Icons.ChevronRight className="w-5 h-5 text-[#4a4a4a]" />
             )}
           </button>
         </div>
@@ -389,12 +493,12 @@ function PropertyCard({
           {/* Flats Header */}
           <div className="px-5 py-3 bg-[#F5F5F5] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Icons.Home className="w-4 h-4 text-[#757575]" />
-              <span className="text-sm font-medium text-[#424242]">
-                {totalFlats} Flats
+              <Icons.Home className="w-4 h-4 text-[#4a4a4a]" />
+              <span className="text-sm font-medium text-[#1a1a1a]">
+                {allFlats.length} Flats
               </span>
               {totalPages > 1 && (
-                <span className="text-xs text-[#757575]">
+                <span className="text-xs text-[#4a4a4a]">
                   (Page {currentPage} of {totalPages})
                 </span>
               )}
@@ -405,17 +509,49 @@ function PropertyCard({
                 onSaveAllFlats(property.id, flats);
               }}
               disabled={isSavingAny}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#1E88E5] bg-blue-50 rounded-lg hover:bg-blue-50 border border-blue-100 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#5B9BD5] bg-blue-50 rounded-lg hover:bg-blue-100 border border-blue-100 transition-colors disabled:opacity-50"
             >
               <Icons.Save className="w-4 h-4" />
               Save Page
             </button>
           </div>
 
+          {/* Add Custom Flat */}
+          <div className="px-5 py-3 bg-white border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1 max-w-xs">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <Icons.Home className="w-4 h-4 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  value={newFlatInput || ''}
+                  onChange={(e) => onNewFlatInputChange(property.id, e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && newFlatInput?.trim()) onAddCustomFlat(property.id, newFlatInput.trim()); }}
+                  placeholder="Enter flat number (e.g. A1, 101)"
+                  className="w-full pl-10 pr-3 py-2 text-sm bg-[#F8F9FA] border border-gray-200 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (newFlatInput?.trim()) onAddCustomFlat(property.id, newFlatInput.trim());
+                }}
+                disabled={!newFlatInput?.trim()}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-[#5B9BD5] rounded-lg hover:bg-[#4A8AC4] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Icons.Plus className="w-4 h-4" />
+                Add Flat
+              </button>
+            </div>
+          </div>
+
           {/* Flats Grid */}
           <div className="p-4 space-y-2">
             {flats.map(flatNum => {
               const key = getFlatKey(property.id, flatNum);
+              const isCustom = extraFlats.includes(flatNum);
               return (
                 <FlatUtilityRow
                   key={key}
@@ -426,6 +562,10 @@ function PropertyCard({
                   successMessage={successMessages[key]}
                   onChange={(field, value) => onUtilityChange(key, field, value)}
                   onSave={() => onSaveFlat(property.id, flatNum)}
+                  onPhotoUpload={(type, file) => onPhotoUpload(property.id, flatNum, type, file)}
+                  onPhotoRemove={(type) => onPhotoRemove(property.id, flatNum, type)}
+                  photoUploading={photoUploading[key] || {}}
+                  isCustom={isCustom}
                 />
               );
             })}
@@ -440,11 +580,11 @@ function PropertyCard({
                   onPageChange(property.id, currentPage - 1);
                 }}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#757575]"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#4a4a4a]"
               >
                 <Icons.ChevronLeft className="w-4 h-4" />
               </button>
-              
+
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
@@ -464,11 +604,10 @@ function PropertyCard({
                         e.stopPropagation();
                         onPageChange(property.id, pageNum);
                       }}
-                      className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                        pageNum === currentPage 
-                          ? 'bg-[#1E88E5] text-[#424242]' 
-                          : 'hover:bg-gray-200 text-[#757575]'
-                      }`}
+                      className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${pageNum === currentPage
+                        ? 'bg-[#5B9BD5] text-[#1a1a1a]'
+                        : 'hover:bg-gray-200 text-[#4a4a4a]'
+                        }`}
                     >
                       {pageNum}
                     </button>
@@ -482,7 +621,7 @@ function PropertyCard({
                   onPageChange(property.id, currentPage + 1);
                 }}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#757575]"
+                className="p-2 rounded-lg border border-gray-200 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed text-[#4a4a4a]"
               >
                 <Icons.ChevronRight className="w-4 h-4" />
               </button>
@@ -502,7 +641,7 @@ export default function UtilitiesEntryPage() {
   const [properties, setProperties] = useState([]);
   const [utilities, setUtilities] = useState({});
   const [existingUtilities, setExistingUtilities] = useState({});
-  
+
   // UI State
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -510,11 +649,16 @@ export default function UtilitiesEntryPage() {
   const [saving, setSaving] = useState({});
   const [successMessages, setSuccessMessages] = useState({});
   const [error, setError] = useState('');
-  
+
   // View State
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedProperties, setExpandedProperties] = useState(new Set());
   const [propertyPages, setPropertyPages] = useState({});
+
+  // Custom Flats & Photo State
+  const [customFlats, setCustomFlats] = useState({}); // { propertyId: [flatId1, flatId2, ...] }
+  const [newFlatInputs, setNewFlatInputs] = useState({}); // { propertyId: 'value' }
+  const [photoUploading, setPhotoUploading] = useState({}); // { flatKey: { type: boolean } }
 
   // Fetch Data
   useEffect(() => {
@@ -552,7 +696,7 @@ export default function UtilitiesEntryPage() {
           where('year', '==', selectedYear)
         );
         const utilitiesSnap = await getDocs(utilitiesQuery);
-        
+
         utilitiesSnap.forEach(doc => {
           const data = doc.data();
           if (data.flat_number) {
@@ -560,7 +704,9 @@ export default function UtilitiesEntryPage() {
             existing[key] = { id: doc.id, ...data };
             initialUtilities[key] = {
               electricity_bill: data.electricity_bill?.toString() || '',
-              gas_bill: data.gas_bill?.toString() || ''
+              gas_bill: data.gas_bill?.toString() || '',
+              electricity_bill_photo: data.electricity_bill_photo || '',
+              gas_bill_photo: data.gas_bill_photo || ''
             };
           }
         });
@@ -574,7 +720,9 @@ export default function UtilitiesEntryPage() {
             existing[key] = { id: doc.id, ...data };
             initialUtilities[key] = {
               electricity_bill: data.electricity_bill?.toString() || '',
-              gas_bill: data.gas_bill?.toString() || ''
+              gas_bill: data.gas_bill?.toString() || '',
+              electricity_bill_photo: data.electricity_bill_photo || '',
+              gas_bill_photo: data.gas_bill_photo || ''
             };
           }
         });
@@ -608,7 +756,7 @@ export default function UtilitiesEntryPage() {
   async function handleSaveFlat(propertyId, flatNumber) {
     const key = getFlatKey(propertyId, flatNumber);
     const utilityData = utilities[key];
-    
+
     if (!utilityData?.electricity_bill && !utilityData?.gas_bill) return;
 
     setSaving(prev => ({ ...prev, [key]: true }));
@@ -626,6 +774,14 @@ export default function UtilitiesEntryPage() {
         gas_bill: gasBill,
         updated_at: serverTimestamp()
       };
+
+      // Include photo URLs if they exist
+      if (utilityData.electricity_bill_photo) {
+        utilityRecord.electricity_bill_photo = utilityData.electricity_bill_photo;
+      }
+      if (utilityData.gas_bill_photo) {
+        utilityRecord.gas_bill_photo = utilityData.gas_bill_photo;
+      }
 
       if (existingUtilities[key]) {
         await updateDoc(doc(db, 'utilities', existingUtilities[key].id), utilityRecord);
@@ -661,6 +817,68 @@ export default function UtilitiesEntryPage() {
     }
   }
 
+  // Custom Flat Handlers
+  const handleNewFlatInputChange = useCallback((propertyId, value) => {
+    setNewFlatInputs(prev => ({ ...prev, [propertyId]: value }));
+  }, []);
+
+  const handleAddCustomFlat = useCallback((propertyId, flatNumber) => {
+    const flatId = isNaN(flatNumber) ? flatNumber : Number(flatNumber);
+    setCustomFlats(prev => {
+      const existing = prev[propertyId] || [];
+      if (existing.includes(flatId)) return prev;
+      return { ...prev, [propertyId]: [...existing, flatId] };
+    });
+    setNewFlatInputs(prev => ({ ...prev, [propertyId]: '' }));
+  }, []);
+
+  // Photo Upload Handler
+  async function handlePhotoUpload(propertyId, flatNumber, photoType, file) {
+    const key = getFlatKey(propertyId, flatNumber);
+    setPhotoUploading(prev => ({ ...prev, [key]: { ...(prev[key] || {}), [photoType]: true } }));
+
+    try {
+      const ext = file.name.split('.').pop();
+      const storagePath = `utility_bills/${propertyId}/${selectedYear}/${selectedMonth}/${flatNumber}/${photoType}.${ext}`;
+      const storageRef = ref(storage, storagePath);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Update utilities state with the photo URL
+      setUtilities(prev => ({
+        ...prev,
+        [key]: { ...prev[key], [photoType]: downloadURL }
+      }));
+    } catch (err) {
+      console.error('Error uploading photo:', err);
+      setError(`Failed to upload photo for flat ${flatNumber}.`);
+    } finally {
+      setPhotoUploading(prev => ({ ...prev, [key]: { ...(prev[key] || {}), [photoType]: false } }));
+    }
+  }
+
+  // Photo Remove Handler
+  async function handlePhotoRemove(propertyId, flatNumber, photoType) {
+    const key = getFlatKey(propertyId, flatNumber);
+    try {
+      const photoUrl = utilities[key]?.[photoType];
+      if (photoUrl) {
+        try {
+          const storageRef = ref(storage, photoUrl);
+          await deleteObject(storageRef);
+        } catch (e) {
+          console.log('Photo may already be deleted from storage');
+        }
+      }
+      setUtilities(prev => ({
+        ...prev,
+        [key]: { ...prev[key], [photoType]: '' }
+      }));
+    } catch (err) {
+      console.error('Error removing photo:', err);
+    }
+  }
+
   const togglePropertyExpand = useCallback((propertyId) => {
     setExpandedProperties(prev => {
       const next = new Set(prev);
@@ -681,7 +899,7 @@ export default function UtilitiesEntryPage() {
   const filteredProperties = useMemo(() => {
     if (!searchQuery.trim()) return properties;
     const q = searchQuery.toLowerCase();
-    return properties.filter(p => 
+    return properties.filter(p =>
       p.name?.toLowerCase().includes(q) ||
       p.area?.toLowerCase().includes(q)
     );
@@ -714,7 +932,7 @@ export default function UtilitiesEntryPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <LoadingSpinner size="large" />
-        <p className="text-[#757575]">Loading properties...</p>
+        <p className="text-[#4a4a4a]">Loading properties...</p>
       </div>
     );
   }
@@ -724,18 +942,18 @@ export default function UtilitiesEntryPage() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#424242]">Per-Flat Utility Billing</h1>
-          <p className="text-[#757575] mt-1">
+          <h1 className="text-2xl font-bold text-[#1a1a1a]">Per-Flat Utility Billing</h1>
+          <p className="text-[#4a4a4a] mt-1">
             Enter electricity and gas bills for each flat in your properties
           </p>
         </div>
-        
+
         {/* Period Selector */}
         <div className="flex items-center gap-2 bg-white rounded-xl border border-gray-200 p-1.5 shadow-sm">
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#424242] cursor-pointer rounded-lg hover:bg-gray-200"
+            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#1a1a1a] cursor-pointer rounded-lg hover:bg-gray-200"
           >
             {MONTHS.map(m => (
               <option key={m.value} value={m.value} className="bg-[#F5F5F5]">{m.label}</option>
@@ -745,7 +963,7 @@ export default function UtilitiesEntryPage() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#424242] cursor-pointer rounded-lg hover:bg-gray-200"
+            className="px-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-0 font-medium text-[#1a1a1a] cursor-pointer rounded-lg hover:bg-gray-200"
           >
             {YEARS.map(y => (
               <option key={y} value={y} className="bg-[#F5F5F5]">{y}</option>
@@ -766,26 +984,26 @@ export default function UtilitiesEntryPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
+        <StatCard
           icon={Icons.Lightning}
           label="Total Electricity"
           value={formatCurrency(stats.totalElectricity)}
           color="amber"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.Fire}
           label="Total Gas"
           value={formatCurrency(stats.totalGas)}
           color="amber"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.Home}
           label="Flats Saved"
           value={`${stats.savedFlats}/${stats.totalFlats}`}
           subValue={stats.totalFlats > 0 ? `${Math.round((stats.savedFlats / stats.totalFlats) * 100)}%` : '0%'}
           color="green"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.Building}
           label="Total Amount"
           value={formatCurrency(stats.totalElectricity + stats.totalGas)}
@@ -796,20 +1014,20 @@ export default function UtilitiesEntryPage() {
 
       {/* Search Bar */}
       <div className="relative">
-        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#757575]" />
+        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4a4a4a]" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search properties by name or area..."
-          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
+          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-lg"
           >
-            <Icons.X className="w-4 h-4 text-[#757575]" />
+            <Icons.X className="w-4 h-4 text-[#4a4a4a]" />
           </button>
         )}
       </div>
@@ -818,13 +1036,13 @@ export default function UtilitiesEntryPage() {
       {filteredProperties.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <div className="w-16 h-16 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
-            <Icons.Building className="w-8 h-8 text-[#757575]" />
+            <Icons.Building className="w-8 h-8 text-[#4a4a4a]" />
           </div>
-          <h3 className="text-lg font-medium text-[#424242] mb-2">
+          <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">
             {properties.length === 0 ? 'No Properties Found' : 'No Matching Properties'}
           </h3>
-          <p className="text-[#757575] max-w-sm mx-auto">
-            {properties.length === 0 
+          <p className="text-[#4a4a4a] max-w-sm mx-auto">
+            {properties.length === 0
               ? 'Add properties first and configure the number of flats.'
               : 'Try adjusting your search criteria.'}
           </p>
@@ -846,6 +1064,13 @@ export default function UtilitiesEntryPage() {
               onSaveAllFlats={handleSaveAllFlats}
               currentPage={propertyPages[property.id] || 1}
               onPageChange={handlePageChange}
+              customFlats={customFlats[property.id] || []}
+              newFlatInput={newFlatInputs[property.id] || ''}
+              onNewFlatInputChange={handleNewFlatInputChange}
+              onAddCustomFlat={handleAddCustomFlat}
+              onPhotoUpload={handlePhotoUpload}
+              onPhotoRemove={handlePhotoRemove}
+              photoUploading={photoUploading}
             />
           ))}
         </div>
@@ -854,13 +1079,13 @@ export default function UtilitiesEntryPage() {
       {/* Help Text */}
       <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
         <div className="flex items-start gap-3">
-          <Icons.Sparkles className="w-5 h-5 text-[#1E88E5] flex-shrink-0 mt-0.5" />
+          <Icons.Sparkles className="w-5 h-5 text-[#5B9BD5] flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-medium text-[#1E88E5]">How it works</h4>
-            <p className="text-sm text-[#1565C0]/80 mt-1">
-              Enter electricity and gas bills for each flat individually. Each flat's utility data is stored 
-              separately and can be used for billing calculations. Click the checkmark to save each flat, 
-              or use "Save Page" to save all visible entries for a property at once.
+            <h4 className="font-medium text-[#5B9BD5]">How it works</h4>
+            <p className="text-sm text-[#4A8AC4]/80 mt-1">
+              Enter electricity and gas bills for each flat individually. Use the <strong>Add Flat</strong> button to add custom flat numbers.
+              Upload bill photos using the 📷 icon next to each input. Click the checkmark to save each flat,
+              or use "Save Page" to save all visible entries at once.
             </p>
           </div>
         </div>

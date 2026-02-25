@@ -7,13 +7,13 @@ import { LoadingSpinner } from '../../components/common';
 
 // SVG Icons
 const EmailIcon = () => (
-  <svg className="w-5 h-5 text-[#757575]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-[#4a4a4a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
   </svg>
 );
 
 const PasswordIcon = () => (
-  <svg className="w-5 h-5 text-[#757575]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-[#4a4a4a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
   </svg>
 );
@@ -89,15 +89,15 @@ export default function AdminLoginPage() {
           <Link to="/" className="inline-block">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</h1>
           </Link>
-          <p className="text-[#757575] mt-2">Admin Portal</p>
+          <p className="text-[#4a4a4a] mt-2">Admin Portal</p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-md">
-          <h2 className="text-2xl font-bold text-[#424242] text-center mb-2">
+          <h2 className="text-2xl font-bold text-[#1a1a1a] text-center mb-2">
             Welcome Back
           </h2>
-          <p className="text-[#757575] text-center mb-8">
+          <p className="text-[#4a4a4a] text-center mb-8">
             Sign in to access the admin dashboard
           </p>
 
@@ -112,7 +112,7 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-[#424242] mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-[#1a1a1a] mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -126,14 +126,14 @@ export default function AdminLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@swamipg.com"
                   required
-                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white border border-gray-200 text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg bg-white border border-gray-200 text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-[#424242] mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-[#1a1a1a] mb-2">
                 Password
               </label>
               <div className="relative">
@@ -147,12 +147,12 @@ export default function AdminLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white border border-gray-200 text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors"
+                  className="w-full pl-10 pr-12 py-3 rounded-lg bg-white border border-gray-200 text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#757575] hover:text-[#424242]"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#4a4a4a] hover:text-[#1a1a1a]"
                 >
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
@@ -163,7 +163,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#1E88E5] text-white font-semibold rounded-lg hover:bg-[#1565C0] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-sm"
+              className="w-full py-3 bg-[#5B9BD5] text-white font-semibold rounded-lg hover:bg-[#4A8AC4] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-sm"
             >
               {loading ? (
                 <>
@@ -179,15 +179,15 @@ export default function AdminLoginPage() {
           {/* Divider */}
           <div className="my-6 flex items-center">
             <div className="flex-1 border-t border-gray-200"></div>
-            <span className="px-4 text-sm text-[#757575]">or</span>
+            <span className="px-4 text-sm text-[#4a4a4a]">or</span>
             <div className="flex-1 border-t border-gray-200"></div>
           </div>
 
           {/* Tenant Login Link */}
           <div className="text-center">
-            <p className="text-[#757575] text-sm">
+            <p className="text-[#4a4a4a] text-sm">
               Are you a tenant?{' '}
-              <Link to="/tenant/login" className="text-[#1E88E5] hover:text-[#1565C0] font-medium">
+              <Link to="/tenant/login" className="text-[#5B9BD5] hover:text-[#4A8AC4] font-medium">
                 Tenant Login
               </Link>
             </p>
@@ -196,7 +196,7 @@ export default function AdminLoginPage() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-[#757575] hover:text-[#1E88E5] text-sm transition-colors">
+          <Link to="/" className="text-[#4a4a4a] hover:text-[#5B9BD5] text-sm transition-colors">
             ← Back to Home
           </Link>
         </div>

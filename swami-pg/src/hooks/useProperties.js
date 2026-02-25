@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
@@ -34,7 +34,7 @@ export function useProperties(areaFilter = null, showOnHomepageOnly = false) {
           const tenantsSnapshot = await getDocs(tenantsQuery);
           
           property.occupied_beds = tenantsSnapshot.size;
-          property.available_beds = property.total_beds - tenantsSnapshot.size;
+          property.available_beds = property.total_flats - tenantsSnapshot.size;
           
           propertiesData.push(property);
         }
@@ -94,7 +94,7 @@ export function useProperty(propertyId) {
           const tenantsSnapshot = await getDocs(tenantsQuery);
           
           propertyData.occupied_beds = tenantsSnapshot.size;
-          propertyData.available_beds = propertyData.total_beds - tenantsSnapshot.size;
+          propertyData.available_beds = propertyData.total_flats - tenantsSnapshot.size;
           
           setProperty(propertyData);
           setError(null);

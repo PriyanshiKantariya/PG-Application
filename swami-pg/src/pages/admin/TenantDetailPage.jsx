@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { doc, getDoc, updateDoc, collection, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -252,7 +252,7 @@ export default function TenantDetailPage() {
     if (status === 'Pending') {
       return 'bg-amber-500/20 text-amber-600 border border-amber-500/30';
     }
-    return 'bg-gray-100 text-[#757575] border border-gray-300';
+    return 'bg-gray-100 text-[#4a4a4a] border border-gray-300';
   };
 
   const getBillStatusBadge = (status) => {
@@ -262,11 +262,11 @@ export default function TenantDetailPage() {
       case 'Pending':
         return 'bg-amber-500/20 text-amber-600';
       case 'ReportedPaid':
-        return 'bg-blue-50 text-[#1E88E5]';
+        return 'bg-blue-50 text-[#5B9BD5]';
       case 'Overdue':
         return 'bg-red-500/20 text-red-600';
       default:
-        return 'bg-gray-100 text-[#757575]';
+        return 'bg-gray-100 text-[#4a4a4a]';
     }
   };
 
@@ -290,8 +290,8 @@ export default function TenantDetailPage() {
           <p className="text-red-600">{error || 'Tenant not found'}</p>
         </div>
         <div className="mt-4">
-          <Link to="/admin/tenants" className="text-[#1E88E5] hover:text-[#1565C0]">
-            ← Back to Tenants
+          <Link to="/admin/tenants" className="text-[#5B9BD5] hover:text-[#4A8AC4]">
+            ? Back to Tenants
           </Link>
         </div>
       </div>
@@ -305,19 +305,19 @@ export default function TenantDetailPage() {
         <div>
           <Link
             to="/admin/tenants"
-            className="inline-flex items-center gap-2 text-[#757575] hover:text-[#1E88E5] transition-colors mb-2"
+            className="inline-flex items-center gap-2 text-[#4a4a4a] hover:text-[#5B9BD5] transition-colors mb-2"
           >
             <ArrowLeftIcon />
             Back to Tenants
           </Link>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold text-[#424242]">{tenant.name}</h1>
+            <h1 className="text-2xl font-bold text-[#1a1a1a]">{tenant.name}</h1>
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusBadge(tenant.status)}`}>
               {tenant.status}
             </span>
           </div>
-          <p className="text-[#757575] mt-1">
-            Tenant Code: <span className="font-mono font-medium text-[#1E88E5]">{tenant.tenant_code}</span>
+          <p className="text-[#4a4a4a] mt-1">
+            Tenant Code: <span className="font-mono font-medium text-[#5B9BD5]">{tenant.tenant_code}</span>
           </p>
         </div>
 
@@ -326,7 +326,7 @@ export default function TenantDetailPage() {
             <>
               <button
                 onClick={() => setIsEditing(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl font-medium hover:from-[#1565C0] hover:to-[#1E88E5] transition-all shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] rounded-xl font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-all shadow-sm"
               >
                 <EditIcon />
                 Edit Details
@@ -346,7 +346,7 @@ export default function TenantDetailPage() {
               <button
                 onClick={handleCancelEdit}
                 disabled={saving}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 text-[#424242] rounded-xl font-medium hover:bg-[#F5F5F5] transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-xl font-medium hover:bg-[#F5F5F5] transition-colors"
               >
                 <CloseIcon />
                 Cancel
@@ -354,7 +354,7 @@ export default function TenantDetailPage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#43A047] to-[#2E7D32] text-[#424242] rounded-xl font-medium hover:from-[#2E7D32] hover:to-[#1B5E20] transition-all shadow-sm disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#43A047] to-[#2E7D32] text-[#1a1a1a] rounded-xl font-medium hover:from-[#2E7D32] hover:to-[#1B5E20] transition-all shadow-sm disabled:opacity-50"
               >
                 {saving ? <LoadingSpinner size="small" /> : <SaveIcon />}
                 {saving ? 'Saving...' : 'Save Changes'}
@@ -378,7 +378,7 @@ export default function TenantDetailPage() {
           {/* Personal Information */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 bg-[#F5F5F5]">
-              <h2 className="font-semibold text-[#424242] flex items-center gap-2">
+              <h2 className="font-semibold text-[#1a1a1a] flex items-center gap-2">
                 <UserIcon />
                 Personal Information
               </h2>
@@ -386,29 +386,29 @@ export default function TenantDetailPage() {
             <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Full Name */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block">Full Name</label>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Full Name</label>
                 {isEditing ? (
                   <input
                     type="text"
                     name="name"
                     value={editData.name || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : (
-                  <p className="font-medium text-[#424242]">{tenant.name}</p>
+                  <p className="font-medium text-[#1a1a1a]">{tenant.name}</p>
                 )}
               </div>
 
               {/* Tenant Code */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block">Tenant Code</label>
-                <p className="font-mono font-medium text-[#1E88E5]">{tenant.tenant_code}</p>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Tenant Code</label>
+                <p className="font-mono font-medium text-[#5B9BD5]">{tenant.tenant_code}</p>
               </div>
 
               {/* Phone */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block flex items-center gap-2">
+                <label className="text-sm text-[#4a4a4a] mb-1 block flex items-center gap-2">
                   <PhoneIcon />
                   Phone
                 </label>
@@ -418,10 +418,10 @@ export default function TenantDetailPage() {
                     name="phone"
                     value={editData.phone || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : (
-                  <a href={`tel:${tenant.phone}`} className="font-medium text-[#1E88E5] hover:text-[#1565C0]">
+                  <a href={`tel:${tenant.phone}`} className="font-medium text-[#5B9BD5] hover:text-[#4A8AC4]">
                     {tenant.phone}
                   </a>
                 )}
@@ -429,7 +429,7 @@ export default function TenantDetailPage() {
 
               {/* Email */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block flex items-center gap-2">
+                <label className="text-sm text-[#4a4a4a] mb-1 block flex items-center gap-2">
                   <EmailIcon />
                   Email
                 </label>
@@ -440,14 +440,14 @@ export default function TenantDetailPage() {
                     value={editData.email || ''}
                     onChange={handleEditChange}
                     placeholder="tenant@example.com"
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] placeholder-gray-400 focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : tenant.email ? (
-                  <a href={`mailto:${tenant.email}`} className="font-medium text-[#1E88E5] hover:text-[#1565C0]">
+                  <a href={`mailto:${tenant.email}`} className="font-medium text-[#5B9BD5] hover:text-[#4A8AC4]">
                     {tenant.email}
                   </a>
                 ) : (
-                  <p className="text-[#757575]">Not provided</p>
+                  <p className="text-[#4a4a4a]">Not provided</p>
                 )}
               </div>
             </div>
@@ -456,7 +456,7 @@ export default function TenantDetailPage() {
           {/* Tenancy Information */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 bg-[#F5F5F5]">
-              <h2 className="font-semibold text-[#424242] flex items-center gap-2">
+              <h2 className="font-semibold text-[#1a1a1a] flex items-center gap-2">
                 <BuildingIcon />
                 Tenancy Details
               </h2>
@@ -464,13 +464,13 @@ export default function TenantDetailPage() {
             <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Property */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block">Property</label>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Property</label>
                 {isEditing ? (
                   <select
                     name="property_id"
                     value={editData.property_id || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   >
                     <option value="">Select Property</option>
                     {properties.map(prop => (
@@ -479,15 +479,15 @@ export default function TenantDetailPage() {
                   </select>
                 ) : (
                   <div>
-                    <p className="font-medium text-[#424242]">{property?.name || 'Unknown'}</p>
-                    {property?.area && <p className="text-sm text-[#757575]">{property.area}</p>}
+                    <p className="font-medium text-[#1a1a1a]">{property?.name || 'Unknown'}</p>
+                    {property?.area && <p className="text-sm text-[#4a4a4a]">{property.area}</p>}
                   </div>
                 )}
               </div>
 
               {/* Start Date */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block flex items-center gap-2">
+                <label className="text-sm text-[#4a4a4a] mb-1 block flex items-center gap-2">
                   <CalendarIcon />
                   Start Date
                 </label>
@@ -497,50 +497,50 @@ export default function TenantDetailPage() {
                     name="start_date"
                     value={editData.start_date || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : (
-                  <p className="font-medium text-[#424242]">{formatDate(tenant.start_date)}</p>
+                  <p className="font-medium text-[#1a1a1a]">{formatDate(tenant.start_date)}</p>
                 )}
               </div>
 
               {/* Monthly Rent */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block">Monthly Rent</label>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Monthly Rent</label>
                 {isEditing ? (
                   <input
                     type="number"
                     name="rent"
                     value={editData.rent || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : (
-                  <p className="text-2xl font-bold text-[#424242]">₹{(tenant.rent || 0).toLocaleString('en-IN')}</p>
+                  <p className="text-2xl font-bold text-[#1a1a1a]">?{(tenant.rent || 0).toLocaleString('en-IN')}</p>
                 )}
               </div>
 
               {/* Security Deposit */}
               <div>
-                <label className="text-sm text-[#757575] mb-1 block">Security Deposit</label>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Security Deposit</label>
                 {isEditing ? (
                   <input
                     type="number"
                     name="deposit"
                     value={editData.deposit || ''}
                     onChange={handleEditChange}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 ) : (
-                  <p className="text-2xl font-bold text-[#43A047]">₹{(tenant.deposit || 0).toLocaleString('en-IN')}</p>
+                  <p className="text-2xl font-bold text-[#43A047]">?{(tenant.deposit || 0).toLocaleString('en-IN')}</p>
                 )}
               </div>
 
               {/* Vacated Date (if vacated) */}
               {tenant.status === 'Vacated' && tenant.vacated_date && (
                 <div className="sm:col-span-2 p-4 bg-[#F5F5F5] rounded-xl border border-gray-200">
-                  <p className="text-sm text-[#757575] mb-1">Vacated On</p>
-                  <p className="font-medium text-[#424242]">{formatDate(tenant.vacated_date)}</p>
+                  <p className="text-sm text-[#4a4a4a] mb-1">Vacated On</p>
+                  <p className="font-medium text-[#1a1a1a]">{formatDate(tenant.vacated_date)}</p>
                 </div>
               )}
             </div>
@@ -549,7 +549,7 @@ export default function TenantDetailPage() {
           {/* Documents */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 bg-[#F5F5F5]">
-              <h2 className="font-semibold text-[#424242] flex items-center gap-2">
+              <h2 className="font-semibold text-[#1a1a1a] flex items-center gap-2">
                 <DocumentIcon />
                 Documents
               </h2>
@@ -557,14 +557,14 @@ export default function TenantDetailPage() {
             <div className="p-6">
               {isEditing ? (
                 <div>
-                  <label className="text-sm text-[#757575] mb-1 block">Documents Link (Google Drive, etc.)</label>
+                  <label className="text-sm text-[#4a4a4a] mb-1 block">Documents Link (Google Drive, etc.)</label>
                   <input
                     type="url"
                     name="docs_link"
                     value={editData.docs_link || ''}
                     onChange={handleEditChange}
                     placeholder="https://drive.google.com/..."
-                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#424242] placeholder-gray-400 focus:border-[#1E88E5] focus:ring-1 focus:ring-[#1E88E5] outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
                   />
                 </div>
               ) : tenant.docs_link ? (
@@ -572,14 +572,14 @@ export default function TenantDetailPage() {
                   href={tenant.docs_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-[#1E88E5] rounded-xl font-medium hover:bg-[#1E88E5]/30 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-[#5B9BD5] rounded-xl font-medium hover:bg-[#5B9BD5]/30 transition-colors"
                 >
                   <DocumentIcon />
                   View Documents
                   <ExternalLinkIcon />
                 </a>
               ) : (
-                <p className="text-[#757575]">No documents uploaded</p>
+                <p className="text-[#4a4a4a]">No documents uploaded</p>
               )}
             </div>
           </div>
@@ -590,30 +590,30 @@ export default function TenantDetailPage() {
           {/* Recent Bills */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 bg-[#F5F5F5] flex items-center justify-between">
-              <h2 className="font-semibold text-[#424242] flex items-center gap-2">
+              <h2 className="font-semibold text-[#1a1a1a] flex items-center gap-2">
                 <BillsIcon />
                 Recent Bills
               </h2>
               <Link
                 to={`/admin/tenants/${tenantId}/bills`}
-                className="text-sm text-[#1E88E5] hover:text-[#1565C0]"
+                className="text-sm text-[#5B9BD5] hover:text-[#4A8AC4]"
               >
                 View all
               </Link>
             </div>
             <div className="p-4">
               {bills.length === 0 ? (
-                <p className="text-center text-[#757575] py-6">No bills found</p>
+                <p className="text-center text-[#4a4a4a] py-6">No bills found</p>
               ) : (
                 <div className="space-y-3">
                   {bills.map(bill => (
                     <div key={bill.id} className="flex items-center justify-between p-3 bg-[#F5F5F5] rounded-xl border border-gray-200">
                       <div>
-                        <p className="font-medium text-[#424242]">
+                        <p className="font-medium text-[#1a1a1a]">
                           {getMonthName(bill.month)} {bill.year}
                         </p>
-                        <p className="text-sm text-[#757575]">
-                          ₹{(bill.total_amount || 0).toLocaleString('en-IN')}
+                        <p className="text-sm text-[#4a4a4a]">
+                          ?{(bill.total_amount || 0).toLocaleString('en-IN')}
                         </p>
                       </div>
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ${getBillStatusBadge(bill.status)}`}>
@@ -628,18 +628,18 @@ export default function TenantDetailPage() {
 
           {/* Tenure Summary */}
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-100 p-6">
-            <h3 className="text-sm text-[#1565C0] mb-4 font-medium">Tenure Summary</h3>
+            <h3 className="text-sm text-[#4A8AC4] mb-4 font-medium">Tenure Summary</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-[#424242]">Total Bills</span>
-                <span className="font-bold text-[#424242] text-lg">{bills.length}</span>
+                <span className="text-[#1a1a1a]">Total Bills</span>
+                <span className="font-bold text-[#1a1a1a] text-lg">{bills.length}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[#424242]">Paid</span>
+                <span className="text-[#1a1a1a]">Paid</span>
                 <span className="font-bold text-[#43A047] text-lg">{bills.filter(b => b.status === 'Paid').length}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[#424242]">Pending</span>
+                <span className="text-[#1a1a1a]">Pending</span>
                 <span className="font-bold text-amber-600 text-lg">{bills.filter(b => b.status === 'Pending' || b.status === 'Overdue').length}</span>
               </div>
             </div>
@@ -649,13 +649,13 @@ export default function TenantDetailPage() {
           <div className="bg-gradient-to-br from-orange-500/20 to-amber-500/20 rounded-xl border border-orange-500/30 p-6">
             <h3 className="text-sm text-orange-300 mb-3 font-medium">Quick Info</h3>
             <div className="space-y-2 text-sm">
-              <p className="text-[#424242]">
+              <p className="text-[#1a1a1a]">
                 <span className="text-orange-300">Joined:</span> {formatDate(tenant.start_date)}
               </p>
-              <p className="text-[#424242]">
+              <p className="text-[#1a1a1a]">
                 <span className="text-orange-300">Property:</span> {property?.name || 'N/A'}
               </p>
-              <p className="text-[#424242]">
+              <p className="text-[#1a1a1a]">
                 <span className="text-orange-300">Status:</span> {tenant.status}
               </p>
             </div>
@@ -668,11 +668,11 @@ export default function TenantDetailPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full shadow-2xl">
             <div className="p-6">
-              <h3 className="text-xl font-bold text-[#424242] mb-2">Mark Tenant as Vacated</h3>
-              <p className="text-[#757575] mb-4">
-                Are you sure you want to mark <strong className="text-[#424242]">{tenant.name}</strong> as vacated?
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Mark Tenant as Vacated</h3>
+              <p className="text-[#4a4a4a] mb-4">
+                Are you sure you want to mark <strong className="text-[#1a1a1a]">{tenant.name}</strong> as vacated?
               </p>
-              <ul className="list-disc list-inside text-sm text-[#757575] mb-6 space-y-1">
+              <ul className="list-disc list-inside text-sm text-[#4a4a4a] mb-6 space-y-1">
                 <li>Update tenant status to "Vacated"</li>
                 <li>Record today's date as the vacated date</li>
                 <li>Free up a bed in the property</li>
@@ -682,14 +682,14 @@ export default function TenantDetailPage() {
                 <button
                   onClick={() => setShowVacateModal(false)}
                   disabled={vacating}
-                  className="px-4 py-2.5 border border-gray-300 text-[#424242] rounded-xl hover:bg-[#F5F5F5] transition-colors"
+                  className="px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-xl hover:bg-[#F5F5F5] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleMarkVacated}
                   disabled={vacating}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-[#424242] rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-[#1a1a1a] rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
                 >
                   {vacating ? (
                     <>

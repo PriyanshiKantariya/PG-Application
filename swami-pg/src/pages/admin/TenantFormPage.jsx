@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { collection, getDocs, addDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -194,13 +194,13 @@ export default function TenantFormPage() {
       <div className="mb-6">
         <Link
           to="/admin/tenants"
-          className="inline-flex items-center gap-2 text-[#757575] hover:text-[#1E88E5] transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-[#4a4a4a] hover:text-[#5B9BD5] transition-colors mb-4"
         >
           <ArrowLeftIcon />
           Back to Tenants
         </Link>
         <h1 className="text-2xl font-bold text-[#212121]">Add New Tenant</h1>
-        <p className="text-[#757575] mt-1">Enter tenant details to register a new tenant</p>
+        <p className="text-[#4a4a4a] mt-1">Enter tenant details to register a new tenant</p>
       </div>
 
       {/* Error Message */}
@@ -229,7 +229,7 @@ export default function TenantFormPage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., Vivek Sharma"
-                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
               />
             </div>
 
@@ -247,7 +247,7 @@ export default function TenantFormPage() {
                   onChange={handleChange}
                   maxLength={10}
                   placeholder="10-digit mobile number"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
                 />
               </div>
               <div>
@@ -261,7 +261,7 @@ export default function TenantFormPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Optional"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
                 />
               </div>
             </div>
@@ -281,7 +281,7 @@ export default function TenantFormPage() {
                 name="property_id"
                 value={formData.property_id}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5] bg-white"
+                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5] bg-white"
               >
                 <option value="">Choose a property...</option>
                 {properties.map(property => (
@@ -305,9 +305,9 @@ export default function TenantFormPage() {
                   value={formData.tenant_code}
                   onChange={handleChange}
                   placeholder="e.g., SPG101"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5] font-mono"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5] font-mono"
                 />
-                <p className="text-xs text-[#757575] mt-1">Auto-generated, but can be changed</p>
+                <p className="text-xs text-[#4a4a4a] mt-1">Auto-generated, but can be changed</p>
               </div>
               <div>
                 <label htmlFor="start_date" className="block text-sm font-medium text-[#212121] mb-1.5">
@@ -319,7 +319,7 @@ export default function TenantFormPage() {
                   name="start_date"
                   value={formData.start_date}
                   onChange={handleChange}
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
                 />
               </div>
             </div>
@@ -328,7 +328,7 @@ export default function TenantFormPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="rent" className="block text-sm font-medium text-[#212121] mb-1.5">
-                  Monthly Rent (₹) <span className="text-[#C62828]">*</span>
+                  Monthly Rent (?) <span className="text-[#C62828]">*</span>
                 </label>
                 <input
                   type="number"
@@ -339,13 +339,13 @@ export default function TenantFormPage() {
                   min="0"
                   step="100"
                   placeholder="e.g., 6500"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
                 />
-                <p className="text-xs text-[#757575] mt-1">Auto-filled from property default</p>
+                <p className="text-xs text-[#4a4a4a] mt-1">Auto-filled from property default</p>
               </div>
               <div>
                 <label htmlFor="deposit" className="block text-sm font-medium text-[#212121] mb-1.5">
-                  Deposit (₹)
+                  Deposit (?)
                 </label>
                 <input
                   type="number"
@@ -356,7 +356,7 @@ export default function TenantFormPage() {
                   min="0"
                   step="100"
                   placeholder="e.g., 3000"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
                 />
               </div>
             </div>
@@ -377,9 +377,9 @@ export default function TenantFormPage() {
                 value={formData.docs_link}
                 onChange={handleChange}
                 placeholder="e.g., https://drive.google.com/..."
-                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/20 focus:border-[#1E88E5]"
+                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
               />
-              <p className="text-xs text-[#757575] mt-1">Link to Google Drive folder with ID proof, agreement, etc.</p>
+              <p className="text-xs text-[#4a4a4a] mt-1">Link to Google Drive folder with ID proof, agreement, etc.</p>
             </div>
           </div>
         </div>
@@ -388,14 +388,14 @@ export default function TenantFormPage() {
         <div className="px-6 py-4 bg-[#F5F5F5] border-t border-[#E0E0E0] rounded-b-lg flex flex-col sm:flex-row gap-3 sm:justify-end">
           <Link
             to="/admin/tenants"
-            className="px-6 py-2.5 border border-[#E0E0E0] bg-white text-[#757575] rounded-lg font-medium hover:bg-[#F5F5F5] transition-colors text-center"
+            className="px-6 py-2.5 border border-[#E0E0E0] bg-white text-[#4a4a4a] rounded-lg font-medium hover:bg-[#F5F5F5] transition-colors text-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1E88E5] text-[#424242] rounded-lg font-medium hover:bg-[#1565C0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#5B9BD5] text-[#1a1a1a] rounded-lg font-medium hover:bg-[#4A8AC4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
               <>
