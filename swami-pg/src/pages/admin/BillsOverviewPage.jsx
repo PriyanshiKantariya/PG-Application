@@ -115,9 +115,9 @@ const STATUSES = [
 const currentYear = new Date().getFullYear();
 const YEARS = [
   { value: 0, label: 'All Years' },
-  ...Array.from({ length: 3 }, (_, i) => ({ 
-    value: currentYear - 1 + i, 
-    label: (currentYear - 1 + i).toString() 
+  ...Array.from({ length: 3 }, (_, i) => ({
+    value: currentYear - 1 + i,
+    label: (currentYear - 1 + i).toString()
   }))
 ];
 
@@ -234,6 +234,16 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
     }
   }
 
+  async function handleRejectPayment() {
+    setUpdating(true);
+    try {
+      await onUpdateStatus(bill.id, 'Pending');
+      onClose();
+    } finally {
+      setUpdating(false);
+    }
+  }
+
   async function handleMarkOverdue() {
     setUpdating(true);
     try {
@@ -339,14 +349,24 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
         {(bill.status === 'Pending' || bill.status === 'ReportedPaid') && (
           <div className="p-5 border-t border-gray-200 flex gap-3">
             {bill.status === 'ReportedPaid' && (
-              <button
-                onClick={handleVerifyPayment}
-                disabled={updating}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-[#1a1a1a] rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-sm"
-              >
-                {updating ? <LoadingSpinner size="small" /> : <Icons.Check className="w-4 h-4" />}
-                Verify Payment
-              </button>
+              <>
+                <button
+                  onClick={handleVerifyPayment}
+                  disabled={updating}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-sm"
+                >
+                  {updating ? <LoadingSpinner size="small" /> : <Icons.Check className="w-4 h-4" />}
+                  Verify Payment
+                </button>
+                <button
+                  onClick={handleRejectPayment}
+                  disabled={updating}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                >
+                  {updating ? <LoadingSpinner size="small" /> : <Icons.X className="w-4 h-4" />}
+                  Reject
+                </button>
+              </>
             )}
             {bill.status === 'Pending' && (
               <button
@@ -379,14 +399,14 @@ export default function BillsOverviewPage() {
   const [bills, setBills] = useState([]);
   const [tenants, setTenants] = useState({});
   const [properties, setProperties] = useState({});
-  
+
   // Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProperty, setSelectedProperty] = useState('all');
   const [selectedMonth, setSelectedMonth] = useState(0);
   const [selectedYear, setSelectedYear] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState('all');
-  
+
   // UI State
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -409,6 +429,33 @@ export default function BillsOverviewPage() {
         id: doc.id,
         ...doc.data()
       }));
+
+      // Auto-mark overdue: any Pending bill whose due date has passed
+      const now = new Date();
+      const overdueUpdates = [];
+      billsData.forEach(bill => {
+        if (bill.status === 'Pending') {
+          // Due date is the 7th of the bill's month/year
+          const dueDate = new Date(bill.year, bill.month - 1, 7, 23, 59, 59);
+          if (now > dueDate) {
+            overdueUpdates.push(bill.id);
+            bill.status = 'Overdue'; // Update local state immediately
+          }
+        }
+      });
+
+      // Batch update overdue bills in Firestore (fire-and-forget for speed)
+      if (overdueUpdates.length > 0) {
+        Promise.all(
+          overdueUpdates.map(billId =>
+            updateDoc(doc(db, 'bills', billId), {
+              status: 'Overdue',
+              updated_at: serverTimestamp()
+            })
+          )
+        ).catch(err => console.error('Error auto-marking overdue:', err));
+      }
+
       // Sort by year and month descending
       billsData.sort((a, b) => {
         if (b.year !== a.year) return b.year - a.year;
@@ -447,16 +494,16 @@ export default function BillsOverviewPage() {
         status: newStatus,
         updated_at: serverTimestamp()
       };
-      
+
       if (newStatus === 'Paid') {
         updateData.paid_at = serverTimestamp();
       }
 
       await updateDoc(doc(db, 'bills', billId), updateData);
-      
+
       // Update local state
-      setBills(prev => prev.map(bill => 
-        bill.id === billId 
+      setBills(prev => prev.map(bill =>
+        bill.id === billId
           ? { ...bill, status: newStatus, ...(newStatus === 'Paid' ? { paid_at: new Date() } : {}) }
           : bill
       ));
@@ -578,32 +625,32 @@ export default function BillsOverviewPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatCard 
+        <StatCard
           icon={Icons.Receipt}
           label="Total Bills"
           value={stats.total}
           color="blue"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.Clock}
           label="Pending"
           value={stats.pending}
           color="amber"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.AlertCircle}
           label="Reported Paid"
           value={stats.reported}
           subValue="Need Verification"
           color="purple"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.CheckCircle}
           label="Paid"
           value={stats.paid}
           color="green"
         />
-        <StatCard 
+        <StatCard
           icon={Icons.CurrencyRupee}
           label="Collected"
           value={formatCurrency(stats.collectedAmount)}
@@ -693,7 +740,7 @@ export default function BillsOverviewPage() {
             </div>
             <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">No Bills Found</h3>
             <p className="text-[#4a4a4a] max-w-sm mx-auto">
-              {hasFilters 
+              {hasFilters
                 ? 'No bills match your current filters. Try adjusting your search criteria.'
                 : 'No bills have been generated yet.'}
             </p>
@@ -787,7 +834,7 @@ export default function BillsOverviewPage() {
                   >
                     <Icons.ChevronLeft className="w-4 h-4" />
                   </button>
-                  
+
                   <div className="flex items-center gap-1">
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                       let pageNum;
@@ -804,11 +851,10 @@ export default function BillsOverviewPage() {
                         <button
                           key={pageNum}
                           onClick={() => setCurrentPage(pageNum)}
-                          className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                            pageNum === currentPage 
-                              ? 'bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a]' 
+                          className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${pageNum === currentPage
+                              ? 'bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a]'
                               : 'hover:bg-gray-200 text-[#4a4a4a]'
-                          }`}
+                            }`}
                         >
                           {pageNum}
                         </button>

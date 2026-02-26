@@ -57,7 +57,7 @@ const CalendarIcon = () => (
 );
 
 const CheckIcon = () => (
-  <svg className="w-5 h-5 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
@@ -165,7 +165,7 @@ export default function ComplaintDetailPage() {
           <p className="text-[#757575] mb-6">{error}</p>
           <button
             onClick={() => navigate('/tenant/complaints')}
-            className="px-6 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all font-semibold"
+            className="px-6 py-3 bg-[#5B7A9D] text-white rounded-xl hover:bg-[#4A6B8A] transition-all font-semibold"
           >
             Back to Complaints
           </button>
@@ -280,10 +280,10 @@ export default function ComplaintDetailPage() {
 
           {/* Admin Notes */}
           {complaint.admin_notes && (
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
+            <div className="bg-[#F0F4F8] border border-[#E0E7EF] rounded-xl p-5">
               <div className="flex items-center mb-3">
                 <AdminIcon className="text-[#1E88E5]" />
-                <h2 className="ml-2 text-sm font-semibold text-[#1E88E5] uppercase tracking-wide">
+                <h2 className="ml-2 text-sm font-semibold text-[#5B7A9D] uppercase tracking-wide">
                   Admin Response
                 </h2>
               </div>
@@ -301,8 +301,8 @@ export default function ComplaintDetailPage() {
             <div className="space-y-4">
               {/* Created */}
               <div className="flex items-start">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1E88E5] to-[#1565C0] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-8 h-8 rounded-full bg-[#5B7A9D] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
@@ -315,8 +315,8 @@ export default function ComplaintDetailPage() {
               {/* In Progress */}
               {(complaint.status === 'InProgress' || complaint.status === 'Resolved') && (
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-[#424242]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-8 h-8 rounded-full bg-[#B8860B] flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -330,7 +330,7 @@ export default function ComplaintDetailPage() {
               {/* Resolved */}
               {complaint.status === 'Resolved' && (
                 <div className="flex items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#43A047] to-[#2E7D32] flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#4A7C59] flex items-center justify-center flex-shrink-0">
                     <CheckIcon />
                   </div>
                   <div className="ml-4">

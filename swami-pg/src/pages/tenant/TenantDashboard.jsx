@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -94,14 +94,14 @@ export default function TenantDashboard() {
       {/* Welcome Header */}
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-[#424242] mb-2">
-          Welcome back, <span className="text-[#1E88E5]">{tenantData?.name || 'Tenant'}</span>
+          Welcome back, <span className="text-[#5B7A9D]">{tenantData?.name || 'Tenant'}</span>
         </h1>
         <p className="text-[#757575] flex items-center gap-2">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          <span className="font-medium text-[#1E88E5]">{propertyName || 'Loading...'}</span>
+          <span className="font-medium text-[#5B7A9D]">{propertyName || 'Loading...'}</span>
         </p>
       </div>
 
@@ -110,14 +110,14 @@ export default function TenantDashboard() {
         <div className="bg-white rounded-2xl border border-gray-200 p-6 md:col-span-2 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-[#424242] flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <svg className="w-4 h-4 text-[#1E88E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 rounded-lg bg-[#F0F4F8] flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#5B7A9D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               This Month's Bill
             </h2>
-            <span className="px-3 py-1 text-sm font-medium text-[#1E88E5] bg-blue-50 rounded-full border border-blue-100">
+            <span className="px-3 py-1 text-sm font-medium text-[#5B7A9D] bg-[#F0F4F8] rounded-full border border-[#E0E7EF]">
               {formatMonthYear(month, year)}
             </span>
           </div>
@@ -165,7 +165,7 @@ export default function TenantDashboard() {
               <div className="flex gap-4">
                 <Link
                   to={`/tenant/bills/${currentBill.id}`}
-                  className="flex-1 px-6 py-3 text-center text-sm font-semibold text-[#1E88E5] border-2 border-[#1E88E5]/30 rounded-xl hover:bg-blue-50 transition-all duration-200"
+                  className="flex-1 px-6 py-3 text-center text-sm font-semibold text-[#5B7A9D] border-2 border-[#5B7A9D]/20 rounded-xl hover:bg-[#F0F4F8] transition-all duration-200"
                 >
                   View Details
                 </Link>
@@ -195,8 +195,8 @@ export default function TenantDashboard() {
         {/* Complaints Card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-[#424242] mb-6 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
-              <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 rounded-lg bg-[#FFF8F0] flex items-center justify-center">
+              <svg className="w-4 h-4 text-[#B8860B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -204,12 +204,12 @@ export default function TenantDashboard() {
           </h2>
 
           <div className="flex justify-around mb-6">
-            <div className="text-center p-4 bg-amber-50 rounded-xl border border-amber-100 flex-1 mr-2">
-              <p className="text-3xl font-bold text-amber-600">{complaintsCount.open}</p>
+            <div className="text-center p-4 bg-[#FFF8F0] rounded-xl border border-[#F0E4D0] flex-1 mr-2">
+              <p className="text-3xl font-bold text-[#B8860B]">{complaintsCount.open}</p>
               <p className="text-sm text-[#757575] mt-1">Open</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-xl border border-green-100 flex-1 ml-2">
-              <p className="text-3xl font-bold text-[#43A047]">{complaintsCount.resolved}</p>
+            <div className="text-center p-4 bg-[#F0F7F0] rounded-xl border border-[#D4E8D4] flex-1 ml-2">
+              <p className="text-3xl font-bold text-[#4A7C59]">{complaintsCount.resolved}</p>
               <p className="text-sm text-[#757575] mt-1">Resolved</p>
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function TenantDashboard() {
             </Link>
             <Link
               to="/tenant/complaints/new"
-              className="flex-1 px-4 py-3 text-center text-sm font-semibold text-white bg-[#1E88E5] rounded-xl hover:bg-[#1565C0] transition-all duration-200 shadow-sm"
+              className="flex-1 px-4 py-3 text-center text-sm font-semibold text-white bg-[#5B7A9D] rounded-xl hover:bg-[#4A6B8A] transition-all duration-200"
             >
               New Complaint
             </Link>
@@ -233,8 +233,8 @@ export default function TenantDashboard() {
         {/* Quick Links Card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-[#424242] mb-6 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
-              <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 rounded-lg bg-[#F3F0F8] flex items-center justify-center">
+              <svg className="w-4 h-4 text-[#7B6B8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
@@ -247,14 +247,14 @@ export default function TenantDashboard() {
               className="flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl hover:bg-gray-100 transition-all duration-200 group border border-gray-100 hover:border-gray-200"
             >
               <span className="flex items-center">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-[#1E88E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-lg bg-[#F0F4F8] flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-[#5B7A9D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <span className="text-[#424242] font-medium group-hover:text-[#1E88E5]">View My Profile</span>
+                <span className="text-[#424242] font-medium group-hover:text-[#5B7A9D]">View My Profile</span>
               </span>
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#1E88E5] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#5B7A9D] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -264,14 +264,14 @@ export default function TenantDashboard() {
               className="flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl hover:bg-gray-100 transition-all duration-200 group border border-gray-100 hover:border-gray-200"
             >
               <span className="flex items-center">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-[#1E88E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-lg bg-[#F0F4F8] flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-[#5B7A9D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <span className="text-[#424242] font-medium group-hover:text-[#1E88E5]">View All Bills</span>
+                <span className="text-[#424242] font-medium group-hover:text-[#5B7A9D]">View All Bills</span>
               </span>
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#1E88E5] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#5B7A9D] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -284,14 +284,14 @@ export default function TenantDashboard() {
               className="w-full flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl hover:bg-gray-100 transition-all duration-200 group text-left border border-gray-100 hover:border-gray-200"
             >
               <span className="flex items-center">
-                <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-lg bg-[#FFF8F0] flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-[#B8860B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
-                <span className="text-[#424242] font-medium group-hover:text-[#1E88E5]">View House Rules</span>
+                <span className="text-[#424242] font-medium group-hover:text-[#5B7A9D]">View House Rules</span>
               </span>
-              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#1E88E5] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-gray-300 group-hover:text-[#5B7A9D] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -299,9 +299,9 @@ export default function TenantDashboard() {
         </div>
 
         {/* Tenant Info Summary */}
-        <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 md:col-span-2">
+        <div className="bg-[#F0F4F8] rounded-2xl border border-[#E0E7EF] p-6 md:col-span-2">
           <h2 className="text-lg font-semibold text-[#424242] mb-6 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#1E88E5] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#5B7A9D] flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -311,19 +311,19 @@ export default function TenantDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl p-4 border border-gray-100">
               <p className="text-[#757575] text-sm mb-1">Tenant Code</p>
-              <p className="font-bold text-lg text-[#1E88E5]">{tenantData?.tenant_code || 'N/A'}</p>
+              <p className="font-bold text-lg text-[#5B7A9D]">{tenantData?.tenant_code || 'N/A'}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-gray-100">
               <p className="text-[#757575] text-sm mb-1">Monthly Rent</p>
-              <p className="font-bold text-lg text-[#43A047]">{formatCurrency(tenantData?.rent || 0)}</p>
+              <p className="font-bold text-lg text-[#4A7C59]">{formatCurrency(tenantData?.rent || 0)}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-gray-100">
               <p className="text-[#757575] text-sm mb-1">Deposit Paid</p>
-              <p className="font-bold text-lg text-purple-500">{formatCurrency(tenantData?.deposit || 0)}</p>
+              <p className="font-bold text-lg text-[#7B6B8A]">{formatCurrency(tenantData?.deposit || 0)}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-gray-100">
               <p className="text-[#757575] text-sm mb-1">Status</p>
-              <p className={`font-bold text-lg ${tenantData?.status === 'Active' ? 'text-[#43A047]' : 'text-amber-500'}`}>
+              <p className={`font-bold text-lg ${tenantData?.status === 'Active' ? 'text-[#4A7C59]' : 'text-[#B8860B]'}`}>
                 {tenantData?.status || 'Active'}
               </p>
             </div>

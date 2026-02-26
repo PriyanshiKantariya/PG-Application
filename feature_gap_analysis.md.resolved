@@ -1,0 +1,112 @@
+# Swami PG Management System — Feature Gap Analysis
+
+## Overview
+
+Comparison of the **V1 PDF specification** (16 pages) against the **existing codebase** to identify implemented vs. pending features.
+
+---
+
+## ✅ Features Fully Implemented
+
+| # | PDF Feature | Status | Codebase Location |
+|---|------------|--------|-------------------|
+| 1 | **Home Page** — List all PGs, Filter by area, Show beds available | ✅ Done | [HomePage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/public/HomePage.jsx) |
+| 2 | **Property Detail Page** — Photos, Rules, Rent & Deposit, Address, Call/Request Visit buttons | ✅ Done | [PropertyDetailPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/public/PropertyDetailPage.jsx) |
+| 3 | **Request Visit Page** — Form to collect visit leads | ✅ Done | [RequestVisitPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/public/RequestVisitPage.jsx) |
+| 4 | **Rules Page** — Standalone rules page | ✅ Done | [RulesPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/public/RulesPage.jsx) |
+| 5 | **Tenant Login** — Phone + password auth | ✅ Done | [TenantLoginPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/TenantLoginPage.jsx) |
+| 6 | **Tenant Signup** — New tenant registration | ✅ Done | [TenantSignUpPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/TenantSignUpPage.jsx) |
+| 7 | **Tenant Dashboard** — Current month bill, status, buttons for View Bill / I Have Paid / Complaints / Rules | ✅ Done | [TenantDashboard.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/TenantDashboard.jsx) |
+| 8 | **Bills List & Detail** — Bills per month, breakdown with rent + utilities + late fee | ✅ Done | [BillsListPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/BillsListPage.jsx), [BillDetailPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/BillDetailPage.jsx) |
+| 9 | **Complaints** — List (by property), new complaint form, detail page | ✅ Done | [ComplaintsListPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/ComplaintsListPage.jsx), [NewComplaintPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/NewComplaintPage.jsx) |
+| 10 | **Tenant Profile & Rules** — Basic info + PG rules | ✅ Done | [TenantProfilePage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/tenant/TenantProfilePage.jsx) |
+| 11 | **Admin Dashboard** — Total tenants, pending payments, open complaints, available beds | ✅ Done | [AdminDashboard.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/AdminDashboard.jsx) |
+| 12 | **Properties Management** — Add/Edit PG, total beds, rules, available beds | ✅ Done | [PropertiesListPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/PropertiesListPage.jsx), [PropertyFormPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/PropertyFormPage.jsx) |
+| 13 | **Tenants Management** — Add tenant, view tenants, mark Vacated | ✅ Done | [TenantsListPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/TenantsListPage.jsx), [TenantFormPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/TenantFormPage.jsx), [TenantDetailPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/TenantDetailPage.jsx) |
+| 14 | **Utilities & Bills** — Enter monthly electricity & gas, generate bills, see statuses | ✅ Done | [UtilitiesEntryPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/UtilitiesEntryPage.jsx), [BillsOverviewPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/BillsOverviewPage.jsx) |
+| 15 | **Complaints Admin** — View all by property, change status | ✅ Done | [ComplaintsAdminPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/ComplaintsAdminPage.jsx) |
+| 16 | **Visit Requests Admin** — List visit forms, update status | ✅ Done | [VisitRequestsPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/VisitRequestsPage.jsx) |
+| 17 | **Constants & Status Chips** — Bill/Complaint/Visit/Tenant statuses, color coding | ✅ Done | [constants.js](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/utils/constants.js), [helpers.js](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/utils/helpers.js) |
+| 18 | **Auth + Protected Routes** — Separate tenant/admin auth with role-based protection | ✅ Done | [App.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/App.jsx) |
+
+---
+
+## ⚠️ Features Partially Implemented / Need Attention
+
+### 1. Payment Verification Admin Page (No Dedicated Page)
+
+> [!IMPORTANT]
+> The PDF requires a **separate Payment Verification page** (#13) that shows only "Reported Paid" bills with Verify/Reject buttons and links to Google Sheet screenshots.
+
+**Current state:** Payment verification logic (Verify/Reject buttons) is embedded within [BillsOverviewPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/admin/BillsOverviewPage.jsx), not a standalone page. There is no dedicated `/admin/payment-verification` route.
+
+**Gap:** No standalone page. The BillsOverviewPage has the functionality but not the dedicated UX described in the PDF.
+
+---
+
+### 2. Google Forms — Placeholder URLs
+
+> [!WARNING]
+> Google Form URLs in [constants.js](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/utils/constants.js) are still **placeholder values** (`https://forms.gle/your-tenant-form-id`, `https://forms.gle/your-payment-form-id`).
+
+**Impact:** The "I Have Paid" flow and tenant onboarding via Google Forms won't work until real URLs are set.
+
+---
+
+### 3. Firestore Security Rules — Not Configured
+
+> [!CAUTION]
+> No `firestore.rules` file was found in the project. The PDF spec requires:
+> - Only authenticated users can access tenant portal
+> - Only admin can access admin panel
+> - Tenants can only see their own bills
+> - Tenants can see all complaints for their property
+
+**Current state:** Client-side route protection exists (`ProtectedRoute` component), but no server-side Firestore security rules are in place. This is a **security vulnerability** — anyone could read/write directly to the database.
+
+---
+
+### 4. Firebase Hosting — Not Configured
+
+No `firebase.json` configuration file exists. The PDF recommends Firebase Hosting for deployment.
+
+---
+
+### 5. Map Link on Property Detail Page
+
+The PDF specifies a **"View on Google Maps"** link with the property address. Need to verify if this is functional or placeholder in [PropertyDetailPage.jsx](file:///c:/Users/priya/OneDrive/Desktop/PG-App/swami-pg/src/pages/public/PropertyDetailPage.jsx).
+
+---
+
+## ❌ Features Not Yet Implemented
+
+### 1. Notification System
+The PDF mentions status-based tenant notifications (e.g., when complaints are resolved). A previous conversation explored this but implementation may not be complete.
+
+### 2. Automatic Overdue Detection
+The PDF implies bills past the due date (7th of month) should automatically change to "Overdue" status. Currently, overdue marking appears to be **manual** (admin clicks "Mark Overdue" in `BillsOverviewPage`).
+
+### 3. Google Sheets Link for Payment Verification
+The PDF says admins should see a **link to the Google Sheet row** showing the tenant's payment screenshot while verifying. This requires either:
+- Prefilled Google Form responses linking back, OR
+- Manual integration with Google Sheets API
+
+---
+
+## 📋 Summary: What Needs To Be Done
+
+| Priority | Item | Effort |
+|----------|------|--------|
+| 🔴 Critical | Replace placeholder Google Form URLs with real ones | Low (config change) |
+| 🔴 Critical | Add Firestore Security Rules | Medium |
+| 🟡 Important | Add automatic Overdue detection (cron/cloud function or client-side check) | Medium |
+| 🟡 Important | Add Google Sheet link on payment verification for screenshot reference | Medium |
+| 🟢 Nice-to-have | Dedicated Payment Verification admin page | Low (extract from existing page) |
+| 🟢 Nice-to-have | Firebase Hosting configuration (`firebase.json`) | Low |
+| 🟢 Nice-to-have | Notification system for tenants | High |
+| 🟢 Nice-to-have | Verify Google Maps link on Property Detail page | Low |
+
+---
+
+> [!TIP]
+> The **core V1 features are all implemented at the page/route level**. The main gaps are around **infrastructure & configuration** (security rules, Google Form URLs, hosting) and a few **workflow automations** (auto-overdue, notification). No major new pages need to be built.

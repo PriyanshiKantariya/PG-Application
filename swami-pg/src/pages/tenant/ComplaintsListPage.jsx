@@ -189,7 +189,7 @@ export default function ComplaintsListPage() {
         </div>
         <Link
           to="/tenant/complaints/new"
-          className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 font-semibold shadow-sm"
+          className="inline-flex items-center px-5 py-3 bg-[#5B7A9D] text-white rounded-xl hover:bg-[#4A6B8A] transition-all duration-200 font-semibold"
         >
           <PlusIcon />
           <span className="ml-2">New Complaint</span>
@@ -205,8 +205,8 @@ export default function ComplaintsListPage() {
               onClick={() => setSelectedStatus(status)}
               className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-200 flex items-center ${
                 selectedStatus === status
-                  ? 'bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] shadow-sm'
-                  : 'text-[#757575] hover:text-[#424242] hover:bg-[#F5F5F5]'
+                  ? 'bg-[#5B7A9D] text-white'
+                  : 'text-[#757575] hover:text-[#424242] hover:bg-[#FAFAFA]'
               }`}
             >
               {status === 'InProgress' ? 'In Progress' : status}
@@ -239,7 +239,7 @@ export default function ComplaintsListPage() {
           {selectedStatus === 'All' && (
             <Link
               to="/tenant/complaints/new"
-              className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 font-semibold shadow-sm"
+              className="inline-flex items-center px-5 py-3 bg-[#5B7A9D] text-white rounded-xl hover:bg-[#4A6B8A] transition-all duration-200 font-semibold"
             >
               <PlusIcon />
               <span className="ml-2">Submit a Complaint</span>
@@ -331,16 +331,16 @@ export default function ComplaintsListPage() {
       {/* Summary Stats */}
       {complaints.length > 0 && (
         <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl border border-red-200 p-5 text-center">
-            <p className="text-2xl font-bold text-red-600">{statusCounts[COMPLAINT_STATUS.OPEN]}</p>
+          <div className="bg-white rounded-2xl border border-red-100 p-5 text-center">
+            <p className="text-2xl font-bold text-[#C25050]">{statusCounts[COMPLAINT_STATUS.OPEN]}</p>
             <p className="text-sm text-[#757575] mt-1">Open</p>
           </div>
           <div className="bg-white rounded-2xl border border-amber-500/30 p-5 text-center">
-            <p className="text-2xl font-bold text-amber-600">{statusCounts[COMPLAINT_STATUS.IN_PROGRESS]}</p>
+            <p className="text-2xl font-bold text-[#B8860B]">{statusCounts[COMPLAINT_STATUS.IN_PROGRESS]}</p>
             <p className="text-sm text-[#757575] mt-1">In Progress</p>
           </div>
           <div className="bg-white rounded-2xl border border-emerald-500/30 p-5 text-center">
-            <p className="text-2xl font-bold text-[#43A047]">{statusCounts[COMPLAINT_STATUS.RESOLVED]}</p>
+            <p className="text-2xl font-bold text-[#4A7C59]">{statusCounts[COMPLAINT_STATUS.RESOLVED]}</p>
             <p className="text-sm text-[#757575] mt-1">Resolved</p>
           </div>
         </div>

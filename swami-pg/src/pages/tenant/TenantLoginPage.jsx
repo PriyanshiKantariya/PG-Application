@@ -1,14 +1,30 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase/config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
 import { isValidEmail } from '../../utils/helpers';
+
+// Detect if input looks like a phone number
+function isPhoneNumber(input) {
+  const cleaned = input.replace(/[\s\-\(\)\+]/g, '');
+  return /^\d{10,13}$/.test(cleaned);
+}
+
+// Normalize phone: strip country code prefix, keep last 10 digits
+function normalizePhone(phone) {
+  const cleaned = phone.replace(/[\s\-\(\)\+]/g, '');
+  if (cleaned.length > 10) {
+    return cleaned.slice(-10);
+  }
+  return cleaned;
+}
 
 export default function TenantLoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    identifier: '',
     password: ''
   });
   const [errors, setErrors] = useState({});
@@ -29,10 +45,13 @@ export default function TenantLoginPage() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!isValidEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    if (!formData.identifier.trim()) {
+      newErrors.identifier = 'Email or phone number is required';
+    } else {
+      const input = formData.identifier.trim();
+      if (!isPhoneNumber(input) && !isValidEmail(input)) {
+        newErrors.identifier = 'Please enter a valid email address or 10-digit phone number';
+      }
     }
 
     if (!formData.password) {
@@ -69,7 +88,7 @@ export default function TenantLoginPage() {
       },
       'auth/invalid-credential': {
         title: 'Invalid Credentials',
-        message: 'The email or password is incorrect. If the admin added you, please Sign Up first with the same email to activate your account.'
+        message: 'The email/phone or password is incorrect. If the admin added you, please Sign Up first with the same email to activate your account.'
       },
       'auth/network-request-failed': {
         title: 'Network Error',
@@ -77,7 +96,7 @@ export default function TenantLoginPage() {
       },
       'auth/invalid-login-credentials': {
         title: 'Login Failed',
-        message: 'Invalid email or password. If you are a new tenant, please Sign Up first to create your login.'
+        message: 'Invalid credentials. If you are a new tenant, please Sign Up first to create your login.'
       }
     };
     return errorMessages[errorCode] || {
@@ -85,6 +104,32 @@ export default function TenantLoginPage() {
       message: `Something went wrong. Please try again. (Error: ${errorCode || 'Unknown'})`
     };
   };
+
+  // Look up email from Firestore by phone number
+  async function lookupEmailByPhone(phone) {
+    const normalized = normalizePhone(phone);
+
+    // Try exact match first
+    let q = query(collection(db, 'tenants'), where('phone', '==', normalized));
+    let snap = await getDocs(q);
+
+    // If not found, try with common prefixes
+    if (snap.empty) {
+      q = query(collection(db, 'tenants'), where('phone', '==', '+91' + normalized));
+      snap = await getDocs(q);
+    }
+    if (snap.empty) {
+      q = query(collection(db, 'tenants'), where('phone', '==', '91' + normalized));
+      snap = await getDocs(q);
+    }
+
+    if (snap.empty) {
+      return null;
+    }
+
+    const tenant = snap.docs[0].data();
+    return tenant.email || null;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,12 +140,67 @@ export default function TenantLoginPage() {
     setAuthError('');
 
     try {
-      console.log('Attempting login with:', formData.email);
-      const result = await signInWithEmailAndPassword(auth, formData.email, formData.password);
-      console.log('Login successful! User:', result.user.uid);
+      let email = formData.identifier.trim();
+
+      // If it's a phone number, look up the email from Firestore
+      if (isPhoneNumber(email)) {
+        const foundEmail = await lookupEmailByPhone(email);
+        if (!foundEmail) {
+          // Check if the phone exists in Firestore at all (tenant added by admin but no email)
+          const normalized = normalizePhone(email);
+          let phoneQuery = query(collection(db, 'tenants'), where('phone', '==', normalized));
+          let phoneSnap = await getDocs(phoneQuery);
+          if (phoneSnap.empty) {
+            phoneQuery = query(collection(db, 'tenants'), where('phone', '==', '+91' + normalized));
+            phoneSnap = await getDocs(phoneQuery);
+          }
+
+          if (!phoneSnap.empty) {
+            // Tenant exists in Firestore but has no email — needs to sign up
+            setAuthError({
+              title: 'Sign Up Required',
+              message: 'Your phone number is registered by the admin, but you haven\'t created your login yet. Please click "Sign Up" below to create your account with this phone number.'
+            });
+          } else {
+            setAuthError({
+              title: 'Phone Number Not Found',
+              message: 'No tenant account is linked to this phone number. Please check the number or try logging in with your email instead.'
+            });
+          }
+          setLoading(false);
+          return;
+        }
+        email = foundEmail;
+      }
+
+      await signInWithEmailAndPassword(auth, email, formData.password);
       navigate('/tenant/dashboard');
     } catch (error) {
       console.error('Login error:', error.code, error.message);
+
+      // If login failed, check if tenant exists in Firestore to give better error
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-login-credentials') {
+        const inputEmail = formData.identifier.trim();
+        if (!isPhoneNumber(inputEmail)) {
+          // Check if this email exists in Firestore tenants (added by admin)
+          const emailQuery = query(collection(db, 'tenants'), where('email', '==', inputEmail.toLowerCase()));
+          const emailSnap = await getDocs(emailQuery);
+
+          if (!emailSnap.empty) {
+            const tenant = emailSnap.docs[0].data();
+            if (!tenant.auth_uid) {
+              // Tenant added by admin but never signed up
+              setAuthError({
+                title: 'Sign Up Required',
+                message: 'The admin has added you as a tenant, but you haven\'t created your login yet. Please click "Sign Up" below and use this same email address to activate your account.'
+              });
+              setLoading(false);
+              return;
+            }
+          }
+        }
+      }
+
       setAuthError(getFirebaseErrorMessage(error.code));
     } finally {
       setLoading(false);
@@ -112,8 +212,9 @@ export default function TenantLoginPage() {
       <div className="relative max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-4">
-            <span className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</span>
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <img src="/logo.svg" alt="Swami PG Logo" className="w-10 h-10 rounded object-contain" />
+            <span className="text-2xl font-bold text-[#1a1a1a]">Swami PG</span>
           </Link>
           <h1 className="text-2xl font-semibold text-[#424242]">Tenant Login</h1>
           <p className="text-[#757575] mt-2">Access your bills and account</p>
@@ -139,24 +240,24 @@ export default function TenantLoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
+            {/* Email or Phone */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-[#424242] mb-2">
-                Email Address
+              <label htmlFor="identifier" className="block text-sm font-semibold text-[#424242] mb-2">
+                Email or Phone Number
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="identifier"
+                name="identifier"
+                value={formData.identifier}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-white border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.email ? 'border-red-300' : 'border-gray-200'
+                className={`w-full px-3 py-3 rounded-lg bg-white border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.identifier ? 'border-red-300' : 'border-gray-200'
                   }`}
-                placeholder="Enter your email"
-                autoComplete="email"
+                placeholder="Enter email or phone number"
+                autoComplete="username"
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              {errors.identifier && (
+                <p className="text-red-500 text-sm mt-1">{errors.identifier}</p>
               )}
             </div>
 

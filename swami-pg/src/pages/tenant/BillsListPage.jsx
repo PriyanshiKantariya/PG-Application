@@ -117,11 +117,11 @@ export default function BillsListPage() {
         </div>
         <div className="bg-white rounded-2xl border border-emerald-500/30 p-5 text-center">
           <p className="text-sm text-[#757575] mb-2">Paid</p>
-          <p className="text-xl font-bold text-[#43A047]">{formatCurrency(paidAmount)}</p>
+          <p className="text-xl font-bold text-[#4A7C59]">{formatCurrency(paidAmount)}</p>
         </div>
         <div className="bg-white rounded-2xl border border-amber-500/30 p-5 text-center">
           <p className="text-sm text-[#757575] mb-2">Pending</p>
-          <p className="text-xl font-bold text-amber-600">{formatCurrency(pendingAmount)}</p>
+          <p className="text-xl font-bold text-[#B8860B]">{formatCurrency(pendingAmount)}</p>
         </div>
       </div>
 
@@ -169,7 +169,7 @@ export default function BillsListPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[#757575]">Total Amount</span>
-                    <span className="font-bold text-[#1E88E5] text-lg">
+                    <span className="font-bold text-[#5B7A9D] text-lg">
                       {formatCurrency(bill.total_amount)}
                     </span>
                   </div>
@@ -186,7 +186,7 @@ export default function BillsListPage() {
                   <div className="text-amber-600">
                     {formatCurrency((bill.electricity_share || 0) + (bill.gas_share || 0))}
                   </div>
-                  <div className="font-bold text-[#1E88E5]">
+                  <div className="font-bold text-[#5B7A9D]">
                     {formatCurrency(bill.total_amount)}
                   </div>
                   <div className="text-center">
@@ -211,7 +211,7 @@ export default function BillsListPage() {
       <div className="text-center mt-8">
         <Link
           to="/tenant/dashboard"
-          className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-[#5B7A9D] hover:text-[#4A6B8A] font-medium transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

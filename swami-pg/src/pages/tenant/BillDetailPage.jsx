@@ -131,7 +131,7 @@ export default function BillDetailPage() {
           <p className="text-[#757575] mb-6">{error}</p>
           <button
             onClick={() => navigate('/tenant/bills')}
-            className="px-6 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all font-semibold"
+            className="px-6 py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-white rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all font-semibold"
           >
             Back to Bills
           </button>
@@ -178,7 +178,7 @@ export default function BillDetailPage() {
       {/* Bill Header */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-[#1E88E5] to-[#1565C0] px-6 py-6 text-[#424242]">
+        <div className="bg-[#5B7A9D] px-6 py-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">
@@ -236,9 +236,9 @@ export default function BillDetailPage() {
           </div>
 
           {/* Total */}
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-100 rounded-xl p-5 flex items-center justify-between">
+          <div className="bg-[#F0F4F8] border border-[#E0E7EF] rounded-xl p-5 flex items-center justify-between">
             <span className="text-lg font-medium text-[#424242]">Total Amount</span>
-            <span className="text-3xl font-bold text-[#1E88E5]">{formatCurrency(bill.total_amount)}</span>
+            <span className="text-3xl font-bold text-[#5B7A9D]">{formatCurrency(bill.total_amount)}</span>
           </div>
 
           {/* Payment Button */}
@@ -246,7 +246,7 @@ export default function BillDetailPage() {
             <div className="mt-6">
               <button
                 onClick={handlePaymentClick}
-                className="w-full py-4 bg-gradient-to-r from-[#43A047] to-[#2E7D32] text-[#424242] text-lg font-semibold rounded-xl hover:from-[#2E7D32] hover:to-[#1B5E20] transition-all duration-200 flex items-center justify-center shadow-sm"
+                className="w-full py-4 bg-[#4A7C59] text-white text-lg font-semibold rounded-xl hover:bg-[#3D6B4A] transition-all duration-200 flex items-center justify-center"
               >
                 <PaymentIcon />
                 <span className="ml-2">I HAVE PAID - Submit Screenshot</span>
@@ -260,14 +260,14 @@ export default function BillDetailPage() {
           {/* Paid confirmation */}
           {bill.status === 'Paid' && (
             <div className="mt-6 bg-green-50 border border-green-100 rounded-xl p-5 text-center">
-              <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-[#43A047]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 bg-[#E8F0E8] rounded-full flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-[#4A7C59]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="text-[#43A047] font-semibold">This bill has been paid</p>
+              <p className="text-[#4A7C59] font-semibold">This bill has been paid</p>
               {bill.paid_date && (
-                <p className="text-sm text-[#43A047]/70 mt-1">
+                <p className="text-sm text-[#4A7C59]/70 mt-1">
                   Payment confirmed on {formatDate(bill.paid_date)}
                 </p>
               )}

@@ -65,8 +65,10 @@ export const PATTERNS = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 };
 
-// Google Forms URLs (to be updated with actual form URLs)
+// Google Forms URLs
 export const GOOGLE_FORMS = {
-  newTenantOnboarding: 'https://forms.gle/your-tenant-form-id',
-  paymentScreenshot: 'https://forms.gle/your-payment-form-id'
+  newTenantOnboarding: 'https://forms.gle/cdxjA7mPaXkqYNsB6',
+  paymentScreenshot: 'https://forms.gle/PcJkCWbptBymF9y69',
+  // Google Sheet URL where payment screenshot responses are stored
+  paymentResponsesSheet: 'https://docs.google.com/spreadsheets/d/1EUCnrAw6Y4-ItF6wM0xI690Zfh5d-NKwq-v7t8VjD78/edit'
 };

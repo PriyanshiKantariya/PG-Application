@@ -4,7 +4,7 @@ import { PublicLayout, TenantLayout, AdminLayout } from './components/layout';
 import { ProtectedRoute } from './components/auth';
 import { HomePage, PropertyDetailPage, RequestVisitPage, RulesPage } from './pages/public';
 import { TenantLoginPage, TenantSignUpPage, TenantDashboard, TenantProfilePage, BillsListPage, BillDetailPage, ComplaintsListPage, NewComplaintPage, ComplaintDetailPage } from './pages/tenant';
-import { AdminLoginPage, AdminDashboard, PropertiesListPage, PropertyFormPage, TenantsListPage, TenantFormPage, TenantDetailPage, UtilitiesEntryPage, BillsOverviewPage, VisitRequestsPage, ComplaintsAdminPage } from './pages/admin';
+import { AdminLoginPage, AdminDashboard, PropertiesListPage, PropertyFormPage, TenantsListPage, TenantFormPage, TenantDetailPage, UtilitiesEntryPage, BillsOverviewPage, VisitRequestsPage, ComplaintsAdminPage, PaymentVerificationPage } from './pages/admin';
 
 function App() {
   return (
@@ -62,7 +62,7 @@ function App() {
             <Route path="/admin/bills/overview" element={<BillsOverviewPage />} />
             <Route path="/admin/visits" element={<VisitRequestsPage />} />
             <Route path="/admin/complaints" element={<ComplaintsAdminPage />} />
-            {/* More admin routes will be added here */}
+            <Route path="/admin/payment-verification" element={<PaymentVerificationPage />} />
           </Route>
         </Routes>
       </Router>

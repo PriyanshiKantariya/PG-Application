@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
+import { GOOGLE_FORMS } from '../../utils/constants';
 
 // SVG Icons
 const PlusIcon = () => (
@@ -35,6 +36,53 @@ const PhoneIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
   </svg>
 );
+
+// Copy onboarding form link button
+function CopyOnboardingLink() {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(GOOGLE_FORMS.newTenantOnboarding);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const input = document.createElement('input');
+      input.value = GOOGLE_FORMS.newTenantOnboarding;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium border border-gray-200 bg-white text-[#4a4a4a] hover:bg-[#F5F5F5] hover:text-[#1a1a1a] transition-all shadow-sm"
+      title="Copy onboarding form link to share with new tenants"
+    >
+      {copied ? (
+        <>
+          <svg className="w-5 h-5 text-[#43A047]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="text-[#43A047]">Link Copied!</span>
+        </>
+      ) : (
+        <>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Share Onboarding Form
+        </>
+      )}
+    </button>
+  );
+}
 
 export default function TenantsListPage() {
   const [tenants, setTenants] = useState([]);
@@ -138,13 +186,16 @@ export default function TenantsListPage() {
           <h1 className="text-2xl font-bold text-[#1a1a1a]">Tenants Management</h1>
           <p className="text-[#4a4a4a] mt-1">Manage all PG tenants</p>
         </div>
-        <Link
-          to="/admin/tenants/new"
-          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] px-4 py-2.5 rounded-lg font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-all shadow-sm"
-        >
-          <PlusIcon />
-          Add New Tenant
-        </Link>
+        <div className="flex items-center gap-3">
+          <CopyOnboardingLink />
+          <Link
+            to="/admin/tenants/new"
+            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a] px-4 py-2.5 rounded-lg font-medium hover:from-[#4A8AC4] hover:to-[#5B9BD5] transition-all shadow-sm"
+          >
+            <PlusIcon />
+            Add New Tenant
+          </Link>
+        </div>
       </div>
 
       {/* Summary Cards */}

@@ -109,11 +109,11 @@ export default function TenantSignUpPage() {
     try {
       // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
-        auth, 
-        formData.email, 
+        auth,
+        formData.email,
         formData.password
       );
-      
+
       const user = userCredential.user;
 
       // Update the user's display name
@@ -177,8 +177,9 @@ export default function TenantSignUpPage() {
       <div className="relative max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-4">
-            <span className="text-3xl font-bold bg-gradient-to-r from-[#1E88E5] to-[#42A5F5] bg-clip-text text-transparent">Swami PG</span>
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <img src="/logo.svg" alt="Swami PG Logo" className="w-10 h-10 rounded object-contain" />
+            <span className="text-2xl font-bold text-[#1a1a1a]">Swami PG</span>
           </Link>
           <h1 className="text-2xl font-semibold text-[#424242]">Create Account</h1>
           <p className="text-[#757575] mt-2">Sign up to get started</p>
@@ -215,9 +216,8 @@ export default function TenantSignUpPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${
-                  errors.name ? 'border-red-500/50' : 'border-gray-200'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.name ? 'border-red-500/50' : 'border-gray-200'
+                  }`}
                 placeholder="Enter your full name"
                 autoComplete="name"
               />
@@ -237,9 +237,8 @@ export default function TenantSignUpPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${
-                  errors.email ? 'border-red-500/50' : 'border-gray-200'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.email ? 'border-red-500/50' : 'border-gray-200'
+                  }`}
                 placeholder="Enter your email"
                 autoComplete="email"
               />
@@ -259,9 +258,8 @@ export default function TenantSignUpPage() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${
-                  errors.phone ? 'border-red-500/50' : 'border-gray-200'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.phone ? 'border-red-500/50' : 'border-gray-200'
+                  }`}
                 placeholder="Enter your phone number"
                 autoComplete="tel"
               />
@@ -282,9 +280,8 @@ export default function TenantSignUpPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-3 py-3 pr-10 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${
-                    errors.password ? 'border-red-500/50' : 'border-gray-200'
-                  }`}
+                  className={`w-full px-3 py-3 pr-10 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.password ? 'border-red-500/50' : 'border-gray-200'
+                    }`}
                   placeholder="Create a password"
                   autoComplete="new-password"
                 />
@@ -321,9 +318,8 @@ export default function TenantSignUpPage() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${
-                  errors.confirmPassword ? 'border-red-500/50' : 'border-gray-200'
-                }`}
+                className={`w-full px-3 py-3 rounded-lg bg-[#F5F5F5] border text-[#424242] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-colors ${errors.confirmPassword ? 'border-red-500/50' : 'border-gray-200'
+                  }`}
                 placeholder="Confirm your password"
                 autoComplete="new-password"
               />
@@ -336,7 +332,7 @@ export default function TenantSignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] font-semibold rounded-lg hover:from-[#1565C0] hover:to-[#1E88E5] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm mt-2"
+              className="w-full py-3 bg-[#1E88E5] text-white font-semibold rounded-lg hover:bg-[#1565C0] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm mt-2"
             >
               {loading ? (
                 <span className="flex items-center justify-center">

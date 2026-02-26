@@ -141,7 +141,7 @@ export default function NewComplaintPage() {
       {/* Form Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#1E88E5] to-[#1565C0] px-6 py-6 text-[#424242]">
+        <div className="bg-[#5B7A9D] px-6 py-6 text-white">
           <h1 className="text-2xl font-bold">New Complaint</h1>
           <p className="text-blue-100 mt-1">
             Report an issue at {tenantData?.property_name || 'your property'}
@@ -294,7 +294,7 @@ export default function NewComplaintPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-4 bg-gradient-to-r from-[#1E88E5] to-[#1565C0] text-[#424242] text-lg font-semibold rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="w-full py-4 bg-[#5B7A9D] text-white text-lg font-semibold rounded-xl hover:bg-[#4A6B8A] transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>
@@ -311,8 +311,8 @@ export default function NewComplaintPage() {
           </div>
 
           {/* Info Note */}
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-            <p className="text-sm text-[#1565C0]">
+          <div className="bg-[#F0F4F8] border border-[#E0E7EF] rounded-xl p-4">
+            <p className="text-sm text-[#5B7A9D]">
               <span className="font-medium">Note:</span> Your complaint will be visible to all tenants in your PG. 
               The admin will review and respond as soon as possible.
             </p>

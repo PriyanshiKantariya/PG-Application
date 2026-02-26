@@ -85,13 +85,13 @@ export default function TenantProfilePage() {
       {/* Profile Card */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Avatar Section */}
-        <div className="bg-gradient-to-r from-[#1E88E5] to-[#1565C0] px-6 py-8 text-center">
+        <div className="bg-[#5B7A9D] px-6 py-8 text-center">
           <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 border-4 border-white/30">
-            <span className="text-4xl font-bold text-[#424242]">
+            <span className="text-4xl font-bold text-white">
               {(tenantData?.name || 'T').charAt(0).toUpperCase()}
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-[#424242]">{tenantData?.name || 'Tenant'}</h2>
+          <h2 className="text-2xl font-bold text-white">{tenantData?.name || 'Tenant'}</h2>
           <p className="text-blue-100 mt-1">{tenantData?.tenant_code || 'Loading...'}</p>
         </div>
 
@@ -103,7 +103,7 @@ export default function TenantProfilePage() {
               className="flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl border border-gray-200"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-[#1E88E5]">
+                <div className="w-10 h-10 rounded-lg bg-[#F0F4F8] flex items-center justify-center text-[#5B7A9D]">
                   {getIcon(field.icon)}
                 </div>
                 <span className="text-[#757575]">{field.label}</span>
@@ -111,8 +111,8 @@ export default function TenantProfilePage() {
               <span className={`font-medium ${
                 field.label === 'Status' 
                   ? field.value === 'Active' 
-                    ? 'text-[#43A047]' 
-                    : 'text-amber-600'
+                    ? 'text-[#4A7C59]' 
+                    : 'text-[#B8860B]'
                   : 'text-[#424242]'
               }`}>
                 {field.value}
@@ -126,7 +126,7 @@ export default function TenantProfilePage() {
           <div className="space-y-3">
             <Link
               to="/tenant/dashboard"
-              className="block w-full px-6 py-3 text-center text-sm font-semibold text-[#424242] bg-gradient-to-r from-[#1E88E5] to-[#1565C0] rounded-xl hover:from-[#1565C0] hover:to-[#1E88E5] transition-all duration-200 shadow-sm"
+              className="block w-full px-6 py-3 text-center text-sm font-semibold text-white bg-[#5B7A9D] rounded-xl hover:bg-[#4A6B8A] transition-all duration-200"
             >
               Back to Dashboard
             </Link>
@@ -143,7 +143,7 @@ export default function TenantProfilePage() {
       {/* Help Section */}
       <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-[#424242] mb-4 flex items-center gap-2">
-          <svg className="w-5 h-5 text-[#1E88E5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-[#5B7A9D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Need Help?

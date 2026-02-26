@@ -10,3 +10,4 @@ export { default as UtilitiesEntryPage } from './UtilitiesEntryPage';
 export { default as BillsOverviewPage } from './BillsOverviewPage';
 export { default as VisitRequestsPage } from './VisitRequestsPage';
 export { default as ComplaintsAdminPage } from './ComplaintsAdminPage';
+export { default as PaymentVerificationPage } from './PaymentVerificationPage';

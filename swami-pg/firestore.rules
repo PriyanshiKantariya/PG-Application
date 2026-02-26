@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Check if user is admin
+    // Admin users have a custom claim 'admin' set to true,
+    // OR their UID matches the admin document in the 'admins' collection
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.admin == true || 
+         exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    // Helper: Check if user is the specified tenant
+    function isTenant(tenantId) {
+      return isAuthenticated() && request.auth.uid == tenantId;
+    }
+
+    // =============================================
+    // PROPERTIES - Public read, admin write
+    // =============================================
+    match /properties/{propertyId} {
+      allow read: if true;  // Public listing
+      allow create, update, delete: if isAdmin();
+    }
+
+    // =============================================
+    // TENANTS - Public read (needed for available
+    // beds count on homepage), admin write
+    // =============================================
+    match /tenants/{tenantId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // =============================================
+    // BILLS - Admin full access, tenants own bills
+    // =============================================
+    match /bills/{billId} {
+      allow read: if isAdmin() || 
+        (isAuthenticated() && resource.data.tenant_id == request.auth.uid);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || 
+        // Allow tenants to update status from Pending to ReportedPaid only
+        (isAuthenticated() && 
+         resource.data.tenant_id == request.auth.uid &&
+         resource.data.status == 'Pending' &&
+         request.resource.data.status == 'ReportedPaid' &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updated_at']));
+    }
+
+    // =============================================
+    // COMPLAINTS - Admin full access, 
+    // tenants can read by property & create
+    // =============================================
+    match /complaints/{complaintId} {
+      allow read: if isAdmin() || 
+        (isAuthenticated() && 
+         exists(/databases/$(database)/documents/tenants/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/tenants/$(request.auth.uid)).data.property_id == resource.data.property_id);
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // =============================================
+    // VISIT REQUESTS - Public create, admin manage
+    // =============================================
+    match /visit_requests/{requestId} {
+      allow create: if true;  // Public form submission
+      allow read, update, delete: if isAdmin();
+    }
+
+    // =============================================
+    // ADMINS - Authenticated can read (needed for
+    // role check in AuthContext), only admin write
+    // =============================================
+    match /admins/{adminId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // =============================================
+    // UTILITY BILLS - Admin only
+    // =============================================
+    match /utility_bills/{utilityId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { collection, getDocs, addDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
+import { GOOGLE_FORMS } from '../../utils/constants';
 
 // SVG Icons
 const ArrowLeftIcon = () => (
@@ -59,7 +60,7 @@ export default function TenantFormPage() {
             if (num >= maxCode) maxCode = num + 1;
           }
         });
-        
+
         setFormData(prev => ({
           ...prev,
           tenant_code: `SPG${maxCode.toString().padStart(3, '0')}`
@@ -134,7 +135,7 @@ export default function TenantFormPage() {
         where('tenant_code', '==', formData.tenant_code.trim())
       );
       const existingSnap = await getDocs(existingCodeQuery);
-      
+
       if (!existingSnap.empty) {
         setError('Tenant code already exists. Please use a different code.');
         setSaving(false);
@@ -147,7 +148,7 @@ export default function TenantFormPage() {
         where('phone', '==', formData.phone.trim())
       );
       const existingPhoneSnap = await getDocs(existingPhoneQuery);
-      
+
       if (!existingPhoneSnap.empty) {
         setError('A tenant with this phone number already exists.');
         setSaving(false);
@@ -216,7 +217,7 @@ export default function TenantFormPage() {
           {/* Personal Information Section */}
           <div className="pb-4 border-b border-[#E0E0E0]">
             <h2 className="text-lg font-semibold text-[#212121] mb-4">Personal Information</h2>
-            
+
             {/* Full Name */}
             <div className="mb-4">
               <label htmlFor="name" className="block text-sm font-medium text-[#212121] mb-1.5">
@@ -270,7 +271,7 @@ export default function TenantFormPage() {
           {/* Tenancy Details Section */}
           <div className="pb-4 border-b border-[#E0E0E0]">
             <h2 className="text-lg font-semibold text-[#212121] mb-4">Tenancy Details</h2>
-            
+
             {/* Property Selection */}
             <div className="mb-4">
               <label htmlFor="property_id" className="block text-sm font-medium text-[#212121] mb-1.5">
@@ -365,7 +366,47 @@ export default function TenantFormPage() {
           {/* Documents Section */}
           <div>
             <h2 className="text-lg font-semibold text-[#212121] mb-4">Documents</h2>
-            
+
+            {/* Onboarding Form Callout */}
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-[#5B9BD5] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-[#1a1a1a] mb-1">Collect tenant documents via Google Form</p>
+                  <p className="text-xs text-[#4a4a4a] mb-2">Share this form with the new tenant to collect their Aadhaar, ID proof, and other details.</p>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={GOOGLE_FORMS.newTenantOnboarding}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-[#5B9BD5] hover:text-[#4A8AC4] transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Open Onboarding Form
+                    </a>
+                    <span className="text-gray-300">|</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(GOOGLE_FORMS.newTenantOnboarding);
+                        alert('Onboarding form link copied to clipboard!');
+                      }}
+                      className="inline-flex items-center gap-1.5 text-sm font-medium text-[#4a4a4a] hover:text-[#1a1a1a] transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      Copy Link
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div>
               <label htmlFor="docs_link" className="block text-sm font-medium text-[#212121] mb-1.5">
                 Documents Link
