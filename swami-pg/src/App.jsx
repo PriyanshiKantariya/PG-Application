@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { PublicLayout, TenantLayout, AdminLayout } from './components/layout';
 import { ProtectedRoute } from './components/auth';
-import { HomePage, PropertyDetailPage, RequestVisitPage, RulesPage } from './pages/public';
+import { HomePage, AllPropertiesPage, PropertyDetailPage, RequestVisitPage, RulesPage } from './pages/public';
 import { TenantLoginPage, TenantSignUpPage, TenantDashboard, TenantProfilePage, BillsListPage, BillDetailPage, ComplaintsListPage, NewComplaintPage, ComplaintDetailPage } from './pages/tenant';
 import { AdminLoginPage, AdminDashboard, PropertiesListPage, PropertyFormPage, TenantsListPage, TenantFormPage, TenantDetailPage, UtilitiesEntryPage, BillsOverviewPage, VisitRequestsPage, ComplaintsAdminPage, PaymentVerificationPage } from './pages/admin';
 
@@ -14,6 +14,7 @@ function App() {
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/properties" element={<AllPropertiesPage />} />
             <Route path="/property/:propertyId" element={<PropertyDetailPage />} />
             <Route path="/request-visit" element={<RequestVisitPage />} />
             <Route path="/rules" element={<RulesPage />} />

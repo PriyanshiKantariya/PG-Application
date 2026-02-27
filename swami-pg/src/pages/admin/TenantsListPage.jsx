@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
 import { GOOGLE_FORMS } from '../../utils/constants';
@@ -34,6 +34,12 @@ const SearchIcon = () => (
 const PhoneIcon = () => (
   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
   </svg>
 );
 
@@ -92,6 +98,9 @@ export default function TenantsListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [propertyFilter, setPropertyFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('Active');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -161,6 +170,22 @@ export default function TenantsListPage() {
     }
     return 'bg-gray-100 text-[#4a4a4a] border border-gray-300';
   };
+
+  async function handleDeleteTenant() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'tenants', deleteTarget.id));
+      setTenants(prev => prev.filter(t => t.id !== deleteTarget.id));
+      setShowDeleteModal(false);
+      setDeleteTarget(null);
+    } catch (err) {
+      console.error('Error deleting tenant:', err);
+      setError('Failed to delete tenant');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -349,13 +374,22 @@ export default function TenantsListPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <Link
-                          to={`/admin/tenants/${tenant.id}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
-                        >
-                          <ViewIcon />
-                          View
-                        </Link>
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            to={`/admin/tenants/${tenant.id}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-blue-100 border border-blue-100 transition-colors"
+                          >
+                            <ViewIcon />
+                            View
+                          </Link>
+                          <button
+                            onClick={() => { setDeleteTarget(tenant); setShowDeleteModal(true); }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 border border-red-100 transition-colors"
+                          >
+                            <TrashIcon />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -367,38 +401,51 @@ export default function TenantsListPage() {
           {/* Mobile Cards */}
           <div className="md:hidden space-y-4">
             {filteredTenants.map((tenant) => (
-              <Link
+              <div
                 key={tenant.id}
-                to={`/admin/tenants/${tenant.id}`}
                 className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-[#5B9BD5]/30 transition-colors"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <span className="font-mono text-sm font-medium text-[#5B9BD5]">
-                      {tenant.tenant_code || 'N/A'}
+                <Link
+                  to={`/admin/tenants/${tenant.id}`}
+                  className="block"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <span className="font-mono text-sm font-medium text-[#5B9BD5]">
+                        {tenant.tenant_code || 'N/A'}
+                      </span>
+                      <h3 className="font-semibold text-[#1a1a1a] mt-1">{tenant.name}</h3>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(tenant.status || 'Pending')}`}>
+                      {tenant.status || 'Pending'}
                     </span>
-                    <h3 className="font-semibold text-[#1a1a1a] mt-1">{tenant.name}</h3>
                   </div>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(tenant.status || 'Pending')}`}>
-                    {tenant.status || 'Pending'}
-                  </span>
-                </div>
 
-                <div className="space-y-1 text-sm text-[#4a4a4a]">
-                  <div className="flex items-center gap-1.5">
-                    <PhoneIcon />
-                    <span>{tenant.phone || 'N/A'}</span>
+                  <div className="space-y-1 text-sm text-[#4a4a4a]">
+                    <div className="flex items-center gap-1.5">
+                      <PhoneIcon />
+                      <span>{tenant.phone || 'N/A'}</span>
+                    </div>
+                    <p>{tenant.property?.name || 'Unknown Property'}</p>
                   </div>
-                  <p>{tenant.property?.name || 'Unknown Property'}</p>
-                </div>
 
-                <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
-                  <span className="text-sm text-[#4a4a4a]">Monthly Rent</span>
-                  <span className="font-semibold text-[#1a1a1a]">
-                    ?{(tenant.rent || 0).toLocaleString('en-IN')}
-                  </span>
+                  <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
+                    <span className="text-sm text-[#4a4a4a]">Monthly Rent</span>
+                    <span className="font-semibold text-[#1a1a1a]">
+                      ₹{(tenant.rent || 0).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </Link>
+                <div className="mt-3 pt-3 border-t border-gray-200 flex justify-end">
+                  <button
+                    onClick={() => { setDeleteTarget(tenant); setShowDeleteModal(true); }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 border border-red-100 transition-colors"
+                  >
+                    <TrashIcon />
+                    Delete
+                  </button>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
@@ -407,6 +454,52 @@ export default function TenantsListPage() {
             Showing {filteredTenants.length} of {tenants.length} tenants
           </p>
         </>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && deleteTarget && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full shadow-2xl">
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Delete Tenant</h3>
+              <p className="text-[#4a4a4a] mb-4">
+                Are you sure you want to permanently delete <strong className="text-[#1a1a1a]">{deleteTarget.name}</strong>?
+              </p>
+              <ul className="list-disc list-inside text-sm text-[#4a4a4a] mb-4 space-y-1">
+                <li>All tenant information will be removed</li>
+                <li>Associated bills will remain but unlinked</li>
+                <li>This will free up a bed in the property</li>
+              </ul>
+              <p className="text-sm text-red-600 mb-6">This action cannot be undone.</p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => { setShowDeleteModal(false); setDeleteTarget(null); }}
+                  disabled={deleting}
+                  className="px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-xl hover:bg-[#F5F5F5] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteTenant}
+                  disabled={deleting}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
+                >
+                  {deleting ? (
+                    <>
+                      <LoadingSpinner size="small" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <TrashIcon />
+                      Delete Tenant
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

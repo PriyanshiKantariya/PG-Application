@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-block">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">Swami PG</h1>
+            <h1 className="text-3xl font-bold text-black">Swami PG</h1>
           </Link>
           <p className="text-[#4a4a4a] mt-2">Admin Portal</p>
         </div>

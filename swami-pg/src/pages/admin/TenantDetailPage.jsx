@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { doc, getDoc, updateDoc, collection, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
 import { formatDate } from '../../utils/helpers';
@@ -84,6 +84,12 @@ const ExternalLinkIcon = () => (
   </svg>
 );
 
+const TrashIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
 export default function TenantDetailPage() {
   const { tenantId } = useParams();
   const navigate = useNavigate();
@@ -102,6 +108,8 @@ export default function TenantDetailPage() {
   const [editData, setEditData] = useState({});
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingTenant, setDeletingTenant] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -245,6 +253,18 @@ export default function TenantDetailPage() {
     }
   }
 
+  async function handleDeleteTenant() {
+    setDeletingTenant(true);
+    try {
+      await deleteDoc(doc(db, 'tenants', tenantId));
+      navigate('/admin/tenants');
+    } catch (err) {
+      console.error('Error deleting tenant:', err);
+      setError('Failed to delete tenant');
+      setDeletingTenant(false);
+    }
+  }
+
   const getStatusBadge = (status) => {
     if (status === 'Active') {
       return 'bg-emerald-500/20 text-[#43A047] border border-emerald-500/30';
@@ -340,6 +360,13 @@ export default function TenantDetailPage() {
                   Mark Vacated
                 </button>
               )}
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 border border-red-500/50 text-red-600 rounded-xl font-medium hover:bg-red-50 transition-colors"
+              >
+                <TrashIcon />
+                Delete Tenant
+              </button>
             </>
           ) : (
             <>
@@ -700,6 +727,52 @@ export default function TenantDetailPage() {
                     <>
                       <ExitIcon />
                       Confirm Vacate
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full shadow-2xl">
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Delete Tenant</h3>
+              <p className="text-[#4a4a4a] mb-4">
+                Are you sure you want to permanently delete <strong className="text-[#1a1a1a]">{tenant.name}</strong>?
+              </p>
+              <ul className="list-disc list-inside text-sm text-[#4a4a4a] mb-4 space-y-1">
+                <li>All tenant information will be removed</li>
+                <li>Associated bills will remain but unlinked</li>
+                <li>This will free up a bed in the property</li>
+              </ul>
+              <p className="text-sm text-red-600 mb-6">This action cannot be undone.</p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  disabled={deletingTenant}
+                  className="px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-xl hover:bg-[#F5F5F5] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteTenant}
+                  disabled={deletingTenant}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
+                >
+                  {deletingTenant ? (
+                    <>
+                      <LoadingSpinner size="small" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <TrashIcon />
+                      Delete Tenant
                     </>
                   )}
                 </button>

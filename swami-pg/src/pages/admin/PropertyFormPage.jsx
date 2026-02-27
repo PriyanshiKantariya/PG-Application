@@ -1,8 +1,8 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { doc, getDoc, addDoc, updateDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage } from '../../firebase/config';
+import { db } from '../../firebase/config';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 import { LoadingSpinner } from '../../components/common';
 
 // SVG Icons
@@ -57,14 +57,14 @@ export default function PropertyFormPage() {
     default_rent: '',
     default_deposit: '',
     images: [], // Array of { url, path, isPrimary }
-    showOnHomepage: true
+    showOnHomepage: true,
+    sharing_options: [] // Array of { sharing: number, price: number }
   });
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [uploadingImages, setUploadingImages] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(''); // Progress text
-  const [imagesToDelete, setImagesToDelete] = useState([]); // Track images to delete on save
 
   useEffect(() => {
     if (isEditMode && propertyId) {
@@ -88,7 +88,8 @@ export default function PropertyFormPage() {
           default_rent: data.default_rent?.toString() || '',
           default_deposit: data.default_deposit?.toString() || '',
           images: data.images || [],
-          showOnHomepage: data.showOnHomepage !== false // Default true
+          showOnHomepage: data.showOnHomepage !== false,
+          sharing_options: data.sharing_options || []
         });
       } else {
         setError('Property not found');
@@ -103,9 +104,9 @@ export default function PropertyFormPage() {
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
     }));
   }
 
@@ -116,19 +117,19 @@ export default function PropertyFormPage() {
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let { width, height } = img;
-        
+
         // Resize if larger than maxWidth
         if (width > maxWidth) {
           height = (height * maxWidth) / width;
           width = maxWidth;
         }
-        
+
         canvas.width = width;
         canvas.height = height;
-        
+
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        
+
         canvas.toBlob(
           (blob) => resolve(blob),
           'image/jpeg',
@@ -165,30 +166,26 @@ export default function PropertyFormPage() {
 
     try {
       const uploadedImages = [];
-      
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         setUploadProgress(`Processing ${i + 1}/${files.length}...`);
-        
+
         // Compress the image (800px max, 60% quality for fast upload)
         const compressedBlob = await compressImage(file, 800, 0.6);
-        
-        setUploadProgress(`Uploading ${i + 1}/${files.length}...`);
-        
-        const timestamp = Date.now();
-        const fileName = `${timestamp}_${i}.jpg`;
-        const storagePath = `properties/${propertyId || 'temp'}/${fileName}`;
-        const storageRef = ref(storage, storagePath);
 
-        await uploadBytes(storageRef, compressedBlob);
-        const url = await getDownloadURL(storageRef);
+        setUploadProgress(`Uploading ${i + 1}/${files.length}...`);
+
+        // Upload to Cloudinary
+        const folder = `swami-pg/properties/${propertyId || 'temp'}`;
+        const { url, publicId } = await uploadToCloudinary(compressedBlob, folder);
 
         uploadedImages.push({
           url,
-          path: storagePath,
+          publicId,
           isPrimary: formData.images.length === 0 && i === 0
         });
-        
+
         // Update UI immediately after each upload
         setFormData(prev => ({
           ...prev,
@@ -210,21 +207,16 @@ export default function PropertyFormPage() {
 
   function handleRemoveImage(index) {
     const imageToRemove = formData.images[index];
-    
-    // Track for deletion on save (only if it's already in storage)
-    if (imageToRemove.path) {
-      setImagesToDelete(prev => [...prev, imageToRemove.path]);
-    }
 
     // Remove from local state
     setFormData(prev => {
       const newImages = prev.images.filter((_, i) => i !== index);
-      
+
       // If we removed the primary image, make the first one primary
       if (imageToRemove.isPrimary && newImages.length > 0) {
         newImages[0].isPrimary = true;
       }
-      
+
       return { ...prev, images: newImages };
     });
   }
@@ -247,6 +239,36 @@ export default function PropertyFormPage() {
       const newImages = [...prev.images];
       [newImages[index], newImages[newIndex]] = [newImages[newIndex], newImages[index]];
       return { ...prev, images: newImages };
+    });
+  }
+
+  // Sharing options handlers
+  function handleAddSharing() {
+    setFormData(prev => {
+      const existingSharings = prev.sharing_options.map(s => s.sharing);
+      let nextSharing = 2;
+      while (existingSharings.includes(nextSharing)) {
+        nextSharing++;
+      }
+      return {
+        ...prev,
+        sharing_options: [...prev.sharing_options, { sharing: nextSharing, price: '' }]
+      };
+    });
+  }
+
+  function handleRemoveSharing(index) {
+    setFormData(prev => ({
+      ...prev,
+      sharing_options: prev.sharing_options.filter((_, i) => i !== index)
+    }));
+  }
+
+  function handleSharingChange(index, field, value) {
+    setFormData(prev => {
+      const updated = [...prev.sharing_options];
+      updated[index] = { ...updated[index], [field]: field === 'sharing' ? parseInt(value) || '' : value };
+      return { ...prev, sharing_options: updated };
     });
   }
 
@@ -280,15 +302,6 @@ export default function PropertyFormPage() {
     setSaving(true);
 
     try {
-      // Delete removed images from storage
-      for (const imagePath of imagesToDelete) {
-        try {
-          const imageRef = ref(storage, imagePath);
-          await deleteObject(imageRef);
-        } catch (err) {
-          console.warn('Could not delete image:', imagePath, err);
-        }
-      }
 
       const propertyData = {
         name: formData.name.trim(),
@@ -300,6 +313,10 @@ export default function PropertyFormPage() {
         default_deposit: parseFloat(formData.default_deposit) || 0,
         images: formData.images,
         showOnHomepage: formData.showOnHomepage,
+        sharing_options: formData.sharing_options
+          .filter(s => s.sharing && s.price)
+          .map(s => ({ sharing: parseInt(s.sharing), price: parseFloat(s.price) }))
+          .sort((a, b) => a.sharing - b.sharing),
         updated_at: serverTimestamp()
       };
 
@@ -316,7 +333,11 @@ export default function PropertyFormPage() {
       navigate('/admin/properties');
     } catch (err) {
       console.error('Error saving property:', err);
-      setError('Failed to save property. Please try again.');
+      if (err.message?.includes('No document to update')) {
+        setError('This property has been deleted. Please go back and create a new one.');
+      } else {
+        setError('Failed to save property. Please try again.');
+      }
     } finally {
       setSaving(false);
     }
@@ -359,7 +380,7 @@ export default function PropertyFormPage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200">
         <div className="p-6 space-y-6">
-          
+
           {/* Image Upload Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -380,16 +401,15 @@ export default function PropertyFormPage() {
                 {formData.images.map((image, index) => (
                   <div
                     key={index}
-                    className={`relative group rounded-lg overflow-hidden border-2 ${
-                      image.isPrimary ? 'border-amber-400' : 'border-gray-200'
-                    }`}
+                    className={`relative group rounded-lg overflow-hidden border-2 ${image.isPrimary ? 'border-amber-400' : 'border-gray-200'
+                      }`}
                   >
                     <img
                       src={image.url}
                       alt={`Property ${index + 1}`}
                       className="w-full h-24 object-cover"
                     />
-                    
+
                     {/* Primary Badge */}
                     {image.isPrimary && (
                       <div className="absolute top-1 left-1 bg-amber-400 text-[#1a1a1a] px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-1">
@@ -437,9 +457,8 @@ export default function PropertyFormPage() {
             {/* Upload Button */}
             <div
               onClick={() => !uploadingImages && fileInputRef.current?.click()}
-              className={`border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-[#5B9BD5]/30 hover:bg-[#F5F5F5] transition-all ${
-                uploadingImages ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-[#5B9BD5]/30 hover:bg-[#F5F5F5] transition-all ${uploadingImages ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             >
               <input
                 ref={fileInputRef}
@@ -601,8 +620,79 @@ export default function PropertyFormPage() {
               />
             </div>
           </div>
+        </div>
 
+        {/* Sharing Room Options */}
+        <div className="border-t border-gray-200 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <label className="block text-sm font-medium text-[#1a1a1a]">
+                Sharing Options & Pricing
+              </label>
+              <p className="text-xs text-[#4a4a4a] mt-0.5">Define what sharing types are available and the rent per sharing</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddSharing}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#5B9BD5]/10 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-[#5B9BD5]/20 border border-[#5B9BD5]/20 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Sharing Type
+            </button>
+          </div>
 
+          {formData.sharing_options.length === 0 ? (
+            <div className="text-center py-6 bg-[#F5F5F5] rounded-xl border border-gray-200 border-dashed">
+              <svg className="w-8 h-8 mx-auto text-[#4a4a4a] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <p className="text-sm text-[#4a4a4a]">No sharing options added yet</p>
+              <p className="text-xs text-[#4a4a4a] mt-1">e.g., 2 Sharing — ₹6,500/month, 3 Sharing — ₹5,000/month</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {formData.sharing_options.map((option, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-[#F5F5F5] rounded-xl border border-gray-200">
+                  <div className="flex-1">
+                    <label className="block text-xs text-[#4a4a4a] mb-1">Sharing Type</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        value={option.sharing}
+                        onChange={(e) => handleSharingChange(index, 'sharing', e.target.value)}
+                        min="1"
+                        max="10"
+                        className="w-20 px-3 py-2 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] text-center focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
+                      />
+                      <span className="text-sm text-[#4a4a4a] font-medium">Sharing</span>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs text-[#4a4a4a] mb-1">Rent per Person (₹)</label>
+                    <input
+                      type="number"
+                      value={option.price}
+                      onChange={(e) => handleSharingChange(index, 'price', e.target.value)}
+                      min="0"
+                      step="100"
+                      placeholder="e.g., 6500"
+                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSharing(index)}
+                    className="mt-5 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Remove"
+                  >
+                    <TrashIcon />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Form Actions */}

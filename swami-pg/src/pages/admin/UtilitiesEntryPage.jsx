@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { collection, getDocs, query, where, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage } from '../../firebase/config';
+import { db } from '../../firebase/config';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 import { LoadingSpinner } from '../../components/common';
 
 // ============================================================================
@@ -832,22 +832,19 @@ export default function UtilitiesEntryPage() {
     setNewFlatInputs(prev => ({ ...prev, [propertyId]: '' }));
   }, []);
 
-  // Photo Upload Handler
+  // Photo Upload Handler (Cloudinary)
   async function handlePhotoUpload(propertyId, flatNumber, photoType, file) {
     const key = getFlatKey(propertyId, flatNumber);
     setPhotoUploading(prev => ({ ...prev, [key]: { ...(prev[key] || {}), [photoType]: true } }));
 
     try {
-      const ext = file.name.split('.').pop();
-      const storagePath = `utility_bills/${propertyId}/${selectedYear}/${selectedMonth}/${flatNumber}/${photoType}.${ext}`;
-      const storageRef = ref(storage, storagePath);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+      const folder = `swami-pg/utility_bills/${propertyId}/${selectedYear}/${selectedMonth}`;
+      const { url } = await uploadToCloudinary(file, folder);
 
       // Update utilities state with the photo URL
       setUtilities(prev => ({
         ...prev,
-        [key]: { ...prev[key], [photoType]: downloadURL }
+        [key]: { ...prev[key], [photoType]: url }
       }));
     } catch (err) {
       console.error('Error uploading photo:', err);
@@ -858,25 +855,12 @@ export default function UtilitiesEntryPage() {
   }
 
   // Photo Remove Handler
-  async function handlePhotoRemove(propertyId, flatNumber, photoType) {
+  function handlePhotoRemove(propertyId, flatNumber, photoType) {
     const key = getFlatKey(propertyId, flatNumber);
-    try {
-      const photoUrl = utilities[key]?.[photoType];
-      if (photoUrl) {
-        try {
-          const storageRef = ref(storage, photoUrl);
-          await deleteObject(storageRef);
-        } catch (e) {
-          console.log('Photo may already be deleted from storage');
-        }
-      }
-      setUtilities(prev => ({
-        ...prev,
-        [key]: { ...prev[key], [photoType]: '' }
-      }));
-    } catch (err) {
-      console.error('Error removing photo:', err);
-    }
+    setUtilities(prev => ({
+      ...prev,
+      [key]: { ...prev[key], [photoType]: '' }
+    }));
   }
 
   const togglePropertyExpand = useCallback((propertyId) => {

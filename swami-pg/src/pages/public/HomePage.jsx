@@ -1,6 +1,6 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useProperties, useAreas } from '../../hooks/useProperties';
+import { useProperties } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
 import { formatCurrency, getCallLink } from '../../utils/helpers';
 
@@ -153,10 +153,26 @@ function PropertyCard({ property }) {
 
         {/* Price */}
         <div className="flex items-baseline gap-1 mb-4">
-          <span className="text-2xl font-bold text-[#1E88E5]">
-            {formatCurrency(default_rent)}
-          </span>
-          <span className="text-[#4a4a4a] text-sm">/ month</span>
+          {property.sharing_options?.length > 0 ? (
+            <>
+              <span className="text-2xl font-bold text-[#1E88E5]">
+                {formatCurrency(Math.min(...property.sharing_options.map(s => s.price)))}
+              </span>
+              {property.sharing_options.length > 1 && (
+                <span className="text-[#4a4a4a] text-sm">
+                  – {formatCurrency(Math.max(...property.sharing_options.map(s => s.price)))}
+                </span>
+              )}
+              <span className="text-[#4a4a4a] text-sm">/ month</span>
+            </>
+          ) : (
+            <>
+              <span className="text-2xl font-bold text-[#1E88E5]">
+                {formatCurrency(default_rent)}
+              </span>
+              <span className="text-[#4a4a4a] text-sm">/ month</span>
+            </>
+          )}
         </div>
 
         {/* Quick Stats */}
@@ -229,9 +245,7 @@ function StatItem({ value, label }) {
 // MAIN COMPONENT
 // ============================================================================
 export default function HomePage() {
-  const [selectedArea, setSelectedArea] = useState('All Areas');
-  const { properties, loading, error } = useProperties(selectedArea, true);
-  const { areas } = useAreas();
+  const { properties, loading, error } = useProperties(null, true);
   const location = useLocation();
 
   // Scroll to hash section when navigating from another page
@@ -375,36 +389,26 @@ export default function HomePage() {
         {/* Subtle blue accent gradient on left edge */}
         <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-transparent via-[#1E88E5]/20 to-transparent" aria-hidden="true"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header with Filter */}
+          {/* Section Header */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2">
                 Our Properties
               </h2>
               <p className="text-[#4a4a4a]">
-                {selectedArea === 'All Areas'
-                  ? 'Browse all available properties'
-                  : `Properties in ${selectedArea}`}
-                <span className="text-[#4a4a4a] ml-2">({properties.length} found)</span>
+                Browse our featured PG accommodations
               </p>
             </div>
-
-            {/* Area Filter */}
-            <div className="flex items-center gap-3">
-              <span className="text-[#4a4a4a] text-sm">Filter by area:</span>
-              <select
-                value={selectedArea}
-                onChange={(e) => setSelectedArea(e.target.value)}
-                className="px-4 py-2.5 rounded-lg bg-white border border-gray-200 text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]/30 focus:border-[#1E88E5] transition-all min-w-[180px] shadow-sm"
-              >
-                {areas.map((area) => (
-                  <option key={area} value={area}>{area}</option>
-                ))}
-              </select>
-            </div>
+            <Link
+              to="/properties"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-[#1E88E5] rounded-xl hover:bg-[#1565C0] transition-all shadow-sm"
+            >
+              View All Properties
+              <Icons.ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
 
-          {/* Properties Grid */}
+          {/* Properties Grid — limited to 3 */}
           {loading ? (
             <div className="py-20 flex flex-col items-center">
               <LoadingSpinner size="large" />
@@ -422,14 +426,27 @@ export default function HomePage() {
               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                 <Icons.Building className="w-8 h-8 text-[#4a4a4a]" />
               </div>
-              <p className="text-[#4a4a4a]">No properties found in this area.</p>
+              <p className="text-[#4a4a4a]">No properties available at the moment.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {properties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {properties.slice(0, 3).map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
+              {properties.length > 3 && (
+                <div className="mt-10 text-center">
+                  <Link
+                    to="/properties"
+                    className="inline-flex items-center gap-2 px-8 py-4 text-[#1E88E5] bg-white border border-[#1E88E5]/30 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-sm"
+                  >
+                    View All {properties.length} Properties
+                    <Icons.ArrowRight className="w-5 h-5" />
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

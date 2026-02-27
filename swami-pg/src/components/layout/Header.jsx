@@ -35,7 +35,7 @@ const ShieldIcon = () => (
 const navLinks = [
   { name: 'Home', href: '/', isRoute: true },
   { name: 'About Us', href: '/#about', isRoute: false },
-  { name: 'Our PGs', href: '/#properties', isRoute: false },
+  { name: 'Our PGs', href: '/properties', isRoute: true },
   { name: 'Reviews', href: '/#reviews', isRoute: false },
   { name: 'Rules', href: '/rules', isRoute: true },
 ];

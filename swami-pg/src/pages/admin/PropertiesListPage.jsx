@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
 
@@ -29,31 +29,40 @@ const SearchIcon = () => (
   </svg>
 );
 
+const TrashIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
 export default function PropertiesListPage() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [areaFilter, setAreaFilter] = useState('All');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchProperties() {
       try {
         // Fetch all properties
         const propertiesSnap = await getDocs(collection(db, 'properties'));
-        
+
         const propertiesData = [];
-        
+
         for (const doc of propertiesSnap.docs) {
           const propertyData = { id: doc.id, ...doc.data() };
-          
+
           // Calculate occupied beds for each property
           const tenantsQuery = query(
             collection(db, 'tenants'),
             where('property_id', '==', doc.id),
             where('status', '==', 'Active')
           );
-          
+
           try {
             const tenantsSnap = await getDocs(tenantsQuery);
             propertyData.occupied_beds = tenantsSnap.size;
@@ -66,14 +75,14 @@ export default function PropertiesListPage() {
             });
             propertyData.occupied_beds = activeTenants.length;
           }
-          
+
           propertyData.available_beds = (propertyData.total_flats || 0) - propertyData.occupied_beds;
           propertiesData.push(propertyData);
         }
-        
+
         // Sort by name
         propertiesData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        
+
         setProperties(propertiesData);
       } catch (err) {
         console.error('Error fetching properties:', err);
@@ -91,13 +100,13 @@ export default function PropertiesListPage() {
 
   // Filter properties
   const filteredProperties = properties.filter(property => {
-    const matchesSearch = 
+    const matchesSearch =
       (property.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (property.address || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (property.area || '').toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesArea = areaFilter === 'All' || property.area === areaFilter;
-    
+
     return matchesSearch && matchesArea;
   });
 
@@ -107,6 +116,22 @@ export default function PropertiesListPage() {
     occupied: acc.occupied + (p.occupied_beds || 0),
     available: acc.available + (p.available_beds || 0)
   }), { totalFlats: 0, occupied: 0, available: 0 });
+
+  async function handleDeleteProperty() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'properties', deleteTarget.id));
+      setProperties(prev => prev.filter(p => p.id !== deleteTarget.id));
+      setShowDeleteModal(false);
+      setDeleteTarget(null);
+    } catch (err) {
+      console.error('Error deleting property:', err);
+      setError('Failed to delete property');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -199,8 +224,8 @@ export default function PropertiesListPage() {
           </div>
           <h3 className="text-lg font-medium text-[#1a1a1a] mb-2">No Properties Found</h3>
           <p className="text-[#4a4a4a] mb-4">
-            {properties.length === 0 
-              ? "You haven't added any properties yet." 
+            {properties.length === 0
+              ? "You haven't added any properties yet."
               : "No properties match your search criteria."}
           </p>
           {properties.length === 0 && (
@@ -275,13 +300,22 @@ export default function PropertiesListPage() {
                         {(property.default_rent || 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <Link
-                          to={`/admin/properties/${property.id}/edit`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-blue-50 border border-blue-100 transition-colors"
-                        >
-                          <EditIcon />
-                          Edit
-                        </Link>
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            to={`/admin/properties/${property.id}/edit`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#5B9BD5] rounded-lg text-sm font-medium hover:bg-blue-100 border border-blue-100 transition-colors"
+                          >
+                            <EditIcon />
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => { setDeleteTarget(property); setShowDeleteModal(true); }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 border border-red-100 transition-colors"
+                          >
+                            <TrashIcon />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -301,16 +335,24 @@ export default function PropertiesListPage() {
                       {property.area || 'N/A'}
                     </span>
                   </div>
-                  <Link
-                    to={`/admin/properties/${property.id}/edit`}
-                    className="p-2 text-[#5B9BD5] hover:bg-blue-50 rounded-lg transition-colors"
-                  >
-                    <EditIcon />
-                  </Link>
+                  <div className="flex items-center gap-1">
+                    <Link
+                      to={`/admin/properties/${property.id}/edit`}
+                      className="p-2 text-[#5B9BD5] hover:bg-blue-50 rounded-lg transition-colors"
+                    >
+                      <EditIcon />
+                    </Link>
+                    <button
+                      onClick={() => { setDeleteTarget(property); setShowDeleteModal(true); }}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <TrashIcon />
+                    </button>
+                  </div>
                 </div>
-                
+
                 <p className="text-sm text-[#4a4a4a] mb-3 line-clamp-1">{property.address}</p>
-                
+
                 <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
                   <div className="text-center">
                     <p className="text-xs text-[#4a4a4a]">Total</p>
@@ -327,7 +369,7 @@ export default function PropertiesListPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <p className="text-sm text-[#4a4a4a]">
                     Default Rent: <span className="font-medium text-[#1a1a1a]">{(property.default_rent || 0).toLocaleString('en-IN')}</span>
@@ -337,6 +379,52 @@ export default function PropertiesListPage() {
             ))}
           </div>
         </>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && deleteTarget && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full shadow-2xl">
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Delete Property</h3>
+              <p className="text-[#4a4a4a] mb-4">
+                Are you sure you want to permanently delete <strong className="text-[#1a1a1a]">{deleteTarget.name}</strong>?
+              </p>
+              {deleteTarget.occupied_beds > 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                  <p className="text-amber-700 text-sm font-medium">⚠️ Warning: This property has {deleteTarget.occupied_beds} active tenant(s). Deleting it will leave those tenants without an assigned property.</p>
+                </div>
+              )}
+              <p className="text-sm text-red-600 mb-6">This action cannot be undone.</p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => { setShowDeleteModal(false); setDeleteTarget(null); }}
+                  disabled={deleting}
+                  className="px-4 py-2.5 border border-gray-300 text-[#1a1a1a] rounded-xl hover:bg-[#F5F5F5] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteProperty}
+                  disabled={deleting}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50"
+                >
+                  {deleting ? (
+                    <>
+                      <LoadingSpinner size="small" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <TrashIcon />
+                      Delete Property
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
