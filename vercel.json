@@ -1,0 +1,6 @@
+{
+    "buildCommand": "cd swami-pg && npm install && npm run build",
+    "outputDirectory": "swami-pg/dist",
+    "installCommand": "cd swami-pg && npm install",
+    "framework": "vite"
+}
