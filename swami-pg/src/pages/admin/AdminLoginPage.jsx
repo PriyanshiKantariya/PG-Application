@@ -124,7 +124,7 @@ export default function AdminLoginPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@swamipg.com"
+                  placeholder="Swamipg1@gmail.com"
                   required
                   className="w-full pl-10 pr-4 py-3 rounded-lg bg-white border border-gray-200 text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5] transition-colors"
                 />

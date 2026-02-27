@@ -143,8 +143,8 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
                   <Icons.Mail className="w-4 h-4 text-[#1E88E5]" />
                 </div>
-                <a href="mailto:info@swamipg.com" className="text-[#4a4a4a] text-sm hover:text-[#1E88E5] transition-colors font-medium">
-                  info@swamipg.com
+                <a href="mailto:Swamipg1@gmail.com" className="text-[#4a4a4a] text-sm hover:text-[#1E88E5] transition-colors font-medium">
+                  Swamipg1@gmail.com
                 </a>
               </li>
             </ul>
