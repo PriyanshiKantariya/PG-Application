@@ -76,7 +76,7 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex items-center gap-3">
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/917575866048"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-[#25D366] hover:border-[#25D366] transition-all duration-300 group shadow-sm"
@@ -94,7 +94,7 @@ export default function Footer() {
                 <Icons.Instagram className="w-4 h-4 text-[#4a4a4a] group-hover:text-white transition-colors" />
               </a>
               <a
-                href="tel:+919876543210"
+                href="tel:+917575866048"
                 className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-[#1E88E5] hover:border-[#1E88E5] transition-all duration-300 group shadow-sm"
                 aria-label="Call"
               >
@@ -135,8 +135,8 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
                   <Icons.Phone className="w-4 h-4 text-[#1E88E5]" />
                 </div>
-                <a href="tel:+919876543210" className="text-[#4a4a4a] text-sm hover:text-[#1E88E5] transition-colors font-medium">
-                  +91 98765 43210
+                <a href="tel:+917575866048" className="text-[#4a4a4a] text-sm hover:text-[#1E88E5] transition-colors font-medium">
+                  +91 75758 66048
                 </a>
               </li>
               <li className="flex items-center gap-3">

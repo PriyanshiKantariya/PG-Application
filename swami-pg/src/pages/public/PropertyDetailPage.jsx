@@ -319,14 +319,14 @@ export default function PropertyDetailPage() {
               </Link>
               <div className="grid grid-cols-2 gap-3">
                 <a
-                  href={getCallLink('9876543210')}
+                  href={getCallLink('7575866048')}
                   className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl font-medium text-[#1a1a1a] hover:border-[#5B9BD5]/30 hover:bg-[#D4E6F6]/40 transition-all shadow-sm"
                 >
                   <Icons.Phone className="w-4 h-4 text-[#5B9BD5]" />
                   Call Us
                 </a>
                 <a
-                  href={getWhatsAppLink('9876543210', `Hi, I'm interested in ${property.name}`)}
+                  href={getWhatsAppLink('7575866048', `Hi, I'm interested in ${property.name}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 px-4 py-3 bg-[#25D366] text-white rounded-xl font-medium hover:bg-[#1fb855] transition-colors shadow-sm"
@@ -462,7 +462,7 @@ export default function PropertyDetailPage() {
               Schedule a Visit
             </Link>
             <a
-              href={getCallLink('9876543210')}
+              href={getCallLink('7575866048')}
               className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-[#1a1a1a] rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
             >
               <Icons.Phone className="w-5 h-5" />
@@ -478,13 +478,13 @@ export default function PropertyDetailPage() {
       <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50">
         <div className="max-w-lg mx-auto flex gap-2.5">
           <a
-            href={getCallLink('9876543210')}
+            href={getCallLink('7575866048')}
             className="flex items-center justify-center gap-1.5 px-4 py-3 bg-white border border-gray-200 rounded-xl font-medium text-[#1a1a1a] shadow-sm"
           >
             <Icons.Phone className="w-4 h-4 text-[#5B9BD5]" />
           </a>
           <a
-            href={getWhatsAppLink('9876543210', `Hi, I'm interested in ${property.name}`)}
+            href={getWhatsAppLink('7575866048', `Hi, I'm interested in ${property.name}`)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-1.5 px-4 py-3 bg-[#25D366] text-white rounded-xl font-medium shadow-sm"

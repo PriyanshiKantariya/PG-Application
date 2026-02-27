@@ -201,7 +201,7 @@ function PropertyCard({ property }) {
             <Icons.ChevronRight className="w-4 h-4" />
           </Link>
           <a
-            href={getCallLink('9876543210')}
+            href={getCallLink('7575866048')}
             className="px-4 py-2.5 text-sm font-medium text-[#1E88E5] border border-[#1E88E5]/30 rounded-lg hover:bg-blue-50 transition-colors"
           >
             <Icons.Phone className="w-4 h-4" />
@@ -302,7 +302,7 @@ export default function HomePage() {
               Schedule a Visit
             </Link>
             <a
-              href="tel:+919876543210"
+              href="tel:+917575866048"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1a1a1a] rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
             >
               <Icons.Phone className="w-5 h-5" />
@@ -560,7 +560,7 @@ export default function HomePage() {
                   Schedule Your Visit
                 </Link>
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+917575866048"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 text-white rounded-xl font-semibold border border-white/40 hover:bg-white/30 transition-colors"
                 >
                   <Icons.Phone className="w-5 h-5" />

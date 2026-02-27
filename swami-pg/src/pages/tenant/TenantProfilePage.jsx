@@ -108,13 +108,12 @@ export default function TenantProfilePage() {
                 </div>
                 <span className="text-[#757575]">{field.label}</span>
               </div>
-              <span className={`font-medium ${
-                field.label === 'Status' 
-                  ? field.value === 'Active' 
-                    ? 'text-[#4A7C59]' 
-                    : 'text-[#B8860B]'
-                  : 'text-[#424242]'
-              }`}>
+              <span className={`font-medium ${field.label === 'Status'
+                ? field.value === 'Active'
+                  ? 'text-[#4A7C59]'
+                  : 'text-[#B8860B]'
+                : 'text-[#424242]'
+                }`}>
                 {field.value}
               </span>
             </div>
@@ -152,7 +151,7 @@ export default function TenantProfilePage() {
           Contact the PG admin for any profile updates or issues.
         </p>
         <a
-          href="tel:+919876543210"
+          href="tel:+917575866048"
           className="inline-flex items-center gap-2 text-[#1E88E5] hover:text-[#1565C0] font-medium transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

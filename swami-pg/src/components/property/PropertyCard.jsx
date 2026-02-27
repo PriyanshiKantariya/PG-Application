@@ -28,11 +28,10 @@ export default function PropertyCard({ property }) {
       <div className="p-5">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-[#212121]">{name}</h3>
-          <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
-            available_beds > 0 
-              ? 'bg-[#E8F5E9] text-[#2E7D32]' 
-              : 'bg-[#FFEBEE] text-[#C62828]'
-          }`}>
+          <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${available_beds > 0
+            ? 'bg-[#E8F5E9] text-[#2E7D32]'
+            : 'bg-[#FFEBEE] text-[#C62828]'
+            }`}>
             {available_beds > 0 ? `${available_beds} flats available` : 'Fully Occupied'}
           </span>
         </div>
@@ -60,7 +59,7 @@ export default function PropertyCard({ property }) {
             View Details
           </Link>
           <a
-            href={getCallLink('9876543210')}
+            href={getCallLink('7575866048')}
             className="px-4 py-2.5 text-sm font-medium text-[#1E88E5] border border-[#1E88E5] rounded-md hover:bg-[#E3F2FD] transition-colors"
           >
             Call

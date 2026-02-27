@@ -158,7 +158,7 @@ function PropertyCard({ property }) {
                         <Icons.ChevronRight className="w-4 h-4" />
                     </Link>
                     <a
-                        href={getCallLink('9876543210')}
+                        href={getCallLink('7575866048')}
                         className="px-4 py-2.5 text-sm font-medium text-[#1E88E5] border border-[#1E88E5]/30 rounded-lg hover:bg-blue-50 transition-colors"
                     >
                         <Icons.Phone className="w-4 h-4" />
