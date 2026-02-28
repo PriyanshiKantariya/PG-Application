@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProperty } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
@@ -190,6 +190,10 @@ export default function PropertyDetailPage() {
   const { propertyId } = useParams();
   const { property, loading, error } = useProperty(propertyId);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
@@ -223,7 +227,7 @@ export default function PropertyDetailPage() {
   const hasSharingOptions = property.sharing_options?.length > 0;
   const lowestPrice = hasSharingOptions
     ? Math.min(...property.sharing_options.map(s => s.price))
-    : property.default_rent;
+    : (property.min_rent || property.default_rent);
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen">
@@ -276,17 +280,15 @@ export default function PropertyDetailPage() {
               {/* Price Highlight */}
               <div className="bg-[#D4E6F6] rounded-xl p-4 mb-5">
                 <p className="text-xs text-[#4a4a4a] font-medium mb-1">
-                  {hasSharingOptions ? 'Starting from' : 'Monthly Rent'}
+                  {hasSharingOptions || (property.min_rent && property.max_rent && property.min_rent !== property.max_rent) ? 'Starting from' : 'Monthly Rent'}
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-bold text-[#5B9BD5]">{formatCurrency(lowestPrice)}</span>
                   <span className="text-[#4a4a4a] text-sm">/ month</span>
                 </div>
-                {property.default_deposit > 0 && (
-                  <p className="text-xs text-[#4a4a4a] mt-1.5">
-                    Deposit: {formatCurrency(property.default_deposit)} (Refundable)
-                  </p>
-                )}
+                <p className="text-xs text-[#4a4a4a] mt-2 pt-2 border-t border-blue-200/50">
+                  Security Deposit: 1.5 × Monthly Rent
+                </p>
               </div>
 
               {/* Quick Stats */}
@@ -406,8 +408,14 @@ export default function PropertyDetailPage() {
             </h2>
             <div className="space-y-0">
               {[
-                { label: 'Monthly Rent', value: formatCurrency(property.default_rent), highlight: true },
-                { label: 'Security Deposit', value: formatCurrency(property.default_deposit), sub: 'Refundable' },
+                {
+                  label: 'Monthly Rent',
+                  value: property.min_rent && property.max_rent
+                    ? `${formatCurrency(property.min_rent)} - ${formatCurrency(property.max_rent)}`
+                    : formatCurrency(property.default_rent),
+                  highlight: true
+                },
+                { label: 'Security Deposit', value: '1.5 × Monthly Rent', sub: 'Refundable' },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between items-center py-3.5 border-b border-gray-50 last:border-b-0">
                   <div>

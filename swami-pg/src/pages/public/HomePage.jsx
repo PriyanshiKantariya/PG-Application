@@ -83,6 +83,11 @@ const Icons = {
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
     </svg>
+  ),
+  Clean: ({ className = "w-5 h-5" }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+    </svg>
   )
 };
 
@@ -90,7 +95,7 @@ const Icons = {
 // PROPERTY CARD – LIGHT MODE
 // ============================================================================
 function PropertyCard({ property }) {
-  const { id, name, area, default_rent, available_beds, total_flats, rules_text, images } = property;
+  const { id, name, area, default_rent, min_rent, max_rent, available_beds, total_flats, rules_text, images } = property;
 
   const rulesPreview = rules_text
     ? rules_text.split('\n').slice(0, 2).join(' • ').replace(/^- /gm, '')
@@ -98,7 +103,6 @@ function PropertyCard({ property }) {
 
   const isAvailable = available_beds > 0;
 
-  // Get primary image or first image
   const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
   const hasImage = primaryImage?.url;
 
@@ -167,10 +171,17 @@ function PropertyCard({ property }) {
             </>
           ) : (
             <>
-              <span className="text-2xl font-bold text-[#1E88E5]">
-                {formatCurrency(default_rent)}
-              </span>
-              <span className="text-[#4a4a4a] text-sm">/ month</span>
+              <div className="flex flex-col">
+                {(min_rent && max_rent && min_rent !== max_rent) && (
+                  <span className="text-xs text-[#4a4a4a] font-medium mb-0.5">Starting from</span>
+                )}
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-bold text-[#1E88E5]">
+                    {formatCurrency(min_rent || default_rent)}
+                  </span>
+                  <span className="text-[#4a4a4a] text-sm">/ month</span>
+                </div>
+              </div>
             </>
           )}
         </div>
@@ -261,8 +272,9 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen">
+
       {/* ================================================================== */}
-      {/* HERO SECTION */}
+      {/* HERO SECTION                                                         */}
       {/* ================================================================== */}
       <section className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #B3D4F0 0%, #C5DFF5 30%, #D4E6F6 70%, #D4E6F6 100%)' }}>
         {/* Decorative floating shapes */}
@@ -325,7 +337,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Wave Divider: Hero → Features */}
+      {/* Wave Divider: Hero → Properties (D4E6F6 → white) */}
       <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
         <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
           <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
@@ -333,59 +345,9 @@ export default function HomePage() {
       </div>
 
       {/* ================================================================== */}
-      {/* FEATURES SECTION */}
+      {/* PROPERTIES SECTION  ← now first, white background                   */}
       {/* ================================================================== */}
-      <section id="about" className="relative py-24 scroll-mt-14 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
-              Why Choose Swami PG?
-            </h2>
-            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
-              We provide more than just a place to stay. Experience comfort, security, and community.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <FeatureCard
-              icon={Icons.Shield}
-              title="Safe & Secure"
-              description="24/7 CCTV surveillance and security personnel for your peace of mind."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-            <FeatureCard
-              icon={Icons.Home}
-              title="Fully Furnished"
-              description="Comfortable beds, storage, and all essential amenities included."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-            <FeatureCard
-              icon={Icons.Wifi}
-              title="High-Speed WiFi"
-              description="Unlimited high-speed internet for work and entertainment."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-            <FeatureCard
-              icon={Icons.Currency}
-              title="Transparent Pricing"
-              description="No hidden charges. Clear billing with utility breakdown."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Wave Divider: Features → Properties */}
-      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
-        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
-          <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#FFFFFF" />
-        </svg>
-      </div>
-
-      {/* ================================================================== */}
-      {/* PROPERTIES SECTION */}
-      {/* ================================================================== */}
-      <section id="properties" className="relative py-24 scroll-mt-14 overflow-hidden bg-[#D4E6F6]">
+      <section id="properties" className="relative py-24 scroll-mt-14 overflow-hidden bg-white">
         {/* Subtle blue accent gradient on left edge */}
         <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-transparent via-[#1E88E5]/20 to-transparent" aria-hidden="true"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -451,8 +413,65 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Wave Divider: Properties → Features (white → D4E6F6) */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
+          <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
       {/* ================================================================== */}
-      {/* HOW IT WORKS SECTION */}
+      {/* FEATURES SECTION  ← now second, D4E6F6 background                   */}
+      {/* ================================================================== */}
+      <section id="about" className="relative py-24 scroll-mt-14 bg-[#D4E6F6]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
+              Why Choose Swami PG?
+            </h2>
+            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
+              We provide more than just a place to stay. Experience comfort, security, and community.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <FeatureCard
+              icon={Icons.Clean}
+              title="Clean and Hygienic"
+              description="Regular housekeeping, sanitized spaces for a healthy living experience."
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
+            />
+            <FeatureCard
+              icon={Icons.Home}
+              title="Fully Furnished"
+              description="Comfortable beds, storage, and all essential amenities included."
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
+            />
+            <FeatureCard
+              icon={Icons.Wifi}
+              title="High-Speed WiFi"
+              description="Unlimited high-speed internet for work and entertainment."
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
+            />
+            <FeatureCard
+              icon={Icons.Currency}
+              title="Transparent Pricing"
+              description="No hidden charges. Clear billing with utility breakdown."
+              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Wave Divider: Features → How It Works (D4E6F6 → white) */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
+          <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
+      {/* ================================================================== */}
+      {/* HOW IT WORKS SECTION  — white background (maintains alternating)     */}
       {/* ================================================================== */}
       <section className="relative py-24 overflow-hidden bg-white">
         {/* Decorative circles */}
@@ -492,8 +511,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Wave Divider: How It Works → Reviews (white → D4E6F6) */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
+          <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
       {/* ================================================================== */}
-      {/* REVIEWS SECTION */}
+      {/* REVIEWS SECTION  — D4E6F6 background (maintains alternating)        */}
       {/* ================================================================== */}
       <section id="reviews" className="relative py-24 scroll-mt-14 overflow-hidden bg-[#D4E6F6]">
         {/* Decorative accent */}
@@ -534,8 +560,15 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Wave Divider: Reviews → CTA (D4E6F6 → white) */}
+      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
+          <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
+        </svg>
+      </div>
       {/* ================================================================== */}
-      {/* CTA SECTION */}
+      {/* CTA SECTION  — white background (maintains alternating)             */}
       {/* ================================================================== */}
       <section className="relative py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -573,7 +606,7 @@ export default function HomePage() {
       </section>
 
       {/* ================================================================== */}
-      {/* FLOATING MOBILE CTA */}
+      {/* FLOATING MOBILE CTA                                                  */}
       {/* ================================================================== */}
       <div className="fixed bottom-4 left-4 right-4 md:hidden z-40">
         <Link

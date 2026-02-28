@@ -54,8 +54,8 @@ export default function PropertyFormPage() {
     address: '',
     landmark: '',
     total_flats: '',
-    default_rent: '',
-    default_deposit: '',
+    min_rent: '',
+    max_rent: '',
     images: [], // Array of { url, path, isPrimary }
     showOnHomepage: true,
     sharing_options: [] // Array of { sharing: number, price: number }
@@ -85,8 +85,8 @@ export default function PropertyFormPage() {
           address: data.address || '',
           landmark: data.landmark || '',
           total_flats: data.total_flats?.toString() || '',
-          default_rent: data.default_rent?.toString() || '',
-          default_deposit: data.default_deposit?.toString() || '',
+          min_rent: data.min_rent?.toString() || '',
+          max_rent: data.max_rent?.toString() || '',
           images: data.images || [],
           showOnHomepage: data.showOnHomepage !== false,
           sharing_options: data.sharing_options || []
@@ -294,8 +294,16 @@ export default function PropertyFormPage() {
       setError('Total flats must be a positive number');
       return;
     }
-    if (!formData.default_rent || parseFloat(formData.default_rent) <= 0) {
-      setError('Default rent must be a positive number');
+    if (!formData.min_rent || parseFloat(formData.min_rent) <= 0) {
+      setError('Minimum rent must be a positive number');
+      return;
+    }
+    if (!formData.max_rent || parseFloat(formData.max_rent) <= 0) {
+      setError('Maximum rent must be a positive number');
+      return;
+    }
+    if (parseFloat(formData.max_rent) < parseFloat(formData.min_rent)) {
+      setError('Maximum rent cannot be less than minimum rent');
       return;
     }
 
@@ -309,8 +317,8 @@ export default function PropertyFormPage() {
         address: formData.address.trim(),
         landmark: formData.landmark.trim(),
         total_flats: parseInt(formData.total_flats),
-        default_rent: parseFloat(formData.default_rent),
-        default_deposit: parseFloat(formData.default_deposit) || 0,
+        min_rent: parseFloat(formData.min_rent),
+        max_rent: parseFloat(formData.max_rent),
         images: formData.images,
         showOnHomepage: formData.showOnHomepage,
         sharing_options: formData.sharing_options
@@ -585,37 +593,37 @@ export default function PropertyFormPage() {
             <p className="text-xs text-[#4a4a4a] mt-1">Total number of flats in this property</p>
           </div>
 
-          {/* Default Rent & Deposit Row */}
+          {/* Rent Range Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="default_rent" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
-                Default Rent <span className="text-red-600">*</span>
+              <label htmlFor="min_rent" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
+                Min Rent <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
-                id="default_rent"
-                name="default_rent"
-                value={formData.default_rent}
+                id="min_rent"
+                name="min_rent"
+                value={formData.min_rent}
                 onChange={handleChange}
                 min="0"
                 step="100"
-                placeholder="e.g., 6500"
+                placeholder="e.g., 5500"
                 className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
               />
             </div>
             <div>
-              <label htmlFor="default_deposit" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
-                Default Deposit
+              <label htmlFor="max_rent" className="block text-sm font-medium text-[#1a1a1a] mb-1.5">
+                Max Rent <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
-                id="default_deposit"
-                name="default_deposit"
-                value={formData.default_deposit}
+                id="max_rent"
+                name="max_rent"
+                value={formData.max_rent}
                 onChange={handleChange}
                 min="0"
                 step="100"
-                placeholder="e.g., 3000"
+                placeholder="e.g., 8500"
                 className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a1a] placeholder:text-[#4a4a4a] focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/30 focus:border-[#5B9BD5]"
               />
             </div>

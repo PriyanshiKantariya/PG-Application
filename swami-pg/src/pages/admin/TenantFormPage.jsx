@@ -30,7 +30,6 @@ export default function TenantFormPage() {
     tenant_code: '',
     start_date: '',
     rent: '',
-    deposit: '',
     docs_link: ''
   });
   const [loading, setLoading] = useState(true);
@@ -82,8 +81,7 @@ export default function TenantFormPage() {
     setFormData(prev => ({
       ...prev,
       property_id: propertyId,
-      rent: property?.default_rent?.toString() || prev.rent,
-      deposit: property?.default_deposit?.toString() || prev.deposit
+      rent: property?.min_rent?.toString() || prev.rent
     }));
   }
 
@@ -164,7 +162,6 @@ export default function TenantFormPage() {
         tenant_code: formData.tenant_code.trim(),
         start_date: formData.start_date,
         rent: parseFloat(formData.rent),
-        deposit: parseFloat(formData.deposit) || 0,
         docs_link: formData.docs_link.trim() || null,
         status: 'Active',
         vacated_date: null,
@@ -325,41 +322,23 @@ export default function TenantFormPage() {
               </div>
             </div>
 
-            {/* Rent & Deposit */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="rent" className="block text-sm font-medium text-[#212121] mb-1.5">
-                  Monthly Rent (?) <span className="text-[#C62828]">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="rent"
-                  name="rent"
-                  value={formData.rent}
-                  onChange={handleChange}
-                  min="0"
-                  step="100"
-                  placeholder="e.g., 6500"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
-                />
-                <p className="text-xs text-[#4a4a4a] mt-1">Auto-filled from property default</p>
-              </div>
-              <div>
-                <label htmlFor="deposit" className="block text-sm font-medium text-[#212121] mb-1.5">
-                  Deposit (?)
-                </label>
-                <input
-                  type="number"
-                  id="deposit"
-                  name="deposit"
-                  value={formData.deposit}
-                  onChange={handleChange}
-                  min="0"
-                  step="100"
-                  placeholder="e.g., 3000"
-                  className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
-                />
-              </div>
+            {/* Rent */}
+            <div className="mb-4">
+              <label htmlFor="rent" className="block text-sm font-medium text-[#212121] mb-1.5">
+                Monthly Rent (₹) <span className="text-[#C62828]">*</span>
+              </label>
+              <input
+                type="number"
+                id="rent"
+                name="rent"
+                value={formData.rent}
+                onChange={handleChange}
+                min="0"
+                step="100"
+                placeholder="e.g., 6500"
+                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
+              />
+              <p className="text-xs text-[#4a4a4a] mt-1">Auto-filled from property min rent</p>
             </div>
           </div>
 

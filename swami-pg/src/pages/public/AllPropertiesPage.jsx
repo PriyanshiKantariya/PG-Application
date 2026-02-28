@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useProperties, useAreas } from '../../hooks/useProperties';
 import { LoadingSpinner } from '../../components/common';
@@ -60,7 +60,7 @@ const Icons = {
 // PROPERTY CARD
 // ============================================================================
 function PropertyCard({ property }) {
-    const { id, name, area, default_rent, available_beds, total_flats, images } = property;
+    const { id, name, area, default_rent, min_rent, max_rent, available_beds, total_flats, images } = property;
     const isAvailable = available_beds > 0;
     const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
     const hasImage = primaryImage?.url;
@@ -128,10 +128,17 @@ function PropertyCard({ property }) {
                         </>
                     ) : (
                         <>
-                            <span className="text-2xl font-bold text-[#1E88E5]">
-                                {formatCurrency(default_rent)}
-                            </span>
-                            <span className="text-[#4a4a4a] text-sm">/ month</span>
+                            <div className="flex flex-col">
+                                {(min_rent && max_rent && min_rent !== max_rent) && (
+                                    <span className="text-xs text-[#4a4a4a] font-medium mb-0.5">Starting from</span>
+                                )}
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-2xl font-bold text-[#1E88E5]">
+                                        {formatCurrency(min_rent || default_rent)}
+                                    </span>
+                                    <span className="text-[#4a4a4a] text-sm">/ month</span>
+                                </div>
+                            </div>
                         </>
                     )}
                 </div>
@@ -177,6 +184,10 @@ export default function AllPropertiesPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const { properties, loading, error } = useProperties(selectedArea, false);
     const { areas } = useAreas();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // Filter by search term
     const filteredProperties = properties.filter(property => {

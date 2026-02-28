@@ -262,7 +262,7 @@ export default function PropertiesListPage() {
                       Available
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
-                      Default Rent
+                      Rent Range
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Actions
@@ -297,7 +297,9 @@ export default function PropertiesListPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center text-[#1a1a1a]">
-                        {(property.default_rent || 0).toLocaleString('en-IN')}
+                        {property.min_rent && property.max_rent
+                          ? `${Number(property.min_rent).toLocaleString('en-IN')} - ${Number(property.max_rent).toLocaleString('en-IN')}`
+                          : (property.default_rent || 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
@@ -372,7 +374,11 @@ export default function PropertiesListPage() {
 
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <p className="text-sm text-[#4a4a4a]">
-                    Default Rent: <span className="font-medium text-[#1a1a1a]">{(property.default_rent || 0).toLocaleString('en-IN')}</span>
+                    Rent Range: <span className="font-medium text-[#1a1a1a]">
+                      {property.min_rent && property.max_rent
+                        ? `${Number(property.min_rent).toLocaleString('en-IN')} - ${Number(property.max_rent).toLocaleString('en-IN')}`
+                        : (property.default_rent || 0).toLocaleString('en-IN')}
+                    </span>
                   </p>
                 </div>
               </div>
