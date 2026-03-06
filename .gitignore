@@ -1,0 +1,13 @@
+# Vercel
+.vercel
+
+# Environment files
+.env*.local
+
+# Documentation files (keep in external storage, not in repo)
+*.pdf
+*.pptx
+*.docx
+
+# Build logs
+build_output.txt
