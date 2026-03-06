@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, query, where, orderBy, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
+import { GOOGLE_FORMS } from '../../utils/constants';
 
 // ============================================================================
 // ICONS
@@ -347,25 +348,36 @@ function BillDetailModal({ bill, tenant, property, onClose, onUpdateStatus }) {
 
         {/* Actions */}
         {(bill.status === 'Pending' || bill.status === 'ReportedPaid') && (
-          <div className="p-5 border-t border-gray-200 flex gap-3">
+          <div className="p-5 border-t border-gray-200 flex flex-col gap-3">
             {bill.status === 'ReportedPaid' && (
               <>
-                <button
-                  onClick={handleVerifyPayment}
-                  disabled={updating}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-sm"
+                <a
+                  href={GOOGLE_FORMS.paymentResponsesSheet}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 text-[#5B9BD5] border border-blue-200 rounded-lg font-medium hover:bg-blue-100 transition-colors mb-3"
                 >
-                  {updating ? <LoadingSpinner size="small" /> : <Icons.Check className="w-4 h-4" />}
-                  Verify Payment
-                </button>
-                <button
-                  onClick={handleRejectPayment}
-                  disabled={updating}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
-                >
-                  {updating ? <LoadingSpinner size="small" /> : <Icons.X className="w-4 h-4" />}
-                  Reject
-                </button>
+                  <Icons.Eye className="w-4 h-4" />
+                  View Payment Responses (Google Sheet)
+                </a>
+                <div className="flex gap-3 w-full">
+                  <button
+                    onClick={handleVerifyPayment}
+                    disabled={updating}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg font-medium hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50 shadow-sm"
+                  >
+                    {updating ? <LoadingSpinner size="small" /> : <Icons.Check className="w-4 h-4" />}
+                    Verify Payment
+                  </button>
+                  <button
+                    onClick={handleRejectPayment}
+                    disabled={updating}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-lg font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                  >
+                    {updating ? <LoadingSpinner size="small" /> : <Icons.X className="w-4 h-4" />}
+                    Reject
+                  </button>
+                </div>
               </>
             )}
             {bill.status === 'Pending' && (
@@ -852,8 +864,8 @@ export default function BillsOverviewPage() {
                           key={pageNum}
                           onClick={() => setCurrentPage(pageNum)}
                           className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${pageNum === currentPage
-                              ? 'bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a]'
-                              : 'hover:bg-gray-200 text-[#4a4a4a]'
+                            ? 'bg-gradient-to-r from-[#5B9BD5] to-[#4A8AC4] text-[#1a1a1a]'
+                            : 'hover:bg-gray-200 text-[#4a4a4a]'
                             }`}
                         >
                           {pageNum}

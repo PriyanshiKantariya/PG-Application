@@ -27,6 +27,7 @@ export default function TenantFormPage() {
     phone: '',
     email: '',
     property_id: '',
+    flat_number: '',
     tenant_code: '',
     start_date: '',
     rent: '',
@@ -159,6 +160,7 @@ export default function TenantFormPage() {
         phone: formData.phone.trim(),
         email: formData.email.trim() || null,
         property_id: formData.property_id,
+        flat_number: formData.flat_number.trim() || null,
         tenant_code: formData.tenant_code.trim(),
         start_date: formData.start_date,
         rent: parseFloat(formData.rent),
@@ -288,6 +290,23 @@ export default function TenantFormPage() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Flat Number */}
+            <div className="mb-4">
+              <label htmlFor="flat_number" className="block text-sm font-medium text-[#212121] mb-1.5">
+                Flat Number
+              </label>
+              <input
+                type="text"
+                id="flat_number"
+                name="flat_number"
+                value={formData.flat_number}
+                onChange={handleChange}
+                placeholder="e.g., A1, 101, 2B"
+                className="w-full px-4 py-2.5 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B9BD5]/20 focus:border-[#5B9BD5]"
+              />
+              <p className="text-xs text-[#4a4a4a] mt-1">Flat/room assigned to this tenant (used for utility billing)</p>
             </div>
 
             {/* Tenant Code & Start Date */}

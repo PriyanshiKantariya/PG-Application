@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { collection, getDocs, query, where, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, query, where, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { LoadingSpinner } from '../../components/common';
@@ -170,14 +170,19 @@ function FlatUtilityRow({
   utilityData,
   isSaved,
   isSaving,
+  isDeleting,
   successMessage,
   onChange,
   onSave,
+  onDelete,
+  onRename,
   onPhotoUpload,
   onPhotoRemove,
   photoUploading,
   isCustom
 }) {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editName, setEditName] = useState(String(flatNumber));
   const electricityBill = parseFloat(utilityData?.electricity_bill) || 0;
   const gasBill = parseFloat(utilityData?.gas_bill) || 0;
   const totalBill = electricityBill + gasBill;
@@ -202,10 +207,46 @@ function FlatUtilityRow({
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4">
         {/* Flat Number Badge */}
         <div className="flex items-center gap-3 sm:w-24 flex-shrink-0">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${isSaved ? 'bg-emerald-500/20 text-[#43A047]' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-[#1a1a1a]'
-            }`}>
-            {flatNumber}
-          </div>
+          {isEditingName ? (
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onBlur={() => {
+                const newName = editName.trim();
+                if (newName && newName !== String(flatNumber)) {
+                  onRename(newName);
+                }
+                setIsEditingName(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const newName = editName.trim();
+                  if (newName && newName !== String(flatNumber)) {
+                    onRename(newName);
+                  }
+                  setIsEditingName(false);
+                } else if (e.key === 'Escape') {
+                  setEditName(String(flatNumber));
+                  setIsEditingName(false);
+                }
+              }}
+              autoFocus
+              className="w-10 h-10 rounded-lg text-center font-bold text-sm border-2 border-[#5B9BD5] bg-white text-[#1a1a1a] outline-none"
+            />
+          ) : (
+            <div
+              onClick={() => {
+                setEditName(String(flatNumber));
+                setIsEditingName(true);
+              }}
+              className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm cursor-pointer hover:ring-2 hover:ring-[#5B9BD5]/40 transition-all ${isSaved ? 'bg-emerald-500/20 text-[#43A047]' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-[#1a1a1a]'
+                }`}
+              title="Click to rename flat"
+            >
+              {flatNumber}
+            </div>
+          )}
           <div className="sm:hidden">
             <span className="text-sm font-medium text-[#1a1a1a]">Flat {flatNumber}</span>
             {isCustom && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 bg-blue-100 text-[#5B9BD5] rounded-full font-medium">Custom</span>}
@@ -332,7 +373,7 @@ function FlatUtilityRow({
             )}
             <button
               onClick={onSave}
-              disabled={isSaving || (!utilityData?.electricity_bill && !utilityData?.gas_bill)}
+              disabled={isSaving || isDeleting || (!utilityData?.electricity_bill && !utilityData?.gas_bill)}
               className={`p-2 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed ${isSaved
                 ? 'bg-emerald-500/20 text-[#43A047] hover:bg-emerald-500/30'
                 : 'bg-blue-50 text-[#5B9BD5] hover:bg-blue-100'
@@ -345,6 +386,20 @@ function FlatUtilityRow({
                 <Icons.Check className="w-4 h-4" />
               )}
             </button>
+            {isSaved && (
+              <button
+                onClick={onDelete}
+                disabled={isSaving || isDeleting}
+                className="p-2 rounded-lg transition-all text-gray-400 hover:text-red-500 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Delete this utility entry"
+              >
+                {isDeleting ? (
+                  <LoadingSpinner size="small" />
+                ) : (
+                  <Icons.Trash className="w-4 h-4" />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -360,11 +415,14 @@ function PropertyCard({
   utilities,
   existingUtilities,
   saving,
+  deleting,
   successMessages,
   isExpanded,
   onToggleExpand,
   onUtilityChange,
   onSaveFlat,
+  onDeleteFlat,
+  onRenameFlat,
   onSaveAllFlats,
   currentPage,
   onPageChange,
@@ -376,10 +434,16 @@ function PropertyCard({
   onPhotoRemove,
   photoUploading
 }) {
-  const totalFlats = Number(property.total_flats) || 0;
-  const autoFlats = Array.from({ length: totalFlats }, (_, i) => i + 1);
+  // Build flat list from database entries + custom flats (no auto-generated flats)
+  const dbFlats = Object.keys(existingUtilities)
+    .filter(key => key.startsWith(`${property.id}_flat_`))
+    .map(key => {
+      const flatNum = key.replace(`${property.id}_flat_`, '');
+      return isNaN(flatNum) ? flatNum : Number(flatNum);
+    });
   const extraFlats = customFlats || [];
-  const allFlats = [...autoFlats, ...extraFlats.filter(f => !autoFlats.includes(f))];
+  const allFlatsSet = new Set([...dbFlats.map(String), ...extraFlats.map(String)]);
+  const allFlats = Array.from(allFlatsSet).map(f => isNaN(f) ? f : Number(f));
 
   // Pagination
   const totalPages = Math.ceil(allFlats.length / ITEMS_PER_PAGE);
@@ -404,30 +468,6 @@ function PropertyCard({
 
   const isSavingAny = allFlats.some(flatNum => saving[getFlatKey(property.id, flatNum)]);
 
-  if (totalFlats === 0) {
-    return (
-      <div className="bg-white rounded-xl border border-amber-500/30 p-5">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-            <Icons.Building className="w-6 h-6 text-amber-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-[#1a1a1a]">{property.name}</h3>
-            <p className="text-sm text-[#4a4a4a] flex items-center gap-1 mt-0.5">
-              <Icons.MapPin className="w-3.5 h-3.5" />
-              {property.area}
-            </p>
-            <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100">
-              <p className="text-sm text-amber-600">
-                ?? No flats configured. Please edit this property and set the "Total Flats" count.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`bg-white rounded-xl border transition-all ${isExpanded ? 'border-[#5B9BD5]/30 shadow-md' : 'border-gray-200 hover:border-gray-300'
       }`}>
@@ -438,9 +478,9 @@ function PropertyCard({
       >
         <div className="flex items-start gap-4">
           {/* Property Icon */}
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${savedCount === totalFlats ? 'bg-emerald-500/20' : 'bg-gray-200'
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${savedCount === allFlats.length && allFlats.length > 0 ? 'bg-emerald-500/20' : 'bg-gray-200'
             }`}>
-            <Icons.Building className={`w-6 h-6 ${savedCount === totalFlats ? 'text-[#43A047]' : 'text-[#4a4a4a]'
+            <Icons.Building className={`w-6 h-6 ${savedCount === allFlats.length && allFlats.length > 0 ? 'text-[#43A047]' : 'text-[#4a4a4a]'
               }`} />
           </div>
 
@@ -448,11 +488,11 @@ function PropertyCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-[#1a1a1a] truncate">{property.name}</h3>
-              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${savedCount === totalFlats
+              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${savedCount === allFlats.length && allFlats.length > 0
                 ? 'bg-emerald-500/20 text-[#43A047]'
                 : 'bg-gray-200 text-[#4a4a4a]'
                 }`}>
-                {savedCount}/{totalFlats} flats
+                {savedCount}/{allFlats.length} flats
               </span>
             </div>
             <p className="text-sm text-[#4a4a4a] flex items-center gap-1 mt-0.5">
@@ -551,7 +591,6 @@ function PropertyCard({
           <div className="p-4 space-y-2">
             {flats.map(flatNum => {
               const key = getFlatKey(property.id, flatNum);
-              const isCustom = extraFlats.includes(flatNum);
               return (
                 <FlatUtilityRow
                   key={key}
@@ -559,13 +598,16 @@ function PropertyCard({
                   utilityData={utilities[key] || {}}
                   isSaved={Boolean(existingUtilities[key])}
                   isSaving={saving[key]}
+                  isDeleting={deleting?.[key]}
                   successMessage={successMessages[key]}
                   onChange={(field, value) => onUtilityChange(key, field, value)}
                   onSave={() => onSaveFlat(property.id, flatNum)}
+                  onDelete={() => onDeleteFlat(property.id, flatNum)}
+                  onRename={(newName) => onRenameFlat(property.id, flatNum, newName)}
                   onPhotoUpload={(type, file) => onPhotoUpload(property.id, flatNum, type, file)}
                   onPhotoRemove={(type) => onPhotoRemove(property.id, flatNum, type)}
                   photoUploading={photoUploading[key] || {}}
-                  isCustom={isCustom}
+                  isCustom={false}
                 />
               );
             })}
@@ -639,6 +681,7 @@ function PropertyCard({
 export default function UtilitiesEntryPage() {
   // Core State
   const [properties, setProperties] = useState([]);
+  const [tenants, setTenants] = useState([]); // All tenants for flat→tenant mapping
   const [utilities, setUtilities] = useState({});
   const [existingUtilities, setExistingUtilities] = useState({});
 
@@ -647,6 +690,7 @@ export default function UtilitiesEntryPage() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState({});
+  const [deleting, setDeleting] = useState({});
   const [successMessages, setSuccessMessages] = useState({});
   const [error, setError] = useState('');
 
@@ -679,6 +723,13 @@ export default function UtilitiesEntryPage() {
       }));
       propertiesData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
       setProperties(propertiesData);
+
+      // Fetch all tenants (for flat→tenant mapping when generating bills)
+      const tenantsSnap = await getDocs(collection(db, 'tenants'));
+      const tenantsData = tenantsSnap.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(t => t.status === 'Active');
+      setTenants(tenantsData);
 
       // Initialize pages
       const pages = {};
@@ -799,11 +850,91 @@ export default function UtilitiesEntryPage() {
         setSuccessMessages(prev => ({ ...prev, [key]: null }));
       }, 2000);
 
+      // Auto-generate/update bill for tenant assigned to this flat
+      await autoGenerateBillForFlat(propertyId, flatNumber, electricityBill, gasBill);
+
     } catch (err) {
       console.error('Error saving utility:', err);
       setError(`Failed to save flat ${flatNumber} utilities.`);
     } finally {
       setSaving(prev => ({ ...prev, [key]: false }));
+    }
+  }
+
+  // Auto-generate or update a bill for the tenant assigned to a flat
+  async function autoGenerateBillForFlat(propertyId, flatNumber, electricityBill, gasBill) {
+    try {
+      // Find tenant(s) assigned to this flat + property
+      const flatStr = String(flatNumber);
+      const matchingTenants = tenants.filter(t =>
+        t.property_id === propertyId &&
+        String(t.flat_number) === flatStr
+      );
+
+      if (matchingTenants.length === 0) {
+        console.log(`No active tenant found for property ${propertyId}, flat ${flatNumber}`);
+        return;
+      }
+
+      for (const tenant of matchingTenants) {
+        const rentAmount = parseFloat(tenant.rent) || 0;
+        const totalAmount = rentAmount + electricityBill + gasBill;
+
+        // Check if a bill already exists for this tenant + month + year
+        const billQuery = query(
+          collection(db, 'bills'),
+          where('tenant_id', '==', tenant.id),
+          where('month', '==', selectedMonth),
+          where('year', '==', selectedYear)
+        );
+
+        let billsSnap;
+        try {
+          billsSnap = await getDocs(billQuery);
+        } catch (err) {
+          // Fallback: fetch all bills and filter manually (composite index may not exist)
+          const allBillsSnap = await getDocs(collection(db, 'bills'));
+          const matchingBills = [];
+          allBillsSnap.forEach(doc => {
+            const data = doc.data();
+            if (data.tenant_id === tenant.id && data.month === selectedMonth && data.year === selectedYear) {
+              matchingBills.push({ id: doc.id, ...data });
+            }
+          });
+          billsSnap = { empty: matchingBills.length === 0, docs: matchingBills.map(b => ({ id: b.id, data: () => b })) };
+        }
+
+        const billData = {
+          tenant_id: tenant.id,
+          property_id: propertyId,
+          flat_number: flatNumber,
+          month: selectedMonth,
+          year: selectedYear,
+          rent_amount: rentAmount,
+          electricity_share: electricityBill,
+          gas_share: gasBill,
+          total_amount: totalAmount,
+          late_fee: 0,
+          due_date: `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-07`,
+          updated_at: serverTimestamp()
+        };
+
+        if (!billsSnap.empty) {
+          // Update existing bill (preserve status and paid_at)
+          const existingBillId = billsSnap.docs[0].id;
+          await updateDoc(doc(db, 'bills', existingBillId), billData);
+          console.log(`Updated bill ${existingBillId} for tenant ${tenant.name}`);
+        } else {
+          // Create new bill
+          billData.status = 'Pending';
+          billData.created_at = serverTimestamp();
+          const billRef = await addDoc(collection(db, 'bills'), billData);
+          console.log(`Created bill ${billRef.id} for tenant ${tenant.name}`);
+        }
+      }
+    } catch (err) {
+      console.error('Error auto-generating bill:', err);
+      // Don't block utility save on bill generation failure
     }
   }
 
@@ -814,6 +945,115 @@ export default function UtilitiesEntryPage() {
       if (utilityData?.electricity_bill || utilityData?.gas_bill) {
         await handleSaveFlat(propertyId, flatNum);
       }
+    }
+  }
+
+  async function handleRenameFlat(propertyId, oldFlatNumber, newFlatName) {
+    const oldKey = getFlatKey(propertyId, oldFlatNumber);
+    const newKey = getFlatKey(propertyId, newFlatName);
+    const existingEntry = existingUtilities[oldKey];
+
+    // Update Firestore document if it exists
+    if (existingEntry) {
+      try {
+        await updateDoc(doc(db, 'utilities', existingEntry.id), {
+          flat_number: isNaN(newFlatName) ? newFlatName : Number(newFlatName),
+          updated_at: serverTimestamp()
+        });
+      } catch (err) {
+        console.error('Error renaming flat:', err);
+        setError(`Failed to rename flat ${oldFlatNumber}.`);
+        return;
+      }
+    }
+
+    // Migrate local state: existingUtilities
+    setExistingUtilities(prev => {
+      const next = { ...prev };
+      if (next[oldKey]) {
+        next[newKey] = { ...next[oldKey], flat_number: newFlatName };
+        delete next[oldKey];
+      }
+      return next;
+    });
+
+    // Migrate local state: utilities
+    setUtilities(prev => {
+      const next = { ...prev };
+      if (next[oldKey]) {
+        next[newKey] = next[oldKey];
+        delete next[oldKey];
+      }
+      return next;
+    });
+
+    // Update custom flats list: replace old with new
+    setCustomFlats(prev => {
+      const existing = prev[propertyId] || [];
+      const filtered = existing.filter(f => String(f) !== String(oldFlatNumber));
+      const newFlatId = isNaN(newFlatName) ? newFlatName : Number(newFlatName);
+      if (!filtered.some(f => String(f) === String(newFlatId))) filtered.push(newFlatId);
+      return { ...prev, [propertyId]: filtered };
+    });
+  }
+
+  async function handleDeleteFlat(propertyId, flatNumber) {
+    const key = getFlatKey(propertyId, flatNumber);
+    const existingEntry = existingUtilities[key];
+
+    if (!existingEntry) return;
+
+    if (!window.confirm(`Delete utility entry for Flat ${flatNumber}? This will remove the saved electricity and gas data for this month.`)) {
+      return;
+    }
+
+    setDeleting(prev => ({ ...prev, [key]: true }));
+
+    try {
+      await deleteDoc(doc(db, 'utilities', existingEntry.id));
+
+      // Remove from existing utilities
+      setExistingUtilities(prev => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+
+      // Clear the utility data for this flat
+      setUtilities(prev => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+
+      setSuccessMessages(prev => ({ ...prev, [key]: null }));
+
+      // Also delete the corresponding bill for the tenant on this flat
+      try {
+        const flatStr = String(flatNumber);
+        const matchingTenants = tenants.filter(t =>
+          t.property_id === propertyId &&
+          String(t.flat_number) === flatStr
+        );
+
+        for (const tenant of matchingTenants) {
+          const allBillsSnap = await getDocs(collection(db, 'bills'));
+          allBillsSnap.forEach(async (billDoc) => {
+            const data = billDoc.data();
+            if (data.tenant_id === tenant.id && data.month === selectedMonth && data.year === selectedYear) {
+              await deleteDoc(doc(db, 'bills', billDoc.id));
+              console.log(`Deleted bill ${billDoc.id} for tenant ${tenant.name}`);
+            }
+          });
+        }
+      } catch (billErr) {
+        console.error('Error deleting associated bill:', billErr);
+      }
+    } catch (err) {
+      console.error('Error deleting utility:', err);
+      setError(`Failed to delete utility entry for flat ${flatNumber}.`);
+    } finally {
+      setDeleting(prev => ({ ...prev, [key]: false }));
     }
   }
 
@@ -1040,11 +1280,14 @@ export default function UtilitiesEntryPage() {
               utilities={utilities}
               existingUtilities={existingUtilities}
               saving={saving}
+              deleting={deleting}
               successMessages={successMessages}
               isExpanded={expandedProperties.has(property.id)}
               onToggleExpand={() => togglePropertyExpand(property.id)}
               onUtilityChange={handleUtilityChange}
               onSaveFlat={handleSaveFlat}
+              onDeleteFlat={handleDeleteFlat}
+              onRenameFlat={handleRenameFlat}
               onSaveAllFlats={handleSaveAllFlats}
               currentPage={propertyPages[property.id] || 1}
               onPageChange={handlePageChange}

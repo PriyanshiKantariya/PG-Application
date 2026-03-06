@@ -146,7 +146,7 @@ export default function TenantSignUpPage() {
           created_at: new Date(),
           status: 'pending', // Admin needs to assign property
           property_id: null,
-          room_number: null,
+          flat_number: null,
           rent: 0,
           deposit: 0
         });

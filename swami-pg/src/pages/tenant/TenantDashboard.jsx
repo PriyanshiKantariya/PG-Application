@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { LoadingSpinner, StatusBadge } from '../../components/common';
@@ -74,7 +74,21 @@ export default function TenantDashboard() {
     fetchDashboardData();
   }, [tenantData]);
 
-  const handlePaymentClick = () => {
+  const handlePaymentClick = async () => {
+    // Update bill status to ReportedPaid in Firestore
+    if (currentBill?.id) {
+      try {
+        await updateDoc(doc(db, 'bills', currentBill.id), {
+          status: 'ReportedPaid',
+          reported_paid_at: serverTimestamp(),
+          updated_at: serverTimestamp()
+        });
+        setCurrentBill(prev => ({ ...prev, status: 'ReportedPaid' }));
+      } catch (error) {
+        console.error('Error updating bill status:', error);
+      }
+    }
+    // Also open the Google Form for screenshot submission
     const paymentFormUrl = GOOGLE_FORMS.paymentScreenshot;
     window.open(paymentFormUrl, '_blank');
   };
@@ -169,13 +183,18 @@ export default function TenantDashboard() {
                 >
                   View Details
                 </Link>
-                {currentBill.status !== 'Paid' && (
+                {currentBill.status !== 'Paid' && currentBill.status !== 'ReportedPaid' && (
                   <button
                     onClick={handlePaymentClick}
                     className="flex-1 px-6 py-3 text-center text-sm font-semibold text-white bg-[#43A047] rounded-xl hover:bg-[#2E7D32] transition-all duration-200 shadow-sm"
                   >
                     I Have Paid
                   </button>
+                )}
+                {currentBill.status === 'ReportedPaid' && (
+                  <div className="flex-1 px-6 py-3 text-center text-sm font-semibold text-amber-600 bg-amber-50 rounded-xl border border-amber-200">
+                    Payment Reported - Awaiting Verification
+                  </div>
                 )}
               </div>
             </div>

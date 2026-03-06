@@ -10,7 +10,7 @@ export default function TenantProfilePage() {
     { label: 'Email', value: user?.email, icon: 'email' },
     { label: 'Phone', value: tenantData?.phone || 'Not provided', icon: 'phone' },
     { label: 'Tenant Code', value: tenantData?.tenant_code, icon: 'id' },
-    { label: 'Room Number', value: tenantData?.room_number || 'N/A', icon: 'room' },
+    { label: 'Flat Number', value: tenantData?.flat_number || 'N/A', icon: 'room' },
     { label: 'Property', value: tenantData?.property_name || 'Loading...', icon: 'building' },
     { label: 'Monthly Rent', value: formatCurrency(tenantData?.rent || 0), icon: 'money' },
     { label: 'Security Deposit', value: formatCurrency(tenantData?.deposit || 0), icon: 'shield' },

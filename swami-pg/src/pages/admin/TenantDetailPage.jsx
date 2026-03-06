@@ -192,6 +192,7 @@ export default function TenantDetailPage() {
         phone: editData.phone?.trim(),
         email: editData.email?.trim() || null,
         property_id: editData.property_id,
+        flat_number: editData.flat_number?.trim() || null,
         rent: parseFloat(editData.rent) || 0,
         deposit: parseFloat(editData.deposit) || 0,
         start_date: editData.start_date,
@@ -509,6 +510,23 @@ export default function TenantDetailPage() {
                     <p className="font-medium text-[#1a1a1a]">{property?.name || 'Unknown'}</p>
                     {property?.area && <p className="text-sm text-[#4a4a4a]">{property.area}</p>}
                   </div>
+                )}
+              </div>
+
+              {/* Flat Number */}
+              <div>
+                <label className="text-sm text-[#4a4a4a] mb-1 block">Flat Number</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="flat_number"
+                    value={editData.flat_number || ''}
+                    onChange={handleEditChange}
+                    placeholder="e.g., A1, 101"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-[#1a1a1a] placeholder-gray-400 focus:border-[#5B9BD5] focus:ring-1 focus:ring-[#5B9BD5] outline-none transition-colors"
+                  />
+                ) : (
+                  <p className="font-medium text-[#1a1a1a]">{tenant.flat_number || 'Not assigned'}</p>
                 )}
               </div>
 

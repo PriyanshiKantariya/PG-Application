@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { LoadingSpinner, StatusBadge } from '../../components/common';
@@ -66,6 +66,7 @@ export default function BillDetailPage() {
   const { tenantData } = useAuth();
   const [bill, setBill] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reporting, setReporting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -78,7 +79,7 @@ export default function BillDetailPage() {
 
       try {
         const billDoc = await getDoc(doc(db, 'bills', billId));
-        
+
         if (!billDoc.exists()) {
           setError('Bill not found');
           setLoading(false);
@@ -105,7 +106,23 @@ export default function BillDetailPage() {
     fetchBill();
   }, [billId, tenantData]);
 
-  const handlePaymentClick = () => {
+  const handlePaymentClick = async () => {
+    setReporting(true);
+    // Update bill status to ReportedPaid in Firestore
+    if (bill?.id) {
+      try {
+        await updateDoc(doc(db, 'bills', bill.id), {
+          status: 'ReportedPaid',
+          reported_paid_at: serverTimestamp(),
+          updated_at: serverTimestamp()
+        });
+        setBill(prev => ({ ...prev, status: 'ReportedPaid' }));
+      } catch (err) {
+        console.error('Error updating bill status:', err);
+      }
+    }
+    setReporting(false);
+    // Also open the Google Form for screenshot submission
     const paymentFormUrl = GOOGLE_FORMS.paymentScreenshot;
     window.open(paymentFormUrl, '_blank');
   };
@@ -141,7 +158,7 @@ export default function BillDetailPage() {
   }
 
   const utilitiesTotal = (bill.electricity_share || 0) + (bill.gas_share || 0);
-  
+
   const breakdownItems = [
     { label: 'Monthly Rent', amount: bill.rent_amount || 0, iconKey: 'rent', color: 'text-[#1E88E5]' },
     { label: 'Electricity Share', amount: bill.electricity_share || 0, iconKey: 'electricity', color: 'text-amber-600' },
@@ -153,9 +170,9 @@ export default function BillDetailPage() {
   }
 
   if (bill.adjustments && bill.adjustments !== 0) {
-    breakdownItems.push({ 
-      label: bill.adjustments > 0 ? 'Additional Charges' : 'Discount/Adjustment', 
-      amount: bill.adjustments, 
+    breakdownItems.push({
+      label: bill.adjustments > 0 ? 'Additional Charges' : 'Discount/Adjustment',
+      amount: bill.adjustments,
       iconKey: bill.adjustments > 0 ? 'plus' : 'minus',
       isExtra: true,
       color: bill.adjustments > 0 ? 'text-red-600' : 'text-[#43A047]'
@@ -210,16 +227,15 @@ export default function BillDetailPage() {
 
           {/* Breakdown */}
           <h2 className="text-lg font-semibold text-[#424242] mb-4">Bill Breakdown</h2>
-          
+
           <div className="space-y-3 mb-6">
             {breakdownItems.map((item, index) => {
               const IconComponent = iconMap[item.iconKey];
               return (
                 <div
                   key={index}
-                  className={`flex items-center justify-between py-4 px-4 rounded-xl ${
-                    item.isExtra ? 'bg-red-50 border border-red-500/20' : 'bg-[#F5F5F5] border border-gray-200'
-                  }`}
+                  className={`flex items-center justify-between py-4 px-4 rounded-xl ${item.isExtra ? 'bg-red-50 border border-red-500/20' : 'bg-[#F5F5F5] border border-gray-200'
+                    }`}
                 >
                   <div className="flex items-center">
                     <span className={`mr-3 ${item.color}`}>
@@ -242,17 +258,18 @@ export default function BillDetailPage() {
           </div>
 
           {/* Payment Button */}
-          {bill.status !== 'Paid' && (
+          {bill.status !== 'Paid' && bill.status !== 'ReportedPaid' && (
             <div className="mt-6">
               <button
                 onClick={handlePaymentClick}
-                className="w-full py-4 bg-[#4A7C59] text-white text-lg font-semibold rounded-xl hover:bg-[#3D6B4A] transition-all duration-200 flex items-center justify-center"
+                disabled={reporting}
+                className="w-full py-4 bg-[#4A7C59] text-white text-lg font-semibold rounded-xl hover:bg-[#3D6B4A] transition-all duration-200 flex items-center justify-center disabled:opacity-60"
               >
                 <PaymentIcon />
-                <span className="ml-2">I HAVE PAID - Submit Screenshot</span>
+                <span className="ml-2">{reporting ? 'Reporting...' : 'I HAVE PAID - Submit Screenshot'}</span>
               </button>
               <p className="text-sm text-[#757575] text-center mt-2">
-                Click above to submit your payment screenshot via Google Form
+                Click above to report your payment and submit screenshot
               </p>
             </div>
           )}
@@ -297,7 +314,7 @@ export default function BillDetailPage() {
       {/* Tenant Info Footer */}
       <div className="mt-6 text-center text-sm text-[#757575]">
         <p>Bill for: {tenantData?.name} ({tenantData?.tenant_code})</p>
-        <p>Room: {tenantData?.room_number}</p>
+        <p>Flat: {tenantData?.flat_number}</p>
       </div>
     </div>
   );
