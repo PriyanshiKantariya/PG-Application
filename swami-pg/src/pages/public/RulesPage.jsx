@@ -162,44 +162,6 @@ export default function RulesPage() {
                 </div>
             </section>
 
-            {/* Wave Divider */}
-            <div className="relative -mt-px bg-white" aria-hidden="true">
-                <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
-                    <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#D4E6F6" />
-                </svg>
-            </div>
-
-            {/* ── CTA Section ── */}
-            <section className="bg-[#D4E6F6] py-16">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative rounded-2xl overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#3A6FA0] to-[#2D5F8A]"></div>
-                        <div className="relative px-8 py-14 md:px-16 text-center">
-                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                                Ready to Join Swami PG?
-                            </h3>
-                            <p className="text-white/80 mb-8 max-w-md mx-auto">
-                                Schedule a visit to see our facilities and find the perfect room for you.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Link
-                                    to="/request-visit"
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-[#5B9BD5] rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg"
-                                >
-                                    <Icons.Calendar className="w-5 h-5" />
-                                    Schedule a Visit
-                                </Link>
-                                <Link
-                                    to="/#properties"
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/15 text-white rounded-xl font-semibold border border-white/30 hover:bg-white/25 transition-colors"
-                                >
-                                    Browse Properties
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
     );
 }

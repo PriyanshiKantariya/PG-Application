@@ -95,13 +95,11 @@ const Icons = {
 // PROPERTY CARD – LIGHT MODE
 // ============================================================================
 function PropertyCard({ property }) {
-  const { id, name, area, default_rent, min_rent, max_rent, available_beds, total_flats, rules_text, images } = property;
+  const { id, name, area, default_rent, min_rent, max_rent, rules_text, images } = property;
 
   const rulesPreview = rules_text
     ? rules_text.split('\n').slice(0, 2).join(' • ').replace(/^- /gm, '')
     : '';
-
-  const isAvailable = available_beds > 0;
 
   const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
   const hasImage = primaryImage?.url;
@@ -127,13 +125,7 @@ function PropertyCard({ property }) {
           </>
         )}
 
-        {/* Availability Badge */}
-        <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold ${isAvailable
-          ? 'bg-green-100 text-[#2E7D32] border border-green-200'
-          : 'bg-red-100 text-[#C62828] border border-red-200'
-          }`}>
-          {isAvailable ? `${available_beds} flats available` : 'Fully Occupied'}
-        </div>
+
 
         {/* Image count badge */}
         {images?.length > 1 && (
@@ -186,17 +178,7 @@ function PropertyCard({ property }) {
           )}
         </div>
 
-        {/* Quick Stats */}
-        <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
-          <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
-            <Icons.Bed className="w-4 h-4" />
-            <span>{total_flats} flats</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
-            <Icons.Users className="w-4 h-4" />
-            <span>Shared</span>
-          </div>
-        </div>
+
 
         {rulesPreview && (
           <p className="text-[#4a4a4a] text-sm mb-4 line-clamp-2">{rulesPreview}</p>
@@ -306,16 +288,9 @@ export default function HomePage() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link
-              to="/request-visit"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold hover:bg-[#4A8AC4] transition-all shadow-md"
-            >
-              <Icons.Calendar className="w-5 h-5" />
-              Schedule a Visit
-            </Link>
             <a
               href="tel:+917575866048"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#1a1a1a] rounded-xl font-semibold border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold hover:bg-[#4A8AC4] transition-all shadow-md"
             >
               <Icons.Phone className="w-5 h-5" />
               Call Us Now
@@ -327,7 +302,7 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-8 md:gap-12 px-8 py-6 rounded-2xl bg-[#F5F5F5] border border-gray-200">
               <StatItem value="10+" label="Properties" />
               <div className="w-px h-10 bg-gray-200"></div>
-              <StatItem value="200+" label="Happy Tenants" />
+              <StatItem value="1000+" label="Happy Tenants" />
               <div className="w-px h-10 bg-gray-200 hidden md:block"></div>
               <div className="hidden md:block">
                 <StatItem value="5★" label="Rating" />
@@ -434,7 +409,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <FeatureCard
               icon={Icons.Clean}
               title="Clean and Hygienic"
@@ -443,27 +418,16 @@ export default function HomePage() {
             />
             <FeatureCard
               icon={Icons.Home}
-              title="Fully Furnished"
-              description="Comfortable beds, storage, and all essential amenities included."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-            <FeatureCard
-              icon={Icons.Wifi}
-              title="High-Speed WiFi"
-              description="Unlimited high-speed internet for work and entertainment."
-              color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
-            />
-            <FeatureCard
-              icon={Icons.Currency}
-              title="Transparent Pricing"
-              description="No hidden charges. Clear billing with utility breakdown."
+              title="All Basic Amenities"
+              description="Fully furnished rooms with beds, storage, Wi-Fi, and all essential facilities included."
               color="from-[#E8F0FE] to-[#D4E4F7] text-[#5B9BD5]"
             />
           </div>
         </div>
       </section>
 
-      {/* Wave Divider: Features → How It Works (D4E6F6 → white) */}
+
+      {/* Wave Divider: Features → Reviews (D4E6F6 → white) */}
       <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
         <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
           <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
@@ -471,57 +435,9 @@ export default function HomePage() {
       </div>
 
       {/* ================================================================== */}
-      {/* HOW IT WORKS SECTION  — white background (maintains alternating)     */}
+      {/* REVIEWS SECTION  — white background (maintains alternating)         */}
       {/* ================================================================== */}
-      <section className="relative py-24 overflow-hidden bg-white">
-        {/* Decorative circles */}
-        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#1E88E5]/[0.05] blur-xl" aria-hidden="true"></div>
-        <div className="absolute -bottom-20 -left-10 w-48 h-48 rounded-full bg-[#42A5F5]/[0.05] blur-xl" aria-hidden="true"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-4">
-              How It Works
-            </h2>
-            <p className="text-[#4a4a4a] max-w-2xl mx-auto">
-              Getting started is simple. Follow these steps to find your perfect PG.
-            </p>
-          </div>
-
-          {/* Step connector line (desktop) */}
-          <div className="hidden md:block absolute top-[13.5rem] left-1/2 -translate-x-1/2 w-2/3 border-t-2 border-dashed border-[#1E88E5]/15" aria-hidden="true"></div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {[
-              { step: '01', title: 'Browse Properties', description: 'Explore our curated list of premium PG accommodations across Vadodara.' },
-              { step: '02', title: 'Schedule a Visit', description: 'Book a convenient time to visit and see the property in person.' },
-              { step: '03', title: 'Move In', description: 'Complete simple documentation and move into your new home.' }
-            ].map((item, index) => (
-              <div key={index} className="relative bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/80 shadow-sm">
-                <div className="text-6xl font-bold text-[#5B9BD5]/90 mb-4">{item.step}</div>
-                <h3 className="text-xl font-semibold text-[#1a1a1a] mb-2">{item.title}</h3>
-                <p className="text-[#4a4a4a]">{item.description}</p>
-                {index < 2 && (
-                  <div className="hidden md:block absolute top-8 -right-4 text-[#1E88E5]/30 z-10">
-                    <Icons.ArrowRight className="w-8 h-8" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Wave Divider: How It Works → Reviews (white → D4E6F6) */}
-      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
-        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
-          <path d="M0 50L48 45C96 40 192 30 288 24C384 18 480 16 576 18C672 20 768 26 864 30C960 34 1056 36 1152 34C1248 32 1344 26 1392 23L1440 20V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V50Z" fill="#FFFFFF" />
-        </svg>
-      </div>
-
-      {/* ================================================================== */}
-      {/* REVIEWS SECTION  — D4E6F6 background (maintains alternating)        */}
-      {/* ================================================================== */}
-      <section id="reviews" className="relative py-24 scroll-mt-14 overflow-hidden bg-[#D4E6F6]">
+      <section id="reviews" className="relative py-24 scroll-mt-14 overflow-hidden bg-white">
         {/* Decorative accent */}
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-[#1E88E5]/[0.04] blur-3xl" aria-hidden="true"></div>
         <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full bg-[#42A5F5]/[0.04] blur-3xl" aria-hidden="true"></div>
@@ -561,62 +477,6 @@ export default function HomePage() {
       </section>
 
 
-      {/* Wave Divider: Reviews → CTA (D4E6F6 → white) */}
-      <div className="relative -mt-px bg-[#D4E6F6]" aria-hidden="true">
-        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-10 md:h-14 block" preserveAspectRatio="none">
-          <path d="M0 0L60 5C120 10 240 20 360 25C480 30 600 30 720 27C840 24 960 18 1080 14C1200 10 1320 8 1380 7L1440 6V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0V0Z" fill="#FFFFFF" />
-        </svg>
-      </div>
-      {/* ================================================================== */}
-      {/* CTA SECTION  — white background (maintains alternating)             */}
-      {/* ================================================================== */}
-      <section className="relative py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden">
-            {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#3A6FA0] to-[#2D5F8A]"></div>
-
-            {/* Content */}
-            <div className="relative px-8 py-16 md:px-16 text-center">
-              <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-                Ready to Find Your New Home?
-              </h2>
-              <p className="text-lg text-white mb-8 max-w-xl mx-auto">
-                Schedule a visit today and experience the Swami PG difference. Our team is ready to welcome you!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  to="/request-visit"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#5B9BD5] rounded-xl font-semibold hover:bg-gray-50 transition-colors shadow-lg"
-                >
-                  <Icons.Calendar className="w-5 h-5" />
-                  Schedule Your Visit
-                </Link>
-                <a
-                  href="tel:+917575866048"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 text-white rounded-xl font-semibold border border-white/40 hover:bg-white/30 transition-colors"
-                >
-                  <Icons.Phone className="w-5 h-5" />
-                  Call Us Now
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================== */}
-      {/* FLOATING MOBILE CTA                                                  */}
-      {/* ================================================================== */}
-      <div className="fixed bottom-4 left-4 right-4 md:hidden z-40">
-        <Link
-          to="/request-visit"
-          className="flex items-center justify-center gap-2 w-full py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold shadow-lg"
-        >
-          <Icons.Calendar className="w-5 h-5" />
-          Schedule a Visit
-        </Link>
-      </div>
     </div>
   );
 }

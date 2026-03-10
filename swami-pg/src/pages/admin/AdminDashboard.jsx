@@ -212,7 +212,6 @@ export default function AdminDashboard() {
             <div>
               <p className="text-sm text-[#4a4a4a] mb-1">Active Tenants</p>
               <p className="text-3xl font-bold text-[#1a1a1a]">{metrics.activeTenants}</p>
-              <p className="text-xs text-[#43A047] mt-1">{metrics.availableBeds} flats available</p>
             </div>
             <div className="w-14 h-14 rounded-xl bg-green-50 flex items-center justify-center text-[#43A047]">
               <TenantsIcon />
@@ -281,23 +280,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        {/* Occupancy Rate */}
-        <div className="bg-gradient-to-r from-[#3A8A5C] to-[#2D7A50] rounded-xl p-5 text-white shadow-md">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-emerald-100 mb-1">Occupancy Rate</p>
-              <p className="text-3xl font-bold">
-                {metrics.totalFlats > 0
-                  ? Math.round((metrics.activeTenants / metrics.totalFlats) * 100)
-                  : 0}%
-              </p>
-            </div>
-            <BedsIcon />
-          </div>
-          <p className="mt-3 text-sm text-emerald-100">
-            {metrics.activeTenants} of {metrics.totalFlats} flats occupied
-          </p>
-        </div>
+
       </div>
 
       {/* Quick Actions */}

@@ -60,8 +60,7 @@ const Icons = {
 // PROPERTY CARD
 // ============================================================================
 function PropertyCard({ property }) {
-    const { id, name, area, default_rent, min_rent, max_rent, available_beds, total_flats, images } = property;
-    const isAvailable = available_beds > 0;
+    const { id, name, area, default_rent, min_rent, max_rent, images } = property;
     const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
     const hasImage = primaryImage?.url;
 
@@ -84,13 +83,7 @@ function PropertyCard({ property }) {
                     </div>
                 )}
 
-                {/* Availability Badge */}
-                <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold ${isAvailable
-                    ? 'bg-green-100 text-[#2E7D32] border border-green-200'
-                    : 'bg-red-100 text-[#C62828] border border-red-200'
-                    }`}>
-                    {isAvailable ? `${available_beds} flats available` : 'Fully Occupied'}
-                </div>
+
 
                 {/* Image count badge */}
                 {images?.length > 1 && (
@@ -143,17 +136,7 @@ function PropertyCard({ property }) {
                     )}
                 </div>
 
-                {/* Quick Stats */}
-                <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
-                    <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
-                        <Icons.Bed className="w-4 h-4" />
-                        <span>{total_flats} flats</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[#4a4a4a] text-sm">
-                        <Icons.Users className="w-4 h-4" />
-                        <span>Shared</span>
-                    </div>
-                </div>
+
 
                 {/* Actions */}
                 <div className="flex gap-3">
@@ -270,13 +253,6 @@ export default function AllPropertiesPage() {
                             <span className="font-semibold text-[#1a1a1a]">{filteredProperties.length}</span> {filteredProperties.length === 1 ? 'property' : 'properties'} found
                             {selectedArea !== 'All Areas' && <span> in <span className="font-medium text-[#1E88E5]">{selectedArea}</span></span>}
                         </p>
-                        <Link
-                            to="/request-visit"
-                            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#5B9BD5] rounded-lg hover:bg-[#4A8AC4] transition-colors shadow-sm"
-                        >
-                            <Icons.Calendar className="w-4 h-4" />
-                            Schedule a Visit
-                        </Link>
                     </div>
 
                     {loading ? (
@@ -321,35 +297,6 @@ export default function AllPropertiesPage() {
                 </div>
             </section>
 
-            {/* Bottom CTA */}
-            <section className="py-12 bg-white">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-4">
-                        Found Your Perfect PG?
-                    </h2>
-                    <p className="text-[#4a4a4a] mb-6">
-                        Schedule a visit to see any property in person. Our team is ready to help.
-                    </p>
-                    <Link
-                        to="/request-visit"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold hover:bg-[#4A8AC4] transition-all shadow-md"
-                    >
-                        <Icons.Calendar className="w-5 h-5" />
-                        Schedule a Visit
-                    </Link>
-                </div>
-            </section>
-
-            {/* Floating Mobile CTA */}
-            <div className="fixed bottom-4 left-4 right-4 md:hidden z-40">
-                <Link
-                    to="/request-visit"
-                    className="flex items-center justify-center gap-2 w-full py-4 bg-[#5B9BD5] text-white rounded-xl font-semibold shadow-lg"
-                >
-                    <Icons.Calendar className="w-5 h-5" />
-                    Schedule a Visit
-                </Link>
-            </div>
         </div>
     );
 }

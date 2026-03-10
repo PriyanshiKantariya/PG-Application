@@ -13,7 +13,7 @@ flowchart TB
         subgraph Public["Public Portal"]
             UC1["View Properties"]
             UC2["View Property Details"]
-            UC3["Submit Visit Request"]L
+            UC3["Submit Visit Request"]
             UC4["View House Rules"]
         end
         

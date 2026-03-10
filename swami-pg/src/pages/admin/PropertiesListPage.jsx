@@ -113,9 +113,7 @@ export default function PropertiesListPage() {
   // Calculate totals
   const totals = filteredProperties.reduce((acc, p) => ({
     totalFlats: acc.totalFlats + (p.total_flats || 0),
-    occupied: acc.occupied + (p.occupied_beds || 0),
-    available: acc.available + (p.available_beds || 0)
-  }), { totalFlats: 0, occupied: 0, available: 0 });
+  }), { totalFlats: 0 });
 
   async function handleDeleteProperty() {
     if (!deleteTarget) return;
@@ -167,7 +165,7 @@ export default function PropertiesListPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <p className="text-sm text-[#4a4a4a]">Total Properties</p>
           <p className="text-2xl font-bold bg-gradient-to-r from-[#5B9BD5] to-[#42A5F5] bg-clip-text text-transparent">{filteredProperties.length}</p>
@@ -175,11 +173,6 @@ export default function PropertiesListPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <p className="text-sm text-[#4a4a4a]">Total Flats</p>
           <p className="text-2xl font-bold text-[#1a1a1a]">{totals.totalFlats}</p>
-          <p className="text-xs text-[#4a4a4a]">{totals.occupied} occupied</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-sm text-[#4a4a4a]">Available Flats</p>
-          <p className="text-2xl font-bold text-[#43A047]">{totals.available}</p>
         </div>
       </div>
 
@@ -253,15 +246,6 @@ export default function PropertiesListPage() {
                       Area
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
-                      Total Flats
-                    </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
-                      Occupied
-                    </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
-                      Available
-                    </th>
-                    <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
                       Rent Range
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-semibold text-[#4a4a4a] uppercase tracking-wider">
@@ -281,19 +265,6 @@ export default function PropertiesListPage() {
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-[#5B9BD5] border border-blue-100">
                           {property.area || 'N/A'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center font-medium text-[#1a1a1a]">
-                        {property.total_flats || 0}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`font-medium ${property.occupied_beds > 0 ? 'text-amber-600' : 'text-[#4a4a4a]'}`}>
-                          {property.occupied_beds || 0}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className={`font-medium ${property.available_beds > 0 ? 'text-[#43A047]' : 'text-red-600'}`}>
-                          {property.available_beds || 0}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center text-[#1a1a1a]">
@@ -355,20 +326,10 @@ export default function PropertiesListPage() {
 
                 <p className="text-sm text-[#4a4a4a] mb-3 line-clamp-1">{property.address}</p>
 
-                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
+                <div className="grid grid-cols-1 gap-2 pt-3 border-t border-gray-200">
                   <div className="text-center">
-                    <p className="text-xs text-[#4a4a4a]">Total</p>
+                    <p className="text-xs text-[#4a4a4a]">Total Flats</p>
                     <p className="font-semibold text-[#1a1a1a]">{property.total_flats || 0}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-[#4a4a4a]">Occupied</p>
-                    <p className="font-semibold text-amber-600">{property.occupied_beds || 0}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs text-[#4a4a4a]">Available</p>
-                    <p className={`font-semibold ${property.available_beds > 0 ? 'text-[#43A047]' : 'text-red-600'}`}>
-                      {property.available_beds || 0}
-                    </p>
                   </div>
                 </div>
 
