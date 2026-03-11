@@ -135,17 +135,8 @@ export default function Footer() {
                   <Icons.Clock className="w-4 h-4 text-[#1E88E5]" />
                 </div>
                 <div>
-                  <p className="text-sm text-[#1a1a1a] font-medium">Mon – Sat</p>
-                  <p className="text-xs text-[#4a4a4a]">9:00 AM – 7:00 PM</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <Icons.Clock className="w-4 h-4 text-[#5B9BD5]" />
-                </div>
-                <div>
-                  <p className="text-sm text-[#1a1a1a] font-medium">Sunday</p>
-                  <p className="text-xs text-[#4a4a4a]">10:00 AM – 4:00 PM</p>
+                  <p className="text-sm text-[#1a1a1a] font-medium">Everyday</p>
+                  <p className="text-xs text-[#4a4a4a]">8:00 AM – 9:00 PM</p>
                 </div>
               </div>
             </div>

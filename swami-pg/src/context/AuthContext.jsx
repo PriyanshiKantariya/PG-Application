@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { auth, db } from '../firebase/config';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth, db, googleProvider } from '../firebase/config';
+import { onAuthStateChanged, signOut, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 
 const AuthContext = createContext();
@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       setCurrentUser(user);
 
       if (user) {
@@ -152,13 +153,18 @@ export function AuthProvider({ children }) {
     setTenantData(null);
   };
 
+  const signInWithGoogle = () => {
+    return signInWithPopup(auth, googleProvider);
+  };
+
   const value = {
     currentUser,
     user: currentUser,
     userRole,
     tenantData,
     loading,
-    logout
+    logout,
+    signInWithGoogle
   };
 
   return (
