@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, doc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { LoadingSpinner } from '../../components/common';
+import { sendComplaintUpdateEmail } from '../../utils/emailNotifications';
 
 // ============================================================================
 // ICONS
@@ -427,7 +428,7 @@ function ComplaintCard({ complaint, tenant, property, onViewDetails }) {
       {/* Category & Property */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <CategoryBadge category={complaint.category} />
-        <span className="text-xs text-[#4a4a4a]">•</span>
+        <span className="text-xs text-[#4a4a4a]">ï¿½</span>
         <span className="text-xs text-[#4a4a4a] flex items-center gap-1">
           <Icons.Building className="w-3 h-3" />
           {property?.name || 'Unknown'}
@@ -540,6 +541,11 @@ export default function ComplaintsAdminPage() {
 
   // Update complaint status and notes
   async function handleUpdateComplaint(complaintId, newStatus, notes) {
+    // Capture current complaint and tenant info before the update for email notification
+    const complaint = complaints.find(c => c.id === complaintId);
+    const tenant = tenants[complaint?.tenant_id];
+    const oldStatus = complaint?.status;
+
     try {
       const updateData = {
         status: newStatus,
@@ -553,19 +559,30 @@ export default function ComplaintsAdminPage() {
       }
 
       await updateDoc(doc(db, 'complaints', complaintId), updateData);
-      
+
       // Update local state
-      setComplaints(prev => prev.map(c => 
-        c.id === complaintId 
-          ? { 
-              ...c, 
-              status: newStatus, 
-              admin_notes: notes, 
+      setComplaints(prev => prev.map(c =>
+        c.id === complaintId
+          ? {
+              ...c,
+              status: newStatus,
+              admin_notes: notes,
               updated_at: new Date(),
               ...(newStatus === 'Resolved' ? { resolved_at: new Date() } : {})
             }
           : c
       ));
+
+      // Send email notification to tenant â€” non-blocking, failures won't disrupt the save
+      sendComplaintUpdateEmail({
+        tenantName: tenant?.name,
+        tenantEmail: tenant?.email,
+        complaintTitle: complaint?.title,
+        oldStatus,
+        newStatus,
+        adminNotes: notes,
+      }).catch(err => console.error('EmailJS notification failed:', err));
+
     } catch (err) {
       console.error('Error updating complaint:', err);
       setError('Failed to update complaint.');
